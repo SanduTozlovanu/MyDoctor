@@ -1,6 +1,6 @@
 ﻿using MyDoctor.Bussiness.Entities;
 
-namespace MyDoctor.Bussiness.Repositories
+namespace MyDoctor.Bussiness.Repositories.Interfaces
 {
     public interface IHospitalRepository
     {

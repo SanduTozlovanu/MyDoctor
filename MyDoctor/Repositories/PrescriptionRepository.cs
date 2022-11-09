@@ -4,34 +4,34 @@ using MyDoctor.Bussiness.Repositories.Interfaces;
 
 namespace MyDoctor.Bussiness.Repositories
 {
-    public class AppointmentRepository : IAppointmentRepository
+    public class PrescriptionRepository : IPrescriptionRepository
     {
         private readonly MyDoctorDatabaseContext context;
-        public AppointmentRepository(MyDoctorDatabaseContext context)
+        public PrescriptionRepository(MyDoctorDatabaseContext context)
         {
             this.context = context;
         }
 
-        public void Add(Appointment appointment)
+        public void Add(Prescription prescription)
         {
-            this.context.Appointments.Add(appointment);
+            this.context.Prescriptions.Add(prescription);
             this.context.SaveChanges();
         }
 
-        public void Update(Appointment appointment)
+        public void Update(Prescription prescription)
         {
-            this.context.Appointments.Update(appointment);
+            this.context.Prescriptions.Update(prescription);
             this.context.SaveChanges();
         }
 
         public void Delete(int id)
         {
-            var appointment = this.context.Appointments.FirstOrDefault(c => c.Id == id);
-            if (appointment != null)
+            var prescription = this.context.Prescriptions.FirstOrDefault(c => c.Id == id);
+            if (prescription != null)
             {
                 return;
             }
-            this.context.Appointments.Remove(appointment);
+            this.context.Prescriptions.Remove(prescription);
             this.context.SaveChanges();
         }
     }

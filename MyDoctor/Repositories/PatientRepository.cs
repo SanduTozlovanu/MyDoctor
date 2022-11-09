@@ -1,5 +1,6 @@
 ﻿using MyDoctor.Bussiness.Data;
 using MyDoctor.Bussiness.Entities;
+using MyDoctor.Bussiness.Repositories.Interfaces;
 
 namespace MyDoctor.Bussiness.Repositories
 {

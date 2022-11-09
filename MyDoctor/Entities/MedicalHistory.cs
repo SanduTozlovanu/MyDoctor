@@ -10,8 +10,6 @@ namespace MyDoctor.Bussiness.Entities
     {
         public int Id { get; set; }
 
-        public List<string> Diseases { get; set; }
-
-        public List<Drug> DrugsEverTaken { get; set; }
+        public List<Prescription> Prescriptions { get; set; }
     }
 }

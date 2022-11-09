@@ -13,11 +13,11 @@ namespace MyDoctor.Bussiness.Data
         public DbSet<Hospital> Hospitals { get; set; }
         public DbSet<MedicalHistory> MedicalHistories { get; set; }
         public DbSet<Patient> Patients { get; set; }
+        public DbSet<Prescription> Prescriptions { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlite("Data Source = MyDoctorManagement.db");
         }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             var drug1 = new Drug
@@ -25,7 +25,7 @@ namespace MyDoctor.Bussiness.Data
                 Id = 1,
                 Name = "Paracetamol",
                 Description = "Paracetamol description",
-                Price = 20, 
+                Price = 20,
                 Quantity = 574996
             };
 
@@ -37,6 +37,9 @@ namespace MyDoctor.Bussiness.Data
                 Price = 29,
                 Quantity = 254652
             };
+
+            List<Drug> drugs = new List<Drug> { drug1, drug2 };
+
             var patient1 = new Patient
             {
                 Id = 1,
@@ -44,7 +47,7 @@ namespace MyDoctor.Bussiness.Data
                 Password = "akmfd795",
                 FirstName = "Ion",
                 LastName = "Raluca",
-                Age = 56,           
+                Age = 56,
             };
 
             var patient2 = new Patient
@@ -56,19 +59,10 @@ namespace MyDoctor.Bussiness.Data
                 LastName = "Binance",
                 Age = 28,
             };
-            var history1 = new MedicalHistory
-            {
-                Id = 1,
-                Diseases = new List<string> { "Tuberculoza", "Cancer"},
-                DrugsEverTaken = new List<Drug> { drug1},
-            };
 
-            var history2 = new MedicalHistory
-            {
-                Id = 2,
-                Diseases = new List<string> { "Tuberculoza", "Raceala" },
-                DrugsEverTaken = new List<Drug> { drug2 },
-            };
+
+
+
             Schedule schedule1 = new Schedule
             {
                 Id = 1,
@@ -93,7 +87,7 @@ namespace MyDoctor.Bussiness.Data
                 Age = 69,
                 FirstName = "Gheorghe",
                 LastName = "Mama",
-                WorkingDays = new List<Schedule> { schedule1, schedule2},
+                WorkingDays = new List<Schedule> { schedule1, schedule2 },
                 Speciality = "Chirurg de Ochi",
             };
 
@@ -108,6 +102,37 @@ namespace MyDoctor.Bussiness.Data
                 WorkingDays = new List<Schedule> { schedule1, schedule2 },
                 Speciality = "Chirurg de Mana",
             };
+
+            var prescription1 = new Prescription
+            {
+                Id = 1,
+                Name = "Reteta 1",
+                Doctor = doctor1,
+                Drugs = drugs
+            };
+
+            var prescription2 = new Prescription
+            {
+                Id = 2,
+                Name = "Reteta 2",
+                Doctor = doctor2,
+                Drugs = drugs
+            };
+
+            List<Prescription> prescriptions = new List<Prescription> { prescription1, prescription2 };
+
+            var history1 = new MedicalHistory
+            {
+                Id = 1,
+                Prescriptions = prescriptions
+            };
+
+            var history2 = new MedicalHistory
+            {
+                Id = 2,
+                Prescriptions = prescriptions
+            };
+
             patient1.MedicalHistory = history1;
             patient2.MedicalHistory = history2;
 
@@ -115,7 +140,7 @@ namespace MyDoctor.Bussiness.Data
             {
                 Id = 1,
                 Name = "Toma Ciorba",
-                Doctors = new List<Doctor> { doctor1, doctor2},
+                Doctors = new List<Doctor> { doctor1, doctor2 },
                 Address = "Ion Cozma 35"
             };
 
@@ -127,7 +152,7 @@ namespace MyDoctor.Bussiness.Data
                 Address = "Ion Ciurca 32"
             };
             doctor1.Hospitals = new List<Hospital> { hospital1, hospital2 };
-            doctor2.Hospitals = new List<Hospital> { hospital1};
+            doctor2.Hospitals = new List<Hospital> { hospital1 };
 
             var appointment1 = new Appointment
             {
@@ -152,25 +177,24 @@ namespace MyDoctor.Bussiness.Data
             };
 
             modelBuilder
-                .Entity<Patient>()
-                .HasData(new List<Patient> { patient1, patient2 });
-            modelBuilder
                 .Entity<Drug>()
                 .HasData(new List<Drug> { drug1, drug2 });
-            modelBuilder
-                .Entity<MedicalHistory>()
-                .HasData(new List<MedicalHistory> { history1, history2 });
-            modelBuilder
-                .Entity<Doctor>()
-                .HasData(new List<Doctor> { doctor1, doctor2 });
-            modelBuilder
-                .Entity<Hospital>()
-                .HasData(new List<Hospital> { hospital1, hospital2 });
-            modelBuilder
-                .Entity<Appointment>()
-                .HasData(new List<Appointment> { appointment1, appointment2 });
+            //modelBuilder
+            //    .Entity<Patient>()
+            //    .HasData(new List<Patient> { patient1, patient2 });
+            //modelBuilder
+            //    .Entity<MedicalHistory>()
+            //    .HasData(new List<MedicalHistory> { history1, history2 });
+            //modelBuilder
+            //    .Entity<Doctor>()
+            //    .HasData(new List<Doctor> { doctor1, doctor2 });
+            //modelBuilder
+            //    .Entity<Hospital>()
+            //    .HasData(new List<Hospital> { hospital1, hospital2 });
+            //modelBuilder
+            //    .Entity<Appointment>()
+            //    .HasData(new List<Appointment> { appointment1, appointment2 });
 
         }
-
     }
 }
