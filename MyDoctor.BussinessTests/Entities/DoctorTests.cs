@@ -1,10 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MyDoctor.Bussiness.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MyDoctor.Domain.Models;
 
 namespace MyDoctor.Bussiness.Entities.Tests
 {
@@ -16,10 +11,8 @@ namespace MyDoctor.Bussiness.Entities.Tests
         {
 
             //arrange
-            Doctor doctor = new Doctor();
-            doctor.FirstName = "Will";
-            doctor.LastName = "Smith";
-            string expected = "Will, Smith";
+            Doctor doctor = new Doctor("troller@gmail.com", "064845", "Ion","Puscasu","Chirurg");
+            string expected = "Ion, Puscasu";
             //act
             string actual = doctor.FullName;
             Assert.AreEqual(expected, actual);
