@@ -12,8 +12,7 @@ namespace MyDoctor.Domain.Models
         public Guid Id { get; private set; }
         public string Adress { get; private set; }
         public List<Doctor> Doctors { get; private set; } = new List<Doctor>();
-        public virtual DrugStock DrugStock { get; private set; }
-        public Guid DrugStockId { get; private set; }
+        public DrugStock DrugStock { get; private set; }
 
         public Result RegisterDoctors(List<Doctor> doctors) 
         {
@@ -33,7 +32,6 @@ namespace MyDoctor.Domain.Models
         
         public void RegisterDrugStock(DrugStock drugStock) 
         {
-            this.DrugStockId = drugStock.Id;
             this.DrugStock = drugStock;
         }
     }

@@ -13,13 +13,10 @@
         public Guid PatientId { get; private set; }
         public virtual Doctor Doctor { get; private set; }
         public Guid DoctorId { get; private set; }
-        public virtual AppointmentInterval AppointmentInterval { get; private set; }
-        public Guid AppointmentIntervalId { get; private set; }
+        public AppointmentInterval AppointmentInterval { get; private set; }
         public double Price { get; private set; }
-        public virtual Prescription Prescription { get; private set; }
-        public Guid? PrescriptionId { get; private set; }
-        public virtual Bill Bill { get; private set; }
-        public Guid BillId { get; private set; }
+        public Prescription Prescription { get; private set; }
+        public Bill Bill { get; private set; }
 
         public void AttachPatient(Patient patient) {
             this.PatientId = patient.Id;
@@ -31,19 +28,16 @@
         }
         public void RegisterPrescription(Prescription prescription) 
         {
-            this.PrescriptionId = prescription.Id;
             prescription.AttachAppointment(this);
             this.Prescription = prescription;
         }
         public void RegisterBill(Bill bill) 
         {
-            this.BillId = bill.Id; 
             bill.AttachAppointment(this);
             this.Bill = bill;
         }
         public void RegisterAppointmentInterval (AppointmentInterval appointmentInterval) 
         { 
-            this.AppointmentIntervalId = appointmentInterval.Id; 
             appointmentInterval.AttachAppointment(this);
             this.AppointmentInterval = appointmentInterval;
         }

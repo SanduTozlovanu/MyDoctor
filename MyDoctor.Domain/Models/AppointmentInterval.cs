@@ -12,6 +12,7 @@ namespace MyDoctor
             this.EndTime = endTime;
         }
         public Guid Id { get; private set; }
+        public Appointment Appointment { get; private set; }
         public Guid? AppointmentId { get; private set; }
         public Guid DoctorId { get; private set; }
         public DateOnly Date { get; private set; }
@@ -21,6 +22,7 @@ namespace MyDoctor
         public void AttachAppointment(Appointment appointment)
         {
             this.AppointmentId = appointment.Id;
+            this.Appointment = appointment;
         }
         public void AttachDoctor(Doctor doctor)
         {

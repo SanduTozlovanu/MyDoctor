@@ -15,12 +15,13 @@ namespace MyDoctor.Domain.Models
         public string Description { get; private set; }
         public List<Drug>? Drugs { get; private set; } = new List<Drug>();
         public List<Procedure>? Procedures { get; private set; } = new List<Procedure>();
-        public virtual HospitalAdmissionFile HospitalAdmissionFile { get; private set; }
-        public Guid? HospitalAdmissionFileId { get; private set; }
+        public HospitalAdmissionFile HospitalAdmissionFile { get; private set; }
+        public Appointment Appointment { get; private set; }
         public Guid AppointmentId { get; private set; }
         public void AttachAppointment(Appointment appointment)
         {
             this.AppointmentId = appointment.Id;
+            this.Appointment = appointment;
         }
         public Result RegisterProcedures(List<Procedure> procedures) 
         {
@@ -58,7 +59,6 @@ namespace MyDoctor.Domain.Models
 
         public void RegisterHospitalAdmissionFile(HospitalAdmissionFile hospitalAdmissionFile) 
         {
-            this.HospitalAdmissionFileId = hospitalAdmissionFile.Id;
             hospitalAdmissionFile.AttachPrescription(this);
             this.HospitalAdmissionFile = hospitalAdmissionFile;
         }
