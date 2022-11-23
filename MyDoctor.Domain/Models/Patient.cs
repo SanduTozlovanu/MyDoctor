@@ -21,22 +21,18 @@ namespace MyDoctor.Domain.Models
         public string LastName { get; private set; }
         public uint Age { get; private set; }
         public List<Appointment> Appointments { get; private set; } = new List<Appointment>();
+        public virtual MedicalHistory MedicalHistory { get; private set; }
         public Guid MedicalHistoryId { get; private set; }
         public string GetFullName()
         {
-            return FullName;
+            return FirstName + SEPARATOR + LastName;
         }
-        public string FullName
-        {
-            get
-            {
-                return FirstName + SEPARATOR + LastName;
-            }
-        }
+
         public void RegisterMedicalHistory(MedicalHistory medicalHistory) 
         {
             this.MedicalHistoryId = medicalHistory.Id;
             medicalHistory.AttachPatient(this);
+            this.MedicalHistory = medicalHistory;
         }
         public Result RegisterAppointment(List<Appointment> appointments)
         {

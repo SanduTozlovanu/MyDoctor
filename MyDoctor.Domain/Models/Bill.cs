@@ -7,11 +7,24 @@
             this.Id = Guid.NewGuid();
         }
         public Guid Id { get; private set; }
-        public Guid ApointmentId { get; private set; }
-        public double BillPrice { get;}
+        public Guid AppointmentId { get; private set; }
+        public double BillPrice { get; private set; }
 
-        public void AttachAppointment(Appointment appointment) { this.ApointmentId = appointment.Id; }
+        public void AttachAppointment(Appointment appointment) {
+            this.AppointmentId = appointment.Id;
+        }
 
+        public void CalculateBillPrice(Appointment appointment)
+        {
+            double totalPrice = 0;
+            totalPrice += appointment.Price;
 
+            foreach (Drug drug in appointment.Prescription.Drugs)
+            {
+                totalPrice += (drug.Price * drug.Quantity);
+            }
+
+            this.BillPrice = totalPrice;
+        }
     }
 }

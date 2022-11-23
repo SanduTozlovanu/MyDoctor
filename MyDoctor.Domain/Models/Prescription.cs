@@ -15,6 +15,7 @@ namespace MyDoctor.Domain.Models
         public string Description { get; private set; }
         public List<Drug>? Drugs { get; private set; } = new List<Drug>();
         public List<Procedure>? Procedures { get; private set; } = new List<Procedure>();
+        public virtual HospitalAdmissionFile HospitalAdmissionFile { get; private set; }
         public Guid? HospitalAdmissionFileId { get; private set; }
         public Guid AppointmentId { get; private set; }
         public void AttachAppointment(Appointment appointment)
@@ -59,6 +60,7 @@ namespace MyDoctor.Domain.Models
         {
             this.HospitalAdmissionFileId = hospitalAdmissionFile.Id;
             hospitalAdmissionFile.AttachPrescription(this);
+            this.HospitalAdmissionFile = hospitalAdmissionFile;
         }
     }
 }

@@ -12,5 +12,16 @@ namespace MyDoctor.API.Controllers
         private readonly IRepository<AppointmentInterval> appointmentIntervalRepository;
         private readonly IRepository<Appointment> appointmentRepository;
         private readonly IRepository<Doctor> doctorRepository;
+
+        public AppointmentIntervalController(IRepository<AppointmentInterval> appointmentIntervalRepository)
+        {
+            this.appointmentIntervalRepository = appointmentIntervalRepository;
+        }
+
+        [HttpGet]
+        public IActionResult Get()
+        {
+            return Ok(appointmentIntervalRepository.All());
+        }
     }
 }

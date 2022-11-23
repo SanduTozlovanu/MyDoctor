@@ -16,6 +16,7 @@ namespace MyDoctor.Domain.Models
         }
         private const string SEPARATOR = ", ";
         public Guid Id { get; private set; }
+        public virtual MedicalRoom MedicalRoom { get; private set; }
         public Guid MedicalRoomId { get; private set; }
         public string Mail { get; private set; }
         public string Password { get; private set; }
@@ -27,18 +28,13 @@ namespace MyDoctor.Domain.Models
 
         public string GetFullName()
         {
-            return FullName;
+            return FirstName + SEPARATOR + LastName;
         }
-        public string FullName
-        {
-            get
-            {
-                return FirstName + SEPARATOR + LastName;
-            }
-        }
+
         public void AttachMedicalRoom(MedicalRoom medicalRoom)
         {
             this.MedicalRoomId = medicalRoom.Id;
+            this.MedicalRoom = medicalRoom;
         }
 
         public Result RegisterAppointment(List<Appointment> appointments)

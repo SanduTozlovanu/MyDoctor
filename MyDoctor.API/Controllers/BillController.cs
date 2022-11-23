@@ -11,5 +11,16 @@ namespace MyDoctor.API.Controllers
     {
         private readonly IRepository<Bill> billRepository;
         private readonly IRepository<Appointment> appointmentRepository;
+
+        public BillController(IRepository<Bill> billRepository)
+        {
+            this.billRepository = billRepository;
+        }
+
+        [HttpGet]
+        public IActionResult Get()
+        {
+            return Ok(billRepository.All());
+        }
     }
 }

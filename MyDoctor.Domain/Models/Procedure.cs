@@ -10,6 +10,7 @@
             this.Price = price;
         }
         public Guid Id { get; private set; }
+        public virtual Prescription Prescription { get; private set; }
         public Guid PrescriptionId { get; private set; }
         public string Name { get; private set; }
         public string Description { get; private set; }
@@ -18,6 +19,7 @@
         public void AttachPrescription(Prescription prescription) 
         {
             this.PrescriptionId= prescription.Id;
+            this.Prescription = prescription;
         }
 
     }

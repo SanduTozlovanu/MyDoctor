@@ -12,15 +12,17 @@
         public Guid PrescriptionId { get; private set; }
         public string Name { get; private set; }
         public string Description { get; private set; }
+        public virtual Hospital Hospital { get; private set; }
         public Guid HospitalId { get; private set; }
 
         public void AttachPrescription(Prescription prescription)
         {
-            this.PrescriptionId= prescription.Id;
+            this.PrescriptionId = prescription.Id;
         }
         public void AttachHospital(Hospital hospital) 
         {
-            this.HospitalId= hospital.Id;
+            this.HospitalId = hospital.Id;
+            this.Hospital = hospital;
         }
 
     }
