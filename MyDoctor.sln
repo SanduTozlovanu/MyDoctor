@@ -7,13 +7,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyDoctor.BussinessTests", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{CC4CBAD5-AC6D-43F8-AA3A-2D13474BB6FB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyDoctorApp.Domain", "MyDoctor.Domain\MyDoctorApp.Domain.csproj", "{F1E1E5BB-8CB4-41B7-8D5E-A36AF64AAECF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyDoctorApp.Domain", "MyDoctor.Domain\MyDoctorApp.Domain.csproj", "{F1E1E5BB-8CB4-41B7-8D5E-A36AF64AAECF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{69B88037-D147-4010-B852-2F304911A44B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebUI", "WebUI", "{364F2841-DFED-4196-901E-7E12A165F86C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyDoctorApp.Infrastructure", "MyDoctor.Infrastructure\MyDoctorApp.Infrastructure.csproj", "{93977A4B-A39A-4AAC-9A1B-6EB19BF6E811}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyDoctorApp.Infrastructure", "MyDoctor.Infrastructure\MyDoctorApp.Infrastructure.csproj", "{93977A4B-A39A-4AAC-9A1B-6EB19BF6E811}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyDoctor.API", "MyDoctor.API\MyDoctor.API.csproj", "{22288A7E-347C-4063-A82E-B95046EC3FFC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{93977A4B-A39A-4AAC-9A1B-6EB19BF6E811}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{93977A4B-A39A-4AAC-9A1B-6EB19BF6E811}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{93977A4B-A39A-4AAC-9A1B-6EB19BF6E811}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22288A7E-347C-4063-A82E-B95046EC3FFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22288A7E-347C-4063-A82E-B95046EC3FFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22288A7E-347C-4063-A82E-B95046EC3FFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22288A7E-347C-4063-A82E-B95046EC3FFC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -40,6 +46,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{F1E1E5BB-8CB4-41B7-8D5E-A36AF64AAECF} = {CC4CBAD5-AC6D-43F8-AA3A-2D13474BB6FB}
 		{93977A4B-A39A-4AAC-9A1B-6EB19BF6E811} = {69B88037-D147-4010-B852-2F304911A44B}
+		{22288A7E-347C-4063-A82E-B95046EC3FFC} = {364F2841-DFED-4196-901E-7E12A165F86C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8E89F985-8269-49B8-9DFD-E2DA19D14386}
