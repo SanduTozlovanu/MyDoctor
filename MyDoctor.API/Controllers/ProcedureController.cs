@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MyDoctor.API.DTOs;
 using MyDoctor.Domain.Models;
 using MyDoctorApp.Infrastructure.Generics;
 using MyDoctorApp.Infrastructure.Generics.GenericRepositories;
@@ -21,5 +22,15 @@ namespace MyDoctor.API.Controllers
         {
             return Ok(procedureRepository.All());
         }
+
+        [HttpPost]
+        public IActionResult Create([FromBody] CreateProcedureDto dto)
+        {
+            var procedure = new Procedure(dto.Name, dto.Description, dto.Price);
+            procedureRepository.Add(procedure);
+            procedureRepository.SaveChanges();
+            return Created(nameof(Get), procedure);
+        }
+
     }
 }
