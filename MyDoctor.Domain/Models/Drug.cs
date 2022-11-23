@@ -13,6 +13,7 @@ namespace MyDoctor.Domain.Models
             this.Quantity = quantity;
         }
         public Guid Id { get; private set; }
+        public DrugStock DrugStock { get; private set; }
         public Guid DrugStockId { get; private set; }
         public string Name { get; private set; }
         public string Description { get; private set; }
@@ -22,6 +23,7 @@ namespace MyDoctor.Domain.Models
         public void AttachDrugStock(DrugStock drugStock)
         {
             this.DrugStockId = drugStock.Id;
+            this.DrugStock = drugStock;
         }
 
         public Result ConsumeDrug()

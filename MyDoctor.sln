@@ -19,6 +19,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{C3577B02
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyDoctor.Tests", "MyDoctor.Tests\MyDoctor.Tests.csproj", "{96517B29-7C1F-4E5A-B22F-E26ACD1E0EF2}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IntegTests", "IntegTests", "{9D3F4B45-2B87-4ADC-84A6-8C9AE924198A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestProject1", "TestProject1\TestProject1.csproj", "{87D824AA-C168-4580-8D62-961FCEC3FD38}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +45,10 @@ Global
 		{96517B29-7C1F-4E5A-B22F-E26ACD1E0EF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{96517B29-7C1F-4E5A-B22F-E26ACD1E0EF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{96517B29-7C1F-4E5A-B22F-E26ACD1E0EF2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87D824AA-C168-4580-8D62-961FCEC3FD38}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87D824AA-C168-4580-8D62-961FCEC3FD38}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87D824AA-C168-4580-8D62-961FCEC3FD38}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87D824AA-C168-4580-8D62-961FCEC3FD38}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -50,6 +58,7 @@ Global
 		{93977A4B-A39A-4AAC-9A1B-6EB19BF6E811} = {69B88037-D147-4010-B852-2F304911A44B}
 		{22288A7E-347C-4063-A82E-B95046EC3FFC} = {364F2841-DFED-4196-901E-7E12A165F86C}
 		{96517B29-7C1F-4E5A-B22F-E26ACD1E0EF2} = {C3577B02-1271-4B18-94C0-05663BE16B3B}
+		{87D824AA-C168-4580-8D62-961FCEC3FD38} = {9D3F4B45-2B87-4ADC-84A6-8C9AE924198A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8E89F985-8269-49B8-9DFD-E2DA19D14386}
