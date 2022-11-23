@@ -7,7 +7,7 @@
             this.Id = Guid.NewGuid();
             this.Price = price;
         }
-        public Guid Id { get; private set; }
+        public Guid Id { get; private set; } 
 
         public virtual Patient Patient { get; private set; }
         public Guid PatientId { get; private set; }
