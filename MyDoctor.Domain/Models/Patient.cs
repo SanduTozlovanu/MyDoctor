@@ -29,7 +29,7 @@ namespace MyDoctor.Domain.Models
 
         public void RegisterMedicalHistory(MedicalHistory medicalHistory) 
         {
-            medicalHistory.AttachPatient(this);
+            medicalHistory.AttachToPatient(this);
             this.MedicalHistory = medicalHistory;
         }
         public Result RegisterAppointment(List<Appointment> appointments)
@@ -41,7 +41,7 @@ namespace MyDoctor.Domain.Models
 
             foreach (Appointment appointment in appointments)
             {
-                appointment.AttachPatient(this);
+                appointment.AttachToPatient(this);
                 this.Appointments.Add(appointment);
             }
 

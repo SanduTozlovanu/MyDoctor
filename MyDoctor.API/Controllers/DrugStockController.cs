@@ -24,16 +24,5 @@ namespace MyDoctor.API.Controllers
         {
             return Ok(drugStockRepository.All());
         }
-
-        [HttpPost]
-        public IActionResult Create([FromBody] List<CreateDrugDto> dtos)
-        {
-            var drugStock = new DrugStock();
-            List<Drug> drugs = dtos.Select(d => new Drug(d.Name, d.Description, d.Price, d.Quantity)).ToList();
-            drugStock.RegisterDrugsToDrugStock(drugs);
-            drugs.ForEach(q => drugRepository.Add(q));
-            drugRepository.SaveChanges();
-            return NoContent();
-        }
     }
 }

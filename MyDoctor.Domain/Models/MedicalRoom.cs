@@ -23,7 +23,7 @@ namespace MyDoctor.Domain.Models
 
             foreach (Doctor doctor in doctors)
             {
-                doctor.AttachMedicalRoom(this);
+                doctor.AttachToMedicalRoom(this);
                 this.Doctors.Add(doctor);
             }
 
@@ -32,7 +32,9 @@ namespace MyDoctor.Domain.Models
         
         public void RegisterDrugStock(DrugStock drugStock) 
         {
+            drugStock.AttachToMedicalRoom(this);
             this.DrugStock = drugStock;
+            
         }
     }
 }

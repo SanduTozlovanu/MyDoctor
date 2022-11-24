@@ -50,7 +50,6 @@ namespace MyDoctor.Domain.Models
 
             foreach (Drug drug in drugs)
             {
-                drug.ConsumeDrug();
                 this.Drugs.Add(drug);
             }
 

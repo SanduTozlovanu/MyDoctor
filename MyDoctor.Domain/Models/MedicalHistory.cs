@@ -29,7 +29,7 @@ namespace MyDoctor.Domain.Models
 
             return Result.Success();
         }
-        public void AttachPatient(Patient patient)
+        public void AttachToPatient(Patient patient)
         {
             this.PatientId = patient.Id;
             this.Patient = patient;

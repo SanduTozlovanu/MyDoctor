@@ -20,7 +20,7 @@ namespace MyDoctor.Domain.Models
         public double Price { get; private set; }
         public uint Quantity { get; private set; }
 
-        public void AttachDrugStock(DrugStock drugStock)
+        public void AttachToDrugStock(DrugStock drugStock)
         {
             this.DrugStockId = drugStock.Id;
             this.DrugStock = drugStock;

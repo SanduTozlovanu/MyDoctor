@@ -12,10 +12,13 @@ namespace MyDoctor.API.Controllers
     public class DrugController : ControllerBase
     {
         private readonly IRepository<Drug> drugRepository;
+        private readonly IRepository<DrugStock> drugStockRepository;
 
-        public DrugController(IRepository<Drug> drugRepository)
+        public DrugController(IRepository<Drug> drugRepository,
+            IRepository<DrugStock> drugStockRepository)
         {
             this.drugRepository = drugRepository;
+            this.drugStockRepository = drugStockRepository;
         }
 
         [HttpGet]
@@ -25,12 +28,22 @@ namespace MyDoctor.API.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody] CreateDrugDto dto)
+        public IActionResult Create(Guid drugStockId, [FromBody] CreateDrugDto dto)
         {
+            var drugStock = drugStockRepository.Get(drugStockId);
+            if (drugStock == null)
+            {
+                return NotFound();
+            }
+
             var drug = new Drug(dto.Name, dto.Description, dto.Price, dto.Quantity);
+            drugStock.RegisterDrugsToDrugStock(new List<Drug> { drug });
+
             drugRepository.Add(drug);
             drugRepository.SaveChanges();
-            return Created(nameof(Get), drug);
+            drugStockRepository.SaveChanges();
+
+            return NoContent();
         }
     }
 }

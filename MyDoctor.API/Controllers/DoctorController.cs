@@ -27,12 +27,22 @@ namespace MyDoctor.API.Controllers
             return Ok(doctorRepository.All());
         }
         [HttpPost]
-        public IActionResult Create([FromBody] CreateDoctorDto dto)
+        public IActionResult Create(Guid medicalRoomId, [FromBody] CreateDoctorDto dto)
         {
+            var medicalRoom = medicalRoomRepository.Get(medicalRoomId);
+            if (medicalRoom == null)
+            {
+                return NotFound();
+            }
+
             var doctor = new Doctor(dto.FirstName, dto.LastName, dto.Speciality, dto.Mail, dto.Password);
+            medicalRoom.RegisterDoctors(new List<Doctor> { doctor });
+
             doctorRepository.Add(doctor);
             doctorRepository.SaveChanges();
-            return Created(nameof(Get), doctor);
+            medicalRoomRepository.SaveChanges();
+
+            return NoContent();
         }
     }
 }

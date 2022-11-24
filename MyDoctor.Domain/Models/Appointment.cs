@@ -18,11 +18,11 @@
         public Prescription Prescription { get; private set; }
         public Bill Bill { get; private set; }
 
-        public void AttachPatient(Patient patient) {
+        public void AttachToPatient(Patient patient) {
             this.PatientId = patient.Id;
-            this.Patient= patient;
+            this.Patient = patient;
         }
-        public void AttachDoctor(Doctor doctor) {
+        public void AttachToDoctor(Doctor doctor) {
             this.DoctorId = doctor.Id;
             this.Doctor = doctor;
         }
@@ -38,7 +38,7 @@
         }
         public void RegisterAppointmentInterval (AppointmentInterval appointmentInterval) 
         { 
-            appointmentInterval.AttachAppointment(this);
+            appointmentInterval.AttachToAppointment(this);
             this.AppointmentInterval = appointmentInterval;
         }
 

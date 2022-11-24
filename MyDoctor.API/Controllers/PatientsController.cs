@@ -20,6 +20,21 @@ namespace MyDoctor.API.Controllers
             this.medicalHistoryRepository = medicalHistoryRepository;
         }
 
+        [HttpGet]
+        public IActionResult Get()
+        {
+            return Ok(patientsRepository.All());
+        }
+
+        [HttpPost]
+        public IActionResult Create([FromBody] CreatePatientDto dto)
+        {
+            var patient = new Patient(dto.Email, dto.Password, dto.FirstName, dto.LastName, dto.Age);
+            patientsRepository.Add(patient);
+            patientsRepository.SaveChanges();
+            return Created(nameof(Get), patient);
+        }
+
         [HttpPost("{patientId:guid}/{medicalHistoryId:guid}")]
         public IActionResult RegisterMedicalHistory(Guid patientId, Guid medicalHistoryId)
         {
@@ -38,21 +53,6 @@ namespace MyDoctor.API.Controllers
             patientsRepository.SaveChanges();
 
             return NoContent();
-        }
-
-        [HttpPost]
-        public IActionResult Create([FromBody] CreatePatientDto dto)
-        {
-            var patient = new Patient(dto.Email, dto.Password, dto.FirstName, dto.LastName, dto.Age);
-            patientsRepository.Add(patient);
-            patientsRepository.SaveChanges();
-            return Created(nameof(Get), patient);
-        }
-
-        [HttpGet]
-        public IActionResult Get()
-        {
-            return Ok(patientsRepository.All());
         }
     }
 }

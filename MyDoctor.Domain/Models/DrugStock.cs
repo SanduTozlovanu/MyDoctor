@@ -23,14 +23,14 @@ namespace MyDoctor.Domain.Models
 
             foreach (Drug drug in drugs)
             {
-                drug.AttachDrugStock(this);
+                drug.AttachToDrugStock(this);
                 Drugs.Add(drug);
             }
 
             return Result.Success();
         }
 
-        public void AttachMedicalRoom(MedicalRoom medicalRoom) 
+        public void AttachToMedicalRoom(MedicalRoom medicalRoom) 
         {
             this.MedicalRoomId = medicalRoom.Id;
             this.MedicalRoom = medicalRoom;

@@ -27,33 +27,42 @@ namespace MyDoctor.API.Controllers
         {
             return Ok(medicalRoomRepository.All());
         }
+
         [HttpPost]
         public IActionResult Create([FromBody] CreateMedicalRoomDto dto)
         {
             var medicalRoom = new MedicalRoom(dto.Adress);
-            medicalRoomRepository.Add(medicalRoom);
-            medicalRoomRepository.SaveChanges();
-            return Created(nameof(Get), medicalRoom);
-        }
-        [HttpPost("{medicalRoomId:guid}/{drugStockId:guid}")]
-        public IActionResult RegisterDrugstock(Guid medicalRoomId, Guid drugStockId)
-        {
-            var medicalRoom = medicalRoomRepository.Get(medicalRoomId);
-            if (medicalRoom == null)
-            {
-                return NotFound();
-            }
-            var drugStock = drugStockRepository.Get(drugStockId);
-            if (drugStock == null)
-            {
-                return NotFound();
-            }
+            var drugStock = new DrugStock();
             medicalRoom.RegisterDrugStock(drugStock);
-            drugStock.AttachMedicalRoom(medicalRoom);
-            drugStockRepository.SaveChanges();
+
+            medicalRoomRepository.Add(medicalRoom);
+            drugStockRepository.Add(drugStock);
+
             medicalRoomRepository.SaveChanges();
+            drugStockRepository.SaveChanges();
+
             return NoContent();
         }
+
+        //[HttpPost("{medicalRoomId:guid}/{drugStockId:guid}")]
+        //public IActionResult RegisterDrugstock(Guid medicalRoomId, Guid drugStockId)
+        //{
+        //    var medicalRoom = medicalRoomRepository.Get(medicalRoomId);
+        //    if (medicalRoom == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    var drugStock = drugStockRepository.Get(drugStockId);
+        //    if (drugStock == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    medicalRoom.RegisterDrugStock(drugStock);
+        //    drugStock.AttachMedicalRoom(medicalRoom);
+        //    drugStockRepository.SaveChanges();
+        //    medicalRoomRepository.SaveChanges();
+        //    return NoContent();
+        //}
         [HttpPost("{medicalRoomId:guid}/doctors")]
         public IActionResult RegisterDoctors(Guid medicalRoomId, [FromBody] List<Guid> doctorsIds)
         {
@@ -62,20 +71,22 @@ namespace MyDoctor.API.Controllers
             {
                 return NotFound();
             }
-            List<Doctor> doctors= new List<Doctor>();
+
+            List<Doctor> doctors = new List<Doctor>();
             for(int i=0; i < doctorsIds.Count; i++)
             {
                 var doctor = doctorRepository.Get(doctorsIds[i]);
-                if (medicalRoom == null)
+                if (doctor == null)
                 {
                     return NotFound();
                 }
                 doctors.Add(doctor);
-                doctor.AttachMedicalRoom(medicalRoom);
             }
             medicalRoom.RegisterDoctors(doctors);
+
             doctorRepository.SaveChanges();
             medicalRoomRepository.SaveChanges();
+
             return NoContent();
         }
     }

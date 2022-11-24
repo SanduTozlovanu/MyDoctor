@@ -31,7 +31,7 @@ namespace MyDoctor.Domain.Models
             return FirstName + SEPARATOR + LastName;
         }
 
-        public void AttachMedicalRoom(MedicalRoom medicalRoom)
+        public void AttachToMedicalRoom(MedicalRoom medicalRoom)
         {
             this.MedicalRoomId = medicalRoom.Id;
             this.MedicalRoom = medicalRoom;
@@ -46,26 +46,26 @@ namespace MyDoctor.Domain.Models
 
             foreach (Appointment appointment in appointments)
             {
-                appointment.AttachDoctor(this);
+                appointment.AttachToDoctor(this);
                 this.Appointments.Add(appointment);
             }
 
             return Result.Success();
         }
-        public Result RegisterAppointmentIntervals(List<AppointmentInterval> appointmentIntervals)
-        {
-            if (!appointmentIntervals.Any())
-            {
-                return Result.Failure("Add at least one appointment to the current Doctor");
-            }
+        //public Result RegisterAppointmentIntervals(List<AppointmentInterval> appointmentIntervals)
+        //{
+        //    if (!appointmentIntervals.Any())
+        //    {
+        //        return Result.Failure("Add at least one appointment to the current Doctor");
+        //    }
 
-            foreach (AppointmentInterval appointmentInterval in appointmentIntervals)
-            {
-                appointmentInterval.AttachDoctor(this);
-                this.AppointmentIntervals.Add(appointmentInterval);
-            }
+        //    foreach (AppointmentInterval appointmentInterval in appointmentIntervals)
+        //    {
+        //        appointmentInterval.AttachDoctor(this);
+        //        this.AppointmentIntervals.Add(appointmentInterval);
+        //    }
 
-            return Result.Success();
-        }
+        //    return Result.Success();
+        //}
     }
 }
