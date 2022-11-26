@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MyDoctor.API.DTOs;
 using MyDoctor.Domain.Models;
 using MyDoctorApp.Infrastructure.Generics;
+using MyDoctorApp.Infrastructure.Generics.GenericRepositories;
 
 namespace MyDoctor.API.Controllers
 {
@@ -10,7 +12,6 @@ namespace MyDoctor.API.Controllers
     public class BillController : ControllerBase
     {
         private readonly IRepository<Bill> billRepository;
-        private readonly IRepository<Appointment> appointmentRepository;
 
         public BillController(IRepository<Bill> billRepository)
         {
@@ -23,4 +24,6 @@ namespace MyDoctor.API.Controllers
             return Ok(billRepository.All());
         }
     }
+
+
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MyDoctor.API.Dtos;
 using MyDoctor.API.DTOs;
 using MyDoctor.Domain.Models;
 using MyDoctorApp.Infrastructure.Generics;
@@ -12,9 +13,13 @@ namespace MyDoctor.API.Controllers
     public class ProcedureController : ControllerBase
     {
         private readonly IRepository<Procedure> procedureRepository;
-        public ProcedureController(IRepository<Procedure> procedureRepository)
+        private readonly IRepository<Prescription> prescriptionRepository;
+
+        public ProcedureController(IRepository<Procedure> procedureRepository,
+            IRepository<Prescription> prescriptionRepository)
         {
             this.procedureRepository = procedureRepository;
+            this.prescriptionRepository = prescriptionRepository;
         }
 
         [HttpGet]
@@ -23,13 +28,24 @@ namespace MyDoctor.API.Controllers
             return Ok(procedureRepository.All());
         }
 
-        [HttpPost]
-        public IActionResult Create([FromBody] CreateProcedureDto dto)
+        [HttpPost("{prescriptionId:guid}/create_procedures")]
+        public IActionResult Create(Guid prescriptionId, [FromBody] List<CreateDrugDto> dtos)
         {
-            var procedure = new Procedure(dto.Name, dto.Description, dto.Price);
-            procedureRepository.Add(procedure);
+            var prescription = prescriptionRepository.Get(prescriptionId);
+            if (prescription == null)
+            {
+                return NotFound();
+            }
+
+            List<Procedure> procedures = dtos.Select(dto => new Procedure(dto.Name, dto.Description, dto.Price)).ToList();
+
+            prescription.RegisterProcedures(procedures);
+
+            procedures.ForEach(p => procedureRepository.Add(p));
             procedureRepository.SaveChanges();
-            return Created(nameof(Get), procedure);
+            prescriptionRepository.SaveChanges();
+
+            return Ok();
         }
 
     }

@@ -21,10 +21,14 @@
             double totalPrice = 0;
             totalPrice += appointment.Price;
 
-            foreach (Drug drug in appointment.Prescription.Drugs)
+            if (appointment.Prescription != null)
             {
-                totalPrice += (drug.Price * drug.Quantity);
+                foreach (Drug drug in appointment.Prescription.Drugs)
+                {
+                    totalPrice += (drug.Price * drug.Quantity);
+                }
             }
+
 
             this.BillPrice = totalPrice;
         }

@@ -17,17 +17,18 @@ namespace MyDoctor.API.Controllers
         private readonly IRepository<Bill> billRepository;
         private readonly IRepository<Doctor> doctorRepository;
         private readonly IRepository<Patient> patientsRepository;
-        private readonly IRepository<Prescription> prescriptonRepository;
 
         public AppointmentController(IRepository<Appointment> appointmentRepository,
             IRepository<Patient> patientsRepository,
             IRepository<Doctor> doctorRepository,
-            IRepository<AppointmentInterval> appointmentIntervalRepository)
+            IRepository<AppointmentInterval> appointmentIntervalRepository,
+            IRepository<Bill> billRepository)
         {
             this.appointmentRepository = appointmentRepository;
             this.patientsRepository = patientsRepository;
             this.doctorRepository = doctorRepository;
             this.appointmentIntervalRepository = appointmentIntervalRepository;
+            this.billRepository = billRepository;
         }
 
         [HttpGet]
@@ -36,7 +37,7 @@ namespace MyDoctor.API.Controllers
             return Ok(appointmentRepository.All());
         }
 
-        [HttpPost]
+        [HttpPost("{patientId:guid}_{doctorId:guid}/create_appointment")]
         public IActionResult Create(Guid patientId, Guid doctorId, [FromBody] CreateAppointmentDto dto)
         {
             var patient = patientsRepository.Get(patientId);
@@ -52,19 +53,23 @@ namespace MyDoctor.API.Controllers
                 TimeOnly.FromDateTime(dto.StartTime),
                 TimeOnly.FromDateTime(dto.EndTime)
                 );
+            var bill = new Bill();
 
-            appointment.AttachToPatient(patient);
-            appointment.AttachToDoctor(doctor);
+            patient.RegisterAppointment(appointment);
+            doctor.RegisterAppointment(appointment);
             appointment.RegisterAppointmentInterval(appointmentInterval);
+            appointment.RegisterBill(bill);
 
+            billRepository.Add(bill);
             appointmentRepository.Add(appointment);
             appointmentIntervalRepository.Add(appointmentInterval);
 
+            billRepository.SaveChanges();
             patientsRepository.SaveChanges();
             doctorRepository.SaveChanges();
             appointmentRepository.SaveChanges();
 
-            return NoContent();
+            return Ok();
         }
     }
 

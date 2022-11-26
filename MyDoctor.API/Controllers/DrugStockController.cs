@@ -12,7 +12,6 @@ namespace MyDoctor.API.Controllers
     public class DrugStockController : ControllerBase
     {
         private readonly IRepository<DrugStock> drugStockRepository;
-        private readonly IRepository<Drug> drugRepository;
 
         public DrugStockController(IRepository<DrugStock> drugStockRepository)
         {

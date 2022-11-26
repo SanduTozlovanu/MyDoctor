@@ -13,8 +13,8 @@ namespace MyDoctor.Domain.Models
         public Guid Id { get; private set; }
         public string Name { get; private set; }
         public string Description { get; private set; }
-        public List<Drug>? Drugs { get; private set; } = new List<Drug>();
-        public List<Procedure>? Procedures { get; private set; } = new List<Procedure>();
+        public List<Drug> Drugs { get; private set; } = new List<Drug>();
+        public List<Procedure> Procedures { get; private set; } = new List<Procedure>();
         public HospitalAdmissionFile HospitalAdmissionFile { get; private set; }
         public Appointment Appointment { get; private set; }
         public Guid AppointmentId { get; private set; }
@@ -33,7 +33,7 @@ namespace MyDoctor.Domain.Models
 
             foreach (Procedure procedure in procedures)
             {
-                procedure.AttachPrescription(this);
+                procedure.AttachToPrescription(this);
                 this.Procedures.Add(procedure);
             }
 
@@ -58,7 +58,7 @@ namespace MyDoctor.Domain.Models
 
         public void RegisterHospitalAdmissionFile(HospitalAdmissionFile hospitalAdmissionFile) 
         {
-            hospitalAdmissionFile.AttachPrescription(this);
+            hospitalAdmissionFile.AttachToPrescription(this);
             this.HospitalAdmissionFile = hospitalAdmissionFile;
         }
     }

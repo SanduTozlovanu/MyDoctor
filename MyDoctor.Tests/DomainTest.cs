@@ -34,23 +34,23 @@ namespace MyDoctor.Tests
 
         }
 
-        [TestMethod]
-        public void DrugTest()
-        {
-            Drug drug = new Drug("paracetamol", "standard", 2, 1);
+        //[TestMethod]
+        //public void DrugTest()
+        //{
+        //    Drug drug = new Drug("paracetamol", "standard", 2, 1);
 
-            bool expected = true;
-            bool actual = drug.ConsumeDrug().IsSuccess;
+        //    bool expected = true;
+        //    bool actual = drug.ConsumeDrug().IsSuccess;
 
-            Assert.AreEqual(expected, actual);
+        //    Assert.AreEqual(expected, actual);
 
 
-            expected = true;
-            actual = drug.ConsumeDrug().IsFailure;
+        //    expected = true;
+        //    actual = drug.ConsumeDrug().IsFailure;
 
-            Assert.AreEqual(expected, actual);
+        //    Assert.AreEqual(expected, actual);
 
-        }
+        //}
 
         [TestMethod]
         public void BillingTest()

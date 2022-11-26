@@ -23,8 +23,8 @@ namespace MyDoctor.Domain.Models
         public string Speciality { get; private set; }
         public string FirstName { get; private set; }
         public string LastName { get; private set; }
-        public List<Appointment> Appointments { get; private set; }
-        public List<AppointmentInterval> AppointmentIntervals { get; private set; } = new List<AppointmentInterval>();
+        public List<Appointment> Appointments { get; private set; } = new List<Appointment>();
+        public List<ScheduleInterval> ScheduleIntervals { get; private set; } = new List<ScheduleInterval>();
 
         public string GetFullName()
         {
@@ -37,20 +37,10 @@ namespace MyDoctor.Domain.Models
             this.MedicalRoom = medicalRoom;
         }
 
-        public Result RegisterAppointment(List<Appointment> appointments)
+        public void RegisterAppointment(Appointment appointment)
         {
-            if (!appointments.Any())
-            {
-                return Result.Failure("Add at least one appointment to the current Doctor");
-            }
-
-            foreach (Appointment appointment in appointments)
-            {
-                appointment.AttachToDoctor(this);
-                this.Appointments.Add(appointment);
-            }
-
-            return Result.Success();
+            appointment.AttachToDoctor(this);
+            this.Appointments.Add(appointment);
         }
         //public Result RegisterAppointmentIntervals(List<AppointmentInterval> appointmentIntervals)
         //{

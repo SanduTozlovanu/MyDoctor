@@ -26,13 +26,13 @@ namespace MyDoctor.Domain.Models
             this.DrugStock = drugStock;
         }
 
-        public Result ConsumeDrug()
+        public Result GetDrugs(uint quantity)
         {
-            if (this.Quantity <= 0 )       
+            if ((this.Quantity - quantity) < 0 )       
             {
                 return Result.Failure("You cannot consume more drugs that the stock has.");
             }
-            this.Quantity -= 1;
+            this.Quantity -= quantity;
             return Result.Success();
         }
 

@@ -32,20 +32,10 @@ namespace MyDoctor.Domain.Models
             medicalHistory.AttachToPatient(this);
             this.MedicalHistory = medicalHistory;
         }
-        public Result RegisterAppointment(List<Appointment> appointments)
+        public void RegisterAppointment(Appointment appointment)
         {
-            if (!appointments.Any())
-            {
-                return Result.Failure("Add at least one appointment to the current Doctor");
-            }
-
-            foreach (Appointment appointment in appointments)
-            {
                 appointment.AttachToPatient(this);
                 this.Appointments.Add(appointment);
-            }
-
-            return Result.Success();
         }
 
     }

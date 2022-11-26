@@ -1,4 +1,6 @@
-﻿namespace MyDoctor.Domain.Models
+﻿using MyDoctorApp.Domain.Helpers;
+
+namespace MyDoctor.Domain.Models
 {
     public class Appointment
     {
@@ -30,11 +32,13 @@
         {
             prescription.AttachAppointment(this);
             this.Prescription = prescription;
+            CalculateBillPrice();
         }
         public void RegisterBill(Bill bill) 
         {
             bill.AttachAppointment(this);
             this.Bill = bill;
+            CalculateBillPrice();
         }
         public void RegisterAppointmentInterval (AppointmentInterval appointmentInterval) 
         { 
@@ -42,9 +46,16 @@
             this.AppointmentInterval = appointmentInterval;
         }
 
-        public void CalculateBillPrice()
+        public Result CalculateBillPrice()
         {
+            if (Bill == null)
+            {
+                return Result.Failure("Not enough data to make the billing.");
+            }
+
             this.Bill.CalculateBillPrice(this);
+
+            return Result.Success();
         }
 
     }

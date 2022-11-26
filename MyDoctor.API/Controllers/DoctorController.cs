@@ -42,7 +42,7 @@ namespace MyDoctor.API.Controllers
             doctorRepository.SaveChanges();
             medicalRoomRepository.SaveChanges();
 
-            return NoContent();
+            return Ok();
         }
     }
 }

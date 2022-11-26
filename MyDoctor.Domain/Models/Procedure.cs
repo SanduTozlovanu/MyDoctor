@@ -16,7 +16,7 @@
         public string Description { get; private set; }
         public double Price { get; private set; }
 
-        public void AttachPrescription(Prescription prescription) 
+        public void AttachToPrescription(Prescription prescription) 
         {
             this.PrescriptionId= prescription.Id;
             this.Prescription = prescription;

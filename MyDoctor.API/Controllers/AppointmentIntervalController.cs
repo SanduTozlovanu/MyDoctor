@@ -10,8 +10,6 @@ namespace MyDoctor.API.Controllers
     public class AppointmentIntervalController : ControllerBase
     {
         private readonly IRepository<AppointmentInterval> appointmentIntervalRepository;
-        private readonly IRepository<Appointment> appointmentRepository;
-        private readonly IRepository<Doctor> doctorRepository;
 
         public AppointmentIntervalController(IRepository<AppointmentInterval> appointmentIntervalRepository)
         {

@@ -15,6 +15,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<DatabaseContext>();
 builder.Services.AddScoped<IRepository<Appointment>, AppointmentRepository>();
 builder.Services.AddScoped<IRepository<AppointmentInterval>, AppointmentIntervalRepository>();
+builder.Services.AddScoped<IRepository<ScheduleInterval>, ScheduleIntervalRepository>();
 builder.Services.AddScoped<IRepository<Bill>, BillRepository>();
 builder.Services.AddScoped<IRepository<Doctor>, DoctorRepository>();
 builder.Services.AddScoped<IRepository<Drug>, DrugRepository>();

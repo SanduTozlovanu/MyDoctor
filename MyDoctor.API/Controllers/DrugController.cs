@@ -28,7 +28,7 @@ namespace MyDoctor.API.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(Guid drugStockId, [FromBody] CreateDrugDto dto)
+        public IActionResult Create(Guid drugStockId, [FromBody] List<CreateDrugDto> dtos)
         {
             var drugStock = drugStockRepository.Get(drugStockId);
             if (drugStock == null)
@@ -36,14 +36,15 @@ namespace MyDoctor.API.Controllers
                 return NotFound();
             }
 
-            var drug = new Drug(dto.Name, dto.Description, dto.Price, dto.Quantity);
-            drugStock.RegisterDrugsToDrugStock(new List<Drug> { drug });
+            List<Drug> drugs = dtos.Select(dto => new Drug(dto.Name, dto.Description, dto.Price, dto.Quantity)).ToList();
 
-            drugRepository.Add(drug);
+            drugStock.RegisterDrugsToDrugStock(drugs);
+
+            drugs.ForEach(d => drugRepository.Add(d));
             drugRepository.SaveChanges();
             drugStockRepository.SaveChanges();
 
-            return NoContent();
+            return Ok();
         }
     }
 }

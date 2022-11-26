@@ -30,29 +30,16 @@ namespace MyDoctor.API.Controllers
         public IActionResult Create([FromBody] CreatePatientDto dto)
         {
             var patient = new Patient(dto.Email, dto.Password, dto.FirstName, dto.LastName, dto.Age);
-            patientsRepository.Add(patient);
-            patientsRepository.SaveChanges();
-            return Created(nameof(Get), patient);
-        }
-
-        [HttpPost("{patientId:guid}/{medicalHistoryId:guid}")]
-        public IActionResult RegisterMedicalHistory(Guid patientId, Guid medicalHistoryId)
-        {
-            var patient = patientsRepository.Get(patientId);
-            var medicalHistory = medicalHistoryRepository.Get(medicalHistoryId);
-
-            if (patient == null || medicalHistory == null)
-            {
-                return NotFound();
-            }
+            var medicalHistory = new MedicalHistory();
 
             patient.RegisterMedicalHistory(medicalHistory);
 
+            medicalHistoryRepository.Add(medicalHistory);
+            patientsRepository.Add(patient);
 
             medicalHistoryRepository.SaveChanges();
             patientsRepository.SaveChanges();
-
-            return NoContent();
+            return Created(nameof(Get), patient);
         }
     }
 }
