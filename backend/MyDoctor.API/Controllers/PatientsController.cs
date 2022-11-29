@@ -39,7 +39,7 @@ namespace MyDoctor.API.Controllers
 
             medicalHistoryRepository.SaveChanges();
             patientsRepository.SaveChanges();
-            return Created(nameof(Get), patient);
+            return Ok();
         }
     }
 }
