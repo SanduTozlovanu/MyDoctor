@@ -6,6 +6,16 @@ using MyDoctorApp.Infrastructure.Generics.GenericRepositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(
+        policy =>
+        {
+            policy.WithOrigins("https://localhost:7244",
+                                "http://localhost:3000");
+        });
+});
+
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -39,7 +49,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseCors();
 app.UseAuthorization();
 
 app.MapControllers();
