@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyDoctor.API.Dtos;
+using MyDoctor.API.DTOs;
 using MyDoctor.Domain.Models;
 using MyDoctorApp.Infrastructure.Generics;
 
@@ -22,7 +23,7 @@ namespace MyDoctor.API.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(medicalRoomRepository.All());
+            return Ok(medicalRoomRepository.All().Select(mr => new DisplayMedicalRoomDto(mr.Id, mr.Adress)));
         }
 
         [HttpPost]
@@ -38,7 +39,7 @@ namespace MyDoctor.API.Controllers
             medicalRoomRepository.SaveChanges();
             drugStockRepository.SaveChanges();
 
-            return Ok();
+            return Ok(new { id = medicalRoom.Id });
         }
     }
 }

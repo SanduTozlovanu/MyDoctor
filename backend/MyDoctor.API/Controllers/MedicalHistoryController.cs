@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MyDoctor.API.DTOs;
 using MyDoctor.Domain.Models;
 using MyDoctorApp.Infrastructure.Generics;
 using MyDoctorApp.Infrastructure.Generics.GenericRepositories;
@@ -20,7 +21,7 @@ namespace MyDoctor.API.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(medicalHistoryRepository.All());
+            return Ok(medicalHistoryRepository.All().Select(mh => new DisplayMedicalHistoryDto(mh.Id, mh.PatientId)));
         }
     }
 }

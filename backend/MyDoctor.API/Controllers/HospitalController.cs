@@ -30,7 +30,7 @@ namespace MyDoctor.API.Controllers
             var hospital = new Hospital(dto.Name, dto.Adress);
             hospitalRepository.Add(hospital);
             hospitalRepository.SaveChanges();
-            return Created(nameof(Get), hospital);
+            return Created(nameof(Get), new { id = hospital.Id });
         }
     }
 }

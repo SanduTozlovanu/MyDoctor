@@ -1,9 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using MyDoctor.API.DTOs;
 using MyDoctor.Domain.Models;
 using MyDoctorApp.Infrastructure.Generics;
-using MyDoctorApp.Infrastructure.Generics.GenericRepositories;
 
 namespace MyDoctor.API.Controllers
 {
@@ -23,7 +21,7 @@ namespace MyDoctor.API.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(patientsRepository.All());
+            return Ok(patientsRepository.All().Select(p => new DisplayPatientDto(p.Id, p.FirstName, p.LastName, p.Mail, p.Age)));
         }
 
         [HttpPost]
@@ -39,7 +37,7 @@ namespace MyDoctor.API.Controllers
 
             medicalHistoryRepository.SaveChanges();
             patientsRepository.SaveChanges();
-            return Ok();
+            return Ok(new { id = patient.Id });
         }
     }
 }

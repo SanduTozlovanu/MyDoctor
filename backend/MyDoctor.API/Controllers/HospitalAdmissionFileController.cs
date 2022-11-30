@@ -37,9 +37,13 @@ namespace MyDoctor.API.Controllers
             var prescription = prescriptionRepository.Get(prescriptionId);
             var hospital = hospitalRepository.Get(hospitalId);
 
-            if (prescription == null || hospital == null)
+            if (prescription == null)
             {
-                return NotFound();
+                return NotFound("Could not find a prescription with this Id.");
+            }
+            if (hospital== null) 
+            {
+                return NotFound("Could not find a hospital with this Id.");
             }
 
             HospitalAdmissionFile hospitalAdmissionFile = new HospitalAdmissionFile(dto.Name, dto.Description);
@@ -51,7 +55,7 @@ namespace MyDoctor.API.Controllers
             hospitalAdmissioFileRepository.SaveChanges();
             prescriptionRepository.SaveChanges();
 
-            return Ok();
+            return Ok(new { id = hospitalAdmissionFile.Id });
         }
     }
 }

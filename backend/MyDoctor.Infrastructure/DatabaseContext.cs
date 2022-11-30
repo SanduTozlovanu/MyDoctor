@@ -9,7 +9,7 @@ namespace MyDoctorApp.Infrastructure
         public DbSet<Appointment> Appointments => Set<Appointment>();
         public DbSet<AppointmentInterval> AppointmentIntervals => Set<AppointmentInterval>();
         public DbSet<ScheduleInterval> ScheduleIntervals => Set<ScheduleInterval>();
-        public DbSet<Bill> bills => Set<Bill>();
+        public DbSet<Bill> Bills => Set<Bill>();
         public DbSet<Doctor> Doctors => Set<Doctor>();
         public DbSet<Drug> Drugs => Set<Drug>();
         public DbSet<DrugStock> DrugStocks => Set<DrugStock>();

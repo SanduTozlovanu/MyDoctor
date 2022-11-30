@@ -21,7 +21,7 @@ namespace MyDoctor.API.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(billRepository.All());
+            return Ok(billRepository.All().Select(b => new DisplayBillDto(b.Id, b.AppointmentId, b.BillPrice)));
         }
     }
 

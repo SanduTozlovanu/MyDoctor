@@ -1,0 +1,17 @@
+C:\Users\sandu.tozlovanu\source\repos\MyDoctor\MyDoctor.Infrastructure\bin\Debug\net6.0\MyDoctorApp.Infrastructure.deps.json
+C:\Users\sandu.tozlovanu\source\repos\MyDoctor\MyDoctor.Infrastructure\bin\Debug\net6.0\MyDoctorApp.Infrastructure.runtimeconfig.json
+C:\Users\sandu.tozlovanu\source\repos\MyDoctor\MyDoctor.Infrastructure\bin\Debug\net6.0\MyDoctorApp.Infrastructure.dll
+C:\Users\sandu.tozlovanu\source\repos\MyDoctor\MyDoctor.Infrastructure\bin\Debug\net6.0\MyDoctorApp.Infrastructure.pdb
+C:\Users\sandu.tozlovanu\source\repos\MyDoctor\MyDoctor.Infrastructure\bin\Debug\net6.0\MyDoctorApp.Domain.dll
+C:\Users\sandu.tozlovanu\source\repos\MyDoctor\MyDoctor.Infrastructure\bin\Debug\net6.0\MyDoctorApp.Domain.pdb
+C:\Users\sandu.tozlovanu\source\repos\MyDoctor\MyDoctor.Infrastructure\obj\Debug\net6.0\MyDoctorApp.Infrastructure.csproj.AssemblyReference.cache
+C:\Users\sandu.tozlovanu\source\repos\MyDoctor\MyDoctor.Infrastructure\obj\Debug\net6.0\MyDoctorApp.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\sandu.tozlovanu\source\repos\MyDoctor\MyDoctor.Infrastructure\obj\Debug\net6.0\MyDoctorApp.Infrastructure.AssemblyInfoInputs.cache
+C:\Users\sandu.tozlovanu\source\repos\MyDoctor\MyDoctor.Infrastructure\obj\Debug\net6.0\MyDoctorApp.Infrastructure.AssemblyInfo.cs
+C:\Users\sandu.tozlovanu\source\repos\MyDoctor\MyDoctor.Infrastructure\obj\Debug\net6.0\MyDoctorApp.Infrastructure.csproj.CoreCompileInputs.cache
+C:\Users\sandu.tozlovanu\source\repos\MyDoctor\MyDoctor.Infrastructure\obj\Debug\net6.0\MyDoctorApp.Infrastructure.csproj.CopyComplete
+C:\Users\sandu.tozlovanu\source\repos\MyDoctor\MyDoctor.Infrastructure\obj\Debug\net6.0\MyDoctorApp.Infrastructure.dll
+C:\Users\sandu.tozlovanu\source\repos\MyDoctor\MyDoctor.Infrastructure\obj\Debug\net6.0\refint\MyDoctorApp.Infrastructure.dll
+C:\Users\sandu.tozlovanu\source\repos\MyDoctor\MyDoctor.Infrastructure\obj\Debug\net6.0\MyDoctorApp.Infrastructure.pdb
+C:\Users\sandu.tozlovanu\source\repos\MyDoctor\MyDoctor.Infrastructure\obj\Debug\net6.0\MyDoctorApp.Infrastructure.genruntimeconfig.cache
+C:\Users\sandu.tozlovanu\source\repos\MyDoctor\MyDoctor.Infrastructure\obj\Debug\net6.0\ref\MyDoctorApp.Infrastructure.dll

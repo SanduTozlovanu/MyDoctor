@@ -24,7 +24,7 @@ namespace MyDoctor.API.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(doctorRepository.All());
+            return Ok(doctorRepository.All().Select(d => new DisplayDoctorDto(d.Id, d.MedicalRoomId, d.Mail, d.Speciality, d.FirstName, d.LastName)));
         }
         [HttpPost]
         public IActionResult Create(Guid medicalRoomId, [FromBody] CreateDoctorDto dto)
@@ -32,7 +32,7 @@ namespace MyDoctor.API.Controllers
             var medicalRoom = medicalRoomRepository.Get(medicalRoomId);
             if (medicalRoom == null)
             {
-                return NotFound();
+                return NotFound("Could not find a medicalRoom with this Id.");
             }
 
             var doctor = new Doctor(dto.FirstName, dto.LastName, dto.Speciality, dto.Mail, dto.Password);
@@ -42,7 +42,7 @@ namespace MyDoctor.API.Controllers
             doctorRepository.SaveChanges();
             medicalRoomRepository.SaveChanges();
 
-            return Ok();
+            return Ok(new { id = doctor.Id });
         }
     }
 }

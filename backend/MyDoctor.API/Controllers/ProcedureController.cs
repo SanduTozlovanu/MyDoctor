@@ -34,7 +34,7 @@ namespace MyDoctor.API.Controllers
             var prescription = prescriptionRepository.Get(prescriptionId);
             if (prescription == null)
             {
-                return NotFound();
+                return NotFound("Could not find a prescription with this id.");
             }
 
             List<Procedure> procedures = dtos.Select(dto => new Procedure(dto.Name, dto.Description, dto.Price)).ToList();
@@ -44,8 +44,9 @@ namespace MyDoctor.API.Controllers
             procedures.ForEach(p => procedureRepository.Add(p));
             procedureRepository.SaveChanges();
             prescriptionRepository.SaveChanges();
-
-            return Ok();
+            List<Guid> proceduresIds = new List<Guid>();
+            procedures.ForEach(p => proceduresIds.Add(p.Id));
+            return Ok(new { id = proceduresIds });
         }
 
     }

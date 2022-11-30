@@ -35,14 +35,14 @@ namespace MyDoctor.API.Controllers
         }
 
         [HttpPost("{appointmentId:guid}/create_prescription")]
-        public IActionResult Create(Guid appointmentId, Guid drugStockId, [FromBody] CreatePrescriptionDto dto)
+        public IActionResult Create(Guid appointmentId, [FromBody] CreatePrescriptionDto dto)
         {
 
             var appointment = appointmentRepository.Get(appointmentId);
 
             if (appointment == null)
             {
-                return NotFound();
+                return NotFound("Could not find an appointment with this Id.");
             }
 
             var drugStock = appointment.Doctor.MedicalRoom.DrugStock;
@@ -67,9 +67,13 @@ namespace MyDoctor.API.Controllers
             }
 
 
-            if (drugStock == null || drugNotFound == true)
+            if (drugStock == null)
             {
-                return NotFound();
+                return NotFound("Could not find a drugStock with this Id.");
+            }
+            if (drugNotFound == true)
+            {
+                return NotFound("Could create drugs.");
             }
 
 
@@ -83,7 +87,7 @@ namespace MyDoctor.API.Controllers
 
                 if (drug.GetDrugs(quantityToTake).IsFailure)
                 {
-                    return BadRequest("A incercat sa ia mai mult decat se poate!");
+                    return BadRequest("You tried to take more drugs than it's available.");
                 }
 
                 drugs.Add(drug);
@@ -101,7 +105,7 @@ namespace MyDoctor.API.Controllers
             prescriptonRepository.SaveChanges();
             appointmentRepository.SaveChanges();
 
-            return Ok(prescription);
+            return Ok(new { id = prescription.Id });
         }
     }
 }

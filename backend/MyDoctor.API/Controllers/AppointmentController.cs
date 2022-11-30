@@ -34,7 +34,7 @@ namespace MyDoctor.API.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(appointmentRepository.All());
+            return Ok(appointmentRepository.All().Select(a => new DisplayAppointmentDto(a.Id, a.PatientId, a.DoctorId, a.Price)));
         }
 
         [HttpPost("{patientId:guid}_{doctorId:guid}/create_appointment")]
@@ -42,9 +42,13 @@ namespace MyDoctor.API.Controllers
         {
             var patient = patientsRepository.Get(patientId);
             var doctor = doctorRepository.Get(doctorId);
-            if (patient == null || doctor == null)
+            if (patient == null)
             {
-                return NotFound();
+                return NotFound("Could not find a patient with this Id.");
+            }
+            if (doctor == null)
+            {
+                return NotFound("Could not find a doctor with this Id.");
             }
 
             var appointment = new Appointment(dto.Price);
@@ -69,7 +73,7 @@ namespace MyDoctor.API.Controllers
             doctorRepository.SaveChanges();
             appointmentRepository.SaveChanges();
 
-            return Ok();
+            return Ok(new { id = appointment.Id });
         }
     }
 
