@@ -154,7 +154,11 @@ const RegisterPatient = () => {
     } else {
       setPasswordStrength('Low')
     }
-  }, [password])
+  }, [password]);
+
+  useEffect(() => {
+    setError(null);
+  }, [firstName, lastName, email, password, repeatPassword, age]);
 
   const register = () => {
     if (
