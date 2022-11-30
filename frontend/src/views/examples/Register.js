@@ -131,6 +131,7 @@ const Register = () => {
       }
       const response = await AuthApi.RegisterPatient(credentials)
       console.log(response)
+      localStorage.setItem("user", JSON.stringify(response.data))
       return history.push('/admin/index')
     } catch (err) {
       console.log(err)
@@ -510,6 +511,7 @@ const ThirdStep = ({ firstName, lastName, email, password, history }) => {
         profilePhoto: profilePhoto,
         degreePhoto: degreePhoto,
       }
+      console.log(credentials)
       const response = await AuthApi.RegisterDoctor(credentials)
       // todo: login and then redirect to dashboard
       console.log(response)

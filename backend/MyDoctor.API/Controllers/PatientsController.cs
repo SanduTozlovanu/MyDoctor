@@ -37,7 +37,7 @@ namespace MyDoctor.API.Controllers
 
             medicalHistoryRepository.SaveChanges();
             patientsRepository.SaveChanges();
-            return Ok(new { id = patient.Id });
+            return Ok(new { id = patient.Id, email = patient.Mail, firstName = patient.FirstName, lastName=patient.LastName});
         }
     }
 }
