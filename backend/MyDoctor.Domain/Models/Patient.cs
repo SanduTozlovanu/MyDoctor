@@ -1,13 +1,11 @@
-﻿using MyDoctorApp.Domain.Helpers;
-
-namespace MyDoctor.Domain.Models
+﻿namespace MyDoctor.Domain.Models
 {
     public class Patient
     {
-        public Patient(string mail, string password, string firstName, string lastName, uint age) 
+        public Patient(string email, string password, string firstName, string lastName, uint age) 
         {
             this.Id = Guid.NewGuid();
-            this.Mail = mail;
+            this.Email = email;
             this.Password = password;
             this.FirstName = firstName;
             this.LastName = lastName;
@@ -15,7 +13,7 @@ namespace MyDoctor.Domain.Models
         }
         private const string SEPARATOR = ", ";
         public Guid Id { get; private set; }
-        public string Mail { get; private set; }
+        public string Email { get; private set; }
         public string Password { get; private set; }
         public string FirstName { get; private set; }
         public string LastName { get; private set; }

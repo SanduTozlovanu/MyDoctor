@@ -17,7 +17,31 @@ namespace MyDoctorApp.Infrastructure.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.0");
 
-            modelBuilder.Entity("MyDoctor.AppointmentInterval", b =>
+            modelBuilder.Entity("MyDoctor.Domain.Models.Appointment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("DoctorId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("PatientId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<double>("Price")
+                        .HasColumnType("REAL");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DoctorId");
+
+                    b.HasIndex("PatientId");
+
+                    b.ToTable("Appointments");
+                });
+
+            modelBuilder.Entity("MyDoctor.Domain.Models.AppointmentInterval", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -43,30 +67,6 @@ namespace MyDoctorApp.Infrastructure.Migrations
                     b.ToTable("AppointmentIntervals");
                 });
 
-            modelBuilder.Entity("MyDoctor.Domain.Models.Appointment", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("DoctorId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("PatientId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<double>("Price")
-                        .HasColumnType("REAL");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DoctorId");
-
-                    b.HasIndex("PatientId");
-
-                    b.ToTable("Appointments");
-                });
-
             modelBuilder.Entity("MyDoctor.Domain.Models.Bill", b =>
                 {
                     b.Property<Guid>("Id")
@@ -84,7 +84,7 @@ namespace MyDoctorApp.Infrastructure.Migrations
                     b.HasIndex("AppointmentId")
                         .IsUnique();
 
-                    b.ToTable("bills");
+                    b.ToTable("Bills");
                 });
 
             modelBuilder.Entity("MyDoctor.Domain.Models.Doctor", b =>
@@ -93,15 +93,15 @@ namespace MyDoctorApp.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Mail")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -140,9 +140,6 @@ namespace MyDoctorApp.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid?>("PrescriptionId")
-                        .HasColumnType("TEXT");
-
                     b.Property<double>("Price")
                         .HasColumnType("REAL");
 
@@ -152,8 +149,6 @@ namespace MyDoctorApp.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("DrugStockId");
-
-                    b.HasIndex("PrescriptionId");
 
                     b.ToTable("Drugs");
                 });
@@ -173,55 +168,6 @@ namespace MyDoctorApp.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("DrugStocks");
-                });
-
-            modelBuilder.Entity("MyDoctor.Domain.Models.Hospital", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Adress")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Hospitals");
-                });
-
-            modelBuilder.Entity("MyDoctor.Domain.Models.HospitalAdmissionFile", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("HospitalId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("PrescriptionId")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("HospitalId");
-
-                    b.HasIndex("PrescriptionId")
-                        .IsUnique();
-
-                    b.ToTable("HospitalAdmissionFiles");
                 });
 
             modelBuilder.Entity("MyDoctor.Domain.Models.MedicalHistory", b =>
@@ -265,15 +211,15 @@ namespace MyDoctorApp.Infrastructure.Migrations
                     b.Property<uint>("Age")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Mail")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -284,6 +230,30 @@ namespace MyDoctorApp.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Patients");
+                });
+
+            modelBuilder.Entity("MyDoctor.Domain.Models.PrescriptedDrug", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("DrugId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("PrescriptionId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<uint>("Quantity")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DrugId");
+
+                    b.HasIndex("PrescriptionId");
+
+                    b.ToTable("PrescriptedDrugs");
                 });
 
             modelBuilder.Entity("MyDoctor.Domain.Models.Prescription", b =>
@@ -343,11 +313,14 @@ namespace MyDoctorApp.Infrastructure.Migrations
                     b.ToTable("Procedures");
                 });
 
-            modelBuilder.Entity("MyDoctor.ScheduleInterval", b =>
+            modelBuilder.Entity("MyDoctor.Domain.Models.ScheduleInterval", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
+
+                    b.Property<uint>("AppointmentDuration")
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateOnly>("Date")
                         .HasColumnType("TEXT");
@@ -368,17 +341,6 @@ namespace MyDoctorApp.Infrastructure.Migrations
                     b.ToTable("ScheduleIntervals");
                 });
 
-            modelBuilder.Entity("MyDoctor.AppointmentInterval", b =>
-                {
-                    b.HasOne("MyDoctor.Domain.Models.Appointment", "Appointment")
-                        .WithOne("AppointmentInterval")
-                        .HasForeignKey("MyDoctor.AppointmentInterval", "AppointmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Appointment");
-                });
-
             modelBuilder.Entity("MyDoctor.Domain.Models.Appointment", b =>
                 {
                     b.HasOne("MyDoctor.Domain.Models.Doctor", "Doctor")
@@ -396,6 +358,17 @@ namespace MyDoctorApp.Infrastructure.Migrations
                     b.Navigation("Doctor");
 
                     b.Navigation("Patient");
+                });
+
+            modelBuilder.Entity("MyDoctor.Domain.Models.AppointmentInterval", b =>
+                {
+                    b.HasOne("MyDoctor.Domain.Models.Appointment", "Appointment")
+                        .WithOne("AppointmentInterval")
+                        .HasForeignKey("MyDoctor.Domain.Models.AppointmentInterval", "AppointmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Appointment");
                 });
 
             modelBuilder.Entity("MyDoctor.Domain.Models.Bill", b =>
@@ -428,10 +401,6 @@ namespace MyDoctorApp.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MyDoctor.Domain.Models.Prescription", null)
-                        .WithMany("Drugs")
-                        .HasForeignKey("PrescriptionId");
-
                     b.Navigation("DrugStock");
                 });
 
@@ -446,25 +415,6 @@ namespace MyDoctorApp.Infrastructure.Migrations
                     b.Navigation("MedicalRoom");
                 });
 
-            modelBuilder.Entity("MyDoctor.Domain.Models.HospitalAdmissionFile", b =>
-                {
-                    b.HasOne("MyDoctor.Domain.Models.Hospital", "Hospital")
-                        .WithMany()
-                        .HasForeignKey("HospitalId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MyDoctor.Domain.Models.Prescription", "Prescription")
-                        .WithOne("HospitalAdmissionFile")
-                        .HasForeignKey("MyDoctor.Domain.Models.HospitalAdmissionFile", "PrescriptionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Hospital");
-
-                    b.Navigation("Prescription");
-                });
-
             modelBuilder.Entity("MyDoctor.Domain.Models.MedicalHistory", b =>
                 {
                     b.HasOne("MyDoctor.Domain.Models.Patient", "Patient")
@@ -474,6 +424,25 @@ namespace MyDoctorApp.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Patient");
+                });
+
+            modelBuilder.Entity("MyDoctor.Domain.Models.PrescriptedDrug", b =>
+                {
+                    b.HasOne("MyDoctor.Domain.Models.Drug", "Drug")
+                        .WithMany()
+                        .HasForeignKey("DrugId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MyDoctor.Domain.Models.Prescription", "Prescription")
+                        .WithMany("PrescriptedDrugs")
+                        .HasForeignKey("PrescriptionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Drug");
+
+                    b.Navigation("Prescription");
                 });
 
             modelBuilder.Entity("MyDoctor.Domain.Models.Prescription", b =>
@@ -502,7 +471,7 @@ namespace MyDoctorApp.Infrastructure.Migrations
                     b.Navigation("Prescription");
                 });
 
-            modelBuilder.Entity("MyDoctor.ScheduleInterval", b =>
+            modelBuilder.Entity("MyDoctor.Domain.Models.ScheduleInterval", b =>
                 {
                     b.HasOne("MyDoctor.Domain.Models.Doctor", "Doctor")
                         .WithMany("ScheduleIntervals")
@@ -560,10 +529,7 @@ namespace MyDoctorApp.Infrastructure.Migrations
 
             modelBuilder.Entity("MyDoctor.Domain.Models.Prescription", b =>
                 {
-                    b.Navigation("Drugs");
-
-                    b.Navigation("HospitalAdmissionFile")
-                        .IsRequired();
+                    b.Navigation("PrescriptedDrugs");
 
                     b.Navigation("Procedures");
                 });

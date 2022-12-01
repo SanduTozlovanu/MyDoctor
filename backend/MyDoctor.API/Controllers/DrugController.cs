@@ -1,10 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using MyDoctor.API.Dtos;
+﻿using Microsoft.AspNetCore.Mvc;
 using MyDoctor.API.DTOs;
 using MyDoctor.Domain.Models;
 using MyDoctorApp.Infrastructure.Generics;
-using MyDoctorApp.Infrastructure.Generics.GenericRepositories;
 
 namespace MyDoctor.API.Controllers
 {
@@ -27,7 +24,12 @@ namespace MyDoctor.API.Controllers
         {
             return Ok(drugRepository.All().Select(d => new DisplayDrugDto(d.Id, d.DrugStockId, d.Name, d.Description, d.Price, d.Quantity)));
         }
-
+        /// <remarks>
+        /// Parameters remarks
+        /// 
+        ///     You can put multiple drugs.
+        ///         
+        /// </remarks>
         [HttpPost]
         public IActionResult Create(Guid drugStockId, [FromBody] List<CreateDrugDto> dtos)
         {
@@ -45,8 +47,9 @@ namespace MyDoctor.API.Controllers
             drugs.ForEach(d => drugRepository.Add(d));
             drugRepository.SaveChanges();
             drugStockRepository.SaveChanges();
-
-            return Ok(new { drugsIds = drugsIds });
+            List<DisplayDrugDto> drugDtos = new List<DisplayDrugDto>();
+            drugs.ForEach(drug => drugDtos.Add(new DisplayDrugDto(drug.Id, drug.DrugStockId, drug.Name, drug.Description, drug.Price, drug.Quantity)));
+            return Ok(drugDtos);
         }
     }
 }

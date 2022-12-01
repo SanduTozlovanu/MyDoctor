@@ -23,9 +23,19 @@
 
             if (appointment.Prescription != null)
             {
-                foreach (Drug drug in appointment.Prescription.Drugs)
+                if (appointment.Prescription.PrescriptedDrugs != null)
                 {
-                    totalPrice += (drug.Price * drug.Quantity);
+                    foreach (PrescriptedDrug prescriptedDrug in appointment.Prescription.PrescriptedDrugs)
+                    {
+                        totalPrice += (prescriptedDrug.Drug.Price * prescriptedDrug.Quantity);
+                    }
+                }
+                if (appointment.Prescription.Procedures!= null)       
+                { 
+                    foreach (Procedure procedure in appointment.Prescription.Procedures)
+                    {
+                        totalPrice += procedure.Price;
+                    }
                 }
             }
 

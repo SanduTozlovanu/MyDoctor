@@ -3,6 +3,7 @@ using MyDoctor.Domain.Models;
 using MyDoctorApp.Infrastructure;
 using MyDoctorApp.Infrastructure.Generics;
 using MyDoctorApp.Infrastructure.Generics.GenericRepositories;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
@@ -19,7 +20,13 @@ builder.Services.AddCors(options =>
                                 .AllowAnyMethod();
                       });
 });
-
+builder.Services.AddSwaggerGen(c =>
+{
+    // Set the comments path for the Swagger JSON and UI.
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    c.IncludeXmlComments(xmlPath);
+});
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -34,13 +41,12 @@ builder.Services.AddScoped<IRepository<Bill>, BillRepository>();
 builder.Services.AddScoped<IRepository<Doctor>, DoctorRepository>();
 builder.Services.AddScoped<IRepository<Drug>, DrugRepository>();
 builder.Services.AddScoped<IRepository<DrugStock>, DrugStockRepository>();
-builder.Services.AddScoped<IRepository<Hospital>, HospitalRepository>();
-builder.Services.AddScoped<IRepository<HospitalAdmissionFile>, HospitalAdmissionFileRepository>();
 builder.Services.AddScoped<IRepository<MedicalHistory>,MedicalHistoryRepository>();
 builder.Services.AddScoped<IRepository<MedicalRoom>, MedicalRoomRepository>();
 builder.Services.AddScoped<IRepository<Patient>, PatientRepository>();
 builder.Services.AddScoped<IRepository<Prescription>, PrescriptionRepository>();
 builder.Services.AddScoped<IRepository<Procedure>, ProcedureRepository>();
+builder.Services.AddScoped<IRepository<PrescriptedDrug>, PrescriptedDrugRepository>();
 
 
 var app = builder.Build();

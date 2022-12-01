@@ -13,9 +13,8 @@ namespace MyDoctor.Domain.Models
         public Guid Id { get; private set; }
         public string Name { get; private set; }
         public string Description { get; private set; }
-        public List<Drug> Drugs { get; private set; } = new List<Drug>();
+        public List<PrescriptedDrug> PrescriptedDrugs { get; private set; } = new List<PrescriptedDrug>();
         public List<Procedure> Procedures { get; private set; } = new List<Procedure>();
-        public HospitalAdmissionFile HospitalAdmissionFile { get; private set; }
         public Appointment Appointment { get; private set; }
         public Guid AppointmentId { get; private set; }
         public void AttachAppointment(Appointment appointment)
@@ -40,26 +39,21 @@ namespace MyDoctor.Domain.Models
             return Result.Success();
         }
 
-        public Result RegisterDrugs(List<Drug> drugs)
+        public Result RegisterPrescriptedDrugs(List<PrescriptedDrug> prescriptedDrugs)
         {
-            if (!drugs.Any())
+            if (!prescriptedDrugs.Any())
             {
                 return Result.Failure("Add at least one drug for the current Prescription");
             }
 
 
-            foreach (Drug drug in drugs)
+            foreach (PrescriptedDrug drug in prescriptedDrugs)
             {
-                this.Drugs.Add(drug);
+                this.PrescriptedDrugs.Add(drug);
+                drug.AttachPrescription(this);
             }
 
             return Result.Success();
-        }
-
-        public void RegisterHospitalAdmissionFile(HospitalAdmissionFile hospitalAdmissionFile) 
-        {
-            hospitalAdmissionFile.AttachToPrescription(this);
-            this.HospitalAdmissionFile = hospitalAdmissionFile;
         }
     }
 }

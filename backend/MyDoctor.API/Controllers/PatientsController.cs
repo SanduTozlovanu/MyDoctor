@@ -21,7 +21,7 @@ namespace MyDoctor.API.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(patientsRepository.All().Select(p => new DisplayPatientDto(p.Id, p.FirstName, p.LastName, p.Mail, p.Age)));
+            return Ok(patientsRepository.All().Select(p => new DisplayPatientDto(p.Id, p.FirstName, p.LastName, p.Email, p.Age)));
         }
 
         [HttpPost]
@@ -37,7 +37,7 @@ namespace MyDoctor.API.Controllers
 
             medicalHistoryRepository.SaveChanges();
             patientsRepository.SaveChanges();
-            return Ok(new { id = patient.Id });
+            return Ok(new DisplayPatientDto(patient.Id, patient.FirstName, patient.LastName, patient.Email, patient.Age));
         }
     }
 }

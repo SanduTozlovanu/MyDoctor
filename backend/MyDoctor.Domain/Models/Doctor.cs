@@ -4,10 +4,10 @@ namespace MyDoctor.Domain.Models
 {
     public class Doctor
     {
-        public Doctor(string mail, string password, string firstName, string lastName, string speciality)
+        public Doctor(string email, string password, string firstName, string lastName, string speciality)
         {
             this.Id = Guid.NewGuid();
-            this.Mail = mail;
+            this.Email = email;
             this.Password = password;
             this.FirstName = firstName;
             this.Password = password;   
@@ -16,9 +16,9 @@ namespace MyDoctor.Domain.Models
         }
         private const string SEPARATOR = ", ";
         public Guid Id { get; private set; }
-        public virtual MedicalRoom MedicalRoom { get; private set; }
+        public MedicalRoom MedicalRoom { get; private set; }
         public Guid MedicalRoomId { get; private set; }
-        public string Mail { get; private set; }
+        public string Email { get; private set; }
         public string Password { get; private set; }
         public string Speciality { get; private set; }
         public string FirstName { get; private set; }

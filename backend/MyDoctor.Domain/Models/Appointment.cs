@@ -48,7 +48,7 @@ namespace MyDoctor.Domain.Models
 
         public Result CalculateBillPrice()
         {
-            if (Bill == null)
+            if (this.Bill == null)
             {
                 return Result.Failure("Not enough data to make the billing.");
             }

@@ -28,7 +28,7 @@ namespace MyDoctor.Domain.Models
 
         public Result GetDrugs(uint quantity)
         {
-            if ((this.Quantity - quantity) < 0 )       
+            if (this.Quantity < quantity )       
             {
                 return Result.Failure("You cannot consume more drugs that the stock has.");
             }

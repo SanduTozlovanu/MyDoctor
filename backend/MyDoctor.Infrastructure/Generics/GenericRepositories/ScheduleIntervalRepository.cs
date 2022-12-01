@@ -1,5 +1,4 @@
-﻿using MyDoctor;
-using MyDoctor.Domain.Models;
+﻿using MyDoctor.Domain.Models;
 
 namespace MyDoctorApp.Infrastructure.Generics.GenericRepositories
 {

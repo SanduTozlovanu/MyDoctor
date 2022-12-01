@@ -1,4 +1,4 @@
-﻿namespace MyDoctor.API.Dtos
+﻿namespace MyDoctor.API.DTOs
 {
     public class CreateDrugDto
     {

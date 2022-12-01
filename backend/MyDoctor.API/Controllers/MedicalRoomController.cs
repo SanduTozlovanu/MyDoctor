@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MyDoctor.API.Dtos;
 using MyDoctor.API.DTOs;
 using MyDoctor.Domain.Models;
 using MyDoctorApp.Infrastructure.Generics;
@@ -39,7 +38,7 @@ namespace MyDoctor.API.Controllers
             medicalRoomRepository.SaveChanges();
             drugStockRepository.SaveChanges();
 
-            return Ok(new { id = medicalRoom.Id });
+            return Ok(new DisplayMedicalRoomDto(medicalRoom.Id, medicalRoom.Adress));
         }
     }
 }

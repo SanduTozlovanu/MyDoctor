@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MyDoctor;
 using MyDoctor.Domain.Models;
 
 namespace MyDoctorApp.Infrastructure
@@ -13,13 +12,12 @@ namespace MyDoctorApp.Infrastructure
         public DbSet<Doctor> Doctors => Set<Doctor>();
         public DbSet<Drug> Drugs => Set<Drug>();
         public DbSet<DrugStock> DrugStocks => Set<DrugStock>();
-        public DbSet<Hospital> Hospitals => Set<Hospital>();
-        public DbSet<HospitalAdmissionFile> HospitalAdmissionFiles => Set<HospitalAdmissionFile>();
         public DbSet<MedicalHistory> MedicalHistories => Set<MedicalHistory>();
         public DbSet<MedicalRoom> MedicalRooms => Set<MedicalRoom>();
         public DbSet<Patient> Patients => Set<Patient>();
         public DbSet<Prescription> Prescriptions => Set<Prescription>();
         public DbSet<Procedure> Procedures => Set<Procedure>();
+        public DbSet<PrescriptedDrug> PrescriptedDrugs => Set<PrescriptedDrug>();
 
         public void Save()
         {

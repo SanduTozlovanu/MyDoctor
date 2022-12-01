@@ -1,6 +1,4 @@
-﻿using MyDoctor.Domain.Models;
-
-namespace MyDoctor
+﻿namespace MyDoctor.Domain.Models
 {
     public class Interval
     {

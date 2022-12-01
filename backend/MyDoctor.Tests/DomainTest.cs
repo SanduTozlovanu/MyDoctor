@@ -1,5 +1,5 @@
 using MyDoctor.Domain.Models;
-using MyDoctorApp.Domain.Helpers;
+using System.Runtime.InteropServices;
 
 namespace MyDoctor.Tests
 {
@@ -11,7 +11,7 @@ namespace MyDoctor.Tests
         {
             string firstName = "Andrei";
             string lastName = "Ciobanu";
-            Doctor doctor = new Doctor("mail@gmail.com", "parola", firstName, lastName, "specialitate");
+            Doctor doctor = new Doctor("email@gmail.com", "parola", firstName, lastName, "specialitate");
             
             string expected = firstName+ ", " + lastName;
             string actual = doctor.GetFullName();
@@ -25,7 +25,7 @@ namespace MyDoctor.Tests
         {
             string firstName = "Andrei";
             string lastName = "Ciobanu";
-            Patient patient = new Patient("mail@gmail.com", "parola", firstName, lastName, 15);
+            Patient patient = new Patient("email@gmail.com", "parola", firstName, lastName, 15);
 
             string expected = firstName + ", " + lastName;
             string actual = patient.GetFullName();
@@ -59,17 +59,32 @@ namespace MyDoctor.Tests
             Prescription prescription = new Prescription("test", "description");
             Drug drug1 = new Drug("paracetamol", "pentru raceala", 10, 5);
             Drug drug2 = new Drug("nurofen", "pentru cap", 15, 10);
+            Procedure procedure1 = new Procedure("Masaj", "Faceti masaj la picioare atent", 260);
+            Procedure procedure2 = new Procedure("Amputare", "Faceti amputare la picioare atent", 50);
+            List<Procedure> procedures = new List<Procedure> { procedure1, procedure2 };
             List<Drug> drugs = new List<Drug> { drug1, drug2 };
-            Bill bill = new Bill();
+            List<PrescriptedDrug> prescriptedDrugs = new List<PrescriptedDrug>();
+            drugs.ForEach(drug =>
+            {
+                PrescriptedDrug prescriptedDrug = new PrescriptedDrug(drug.Quantity);
+                prescriptedDrug.AttachDrug(drug);
+                prescriptedDrugs.Add(prescriptedDrug);
+            });
 
-            prescription.RegisterDrugs(drugs);
-            appointment.RegisterBill(bill);
+            prescription.RegisterPrescriptedDrugs(prescriptedDrugs);
+            prescription.RegisterProcedures(procedures);
             appointment.RegisterPrescription(prescription);
+            Bill bill = new Bill();
+            appointment.RegisterBill(bill);
 
-            appointment.CalculateBillPrice();
 
-            double expected = appointment.Price + (drug1.Price * drug1.Quantity) + (drug2.Price * drug2.Quantity);
+            double expected = appointment.Price
+               + (drug1.Price * drug1.Quantity) 
+               + (drug2.Price * drug2.Quantity)
+               + procedure1.Price + procedure2.Price;
             double actual = appointment.Bill.BillPrice;
+            Console.WriteLine(expected);
+            Console.WriteLine(actual);
 
             Assert.AreEqual(expected, actual);
         }
