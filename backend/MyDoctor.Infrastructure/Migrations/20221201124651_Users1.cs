@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace MyDoctorApp.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Initi : Migration
+    public partial class Users1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -41,11 +41,12 @@ namespace MyDoctorApp.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Age = table.Column<uint>(type: "INTEGER", nullable: false),
+                    AccountType = table.Column<string>(type: "TEXT", nullable: false),
                     Mail = table.Column<string>(type: "TEXT", nullable: false),
                     Password = table.Column<string>(type: "TEXT", nullable: false),
                     FirstName = table.Column<string>(type: "TEXT", nullable: false),
-                    LastName = table.Column<string>(type: "TEXT", nullable: false),
-                    Age = table.Column<uint>(type: "INTEGER", nullable: false)
+                    LastName = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -58,9 +59,10 @@ namespace MyDoctorApp.Infrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     MedicalRoomId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Speciality = table.Column<string>(type: "TEXT", nullable: false),
+                    AccountType = table.Column<string>(type: "TEXT", nullable: false),
                     Mail = table.Column<string>(type: "TEXT", nullable: false),
                     Password = table.Column<string>(type: "TEXT", nullable: false),
-                    Speciality = table.Column<string>(type: "TEXT", nullable: false),
                     FirstName = table.Column<string>(type: "TEXT", nullable: false),
                     LastName = table.Column<string>(type: "TEXT", nullable: false)
                 },
@@ -118,7 +120,6 @@ namespace MyDoctorApp.Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     PatientId = table.Column<Guid>(type: "TEXT", nullable: false),
                     DoctorId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    AppointmentIntervalId = table.Column<Guid>(type: "TEXT", nullable: false),
                     Price = table.Column<double>(type: "REAL", nullable: false)
                 },
                 constraints: table =>
@@ -139,7 +140,49 @@ namespace MyDoctorApp.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "bills",
+                name: "ScheduleIntervals",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    DoctorId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Date = table.Column<DateOnly>(type: "TEXT", nullable: false),
+                    StartTime = table.Column<TimeOnly>(type: "TEXT", nullable: false),
+                    EndTime = table.Column<TimeOnly>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ScheduleIntervals", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ScheduleIntervals_Doctors_DoctorId",
+                        column: x => x.DoctorId,
+                        principalTable: "Doctors",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AppointmentIntervals",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    AppointmentId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Date = table.Column<DateOnly>(type: "TEXT", nullable: false),
+                    StartTime = table.Column<TimeOnly>(type: "TEXT", nullable: false),
+                    EndTime = table.Column<TimeOnly>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppointmentIntervals", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AppointmentIntervals_Appointments_AppointmentId",
+                        column: x => x.AppointmentId,
+                        principalTable: "Appointments",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Bills",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
@@ -148,41 +191,13 @@ namespace MyDoctorApp.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_bills", x => x.Id);
+                    table.PrimaryKey("PK_Bills", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_bills_Appointments_AppointmentId",
+                        name: "FK_Bills_Appointments_AppointmentId",
                         column: x => x.AppointmentId,
                         principalTable: "Appointments",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Interval",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Date = table.Column<DateOnly>(type: "TEXT", nullable: false),
-                    StartTime = table.Column<TimeOnly>(type: "TEXT", nullable: false),
-                    EndTime = table.Column<TimeOnly>(type: "TEXT", nullable: false),
-                    Discriminator = table.Column<string>(type: "TEXT", nullable: false),
-                    DoctorId = table.Column<Guid>(type: "TEXT", nullable: true),
-                    AppointmentId = table.Column<Guid>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Interval", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Interval_Appointments_AppointmentId",
-                        column: x => x.AppointmentId,
-                        principalTable: "Appointments",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Interval_Doctors_DoctorId",
-                        column: x => x.DoctorId,
-                        principalTable: "Doctors",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -288,9 +303,10 @@ namespace MyDoctorApp.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Appointments_AppointmentIntervalId",
-                table: "Appointments",
-                column: "AppointmentIntervalId");
+                name: "IX_AppointmentIntervals_AppointmentId",
+                table: "AppointmentIntervals",
+                column: "AppointmentId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Appointments_DoctorId",
@@ -303,8 +319,8 @@ namespace MyDoctorApp.Infrastructure.Migrations
                 column: "PatientId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_bills_AppointmentId",
-                table: "bills",
+                name: "IX_Bills_AppointmentId",
+                table: "Bills",
                 column: "AppointmentId",
                 unique: true);
 
@@ -341,16 +357,6 @@ namespace MyDoctorApp.Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Interval_AppointmentId",
-                table: "Interval",
-                column: "AppointmentId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Interval_DoctorId",
-                table: "Interval",
-                column: "DoctorId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_MedicalHistories_PatientId",
                 table: "MedicalHistories",
                 column: "PatientId",
@@ -372,32 +378,20 @@ namespace MyDoctorApp.Infrastructure.Migrations
                 table: "Procedures",
                 column: "PrescriptionId");
 
-            migrationBuilder.AddForeignKey(
-                name: "FK_Appointments_Interval_AppointmentIntervalId",
-                table: "Appointments",
-                column: "AppointmentIntervalId",
-                principalTable: "Interval",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+            migrationBuilder.CreateIndex(
+                name: "IX_ScheduleIntervals_DoctorId",
+                table: "ScheduleIntervals",
+                column: "DoctorId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Appointments_Doctors_DoctorId",
-                table: "Appointments");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Interval_Doctors_DoctorId",
-                table: "Interval");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Appointments_Interval_AppointmentIntervalId",
-                table: "Appointments");
+            migrationBuilder.DropTable(
+                name: "AppointmentIntervals");
 
             migrationBuilder.DropTable(
-                name: "bills");
+                name: "Bills");
 
             migrationBuilder.DropTable(
                 name: "Drugs");
@@ -409,6 +403,9 @@ namespace MyDoctorApp.Infrastructure.Migrations
                 name: "Procedures");
 
             migrationBuilder.DropTable(
+                name: "ScheduleIntervals");
+
+            migrationBuilder.DropTable(
                 name: "DrugStocks");
 
             migrationBuilder.DropTable(
@@ -418,22 +415,19 @@ namespace MyDoctorApp.Infrastructure.Migrations
                 name: "Prescriptions");
 
             migrationBuilder.DropTable(
+                name: "Appointments");
+
+            migrationBuilder.DropTable(
                 name: "MedicalHistories");
 
             migrationBuilder.DropTable(
                 name: "Doctors");
 
             migrationBuilder.DropTable(
-                name: "MedicalRooms");
-
-            migrationBuilder.DropTable(
-                name: "Interval");
-
-            migrationBuilder.DropTable(
-                name: "Appointments");
-
-            migrationBuilder.DropTable(
                 name: "Patients");
+
+            migrationBuilder.DropTable(
+                name: "MedicalRooms");
         }
     }
 }

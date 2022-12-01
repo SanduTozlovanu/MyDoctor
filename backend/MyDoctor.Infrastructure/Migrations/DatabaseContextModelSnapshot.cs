@@ -84,13 +84,17 @@ namespace MyDoctorApp.Infrastructure.Migrations
                     b.HasIndex("AppointmentId")
                         .IsUnique();
 
-                    b.ToTable("bills");
+                    b.ToTable("Bills");
                 });
 
             modelBuilder.Entity("MyDoctor.Domain.Models.Doctor", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("AccountType")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("FirstName")
@@ -260,6 +264,10 @@ namespace MyDoctorApp.Infrastructure.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("AccountType")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<uint>("Age")

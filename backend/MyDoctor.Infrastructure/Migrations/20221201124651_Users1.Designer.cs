@@ -11,8 +11,8 @@ using MyDoctorApp.Infrastructure;
 namespace MyDoctorApp.Infrastructure.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20221125102426_Initi4")]
-    partial class Initi4
+    [Migration("20221201124651_Users1")]
+    partial class Users1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -87,13 +87,17 @@ namespace MyDoctorApp.Infrastructure.Migrations
                     b.HasIndex("AppointmentId")
                         .IsUnique();
 
-                    b.ToTable("bills");
+                    b.ToTable("Bills");
                 });
 
             modelBuilder.Entity("MyDoctor.Domain.Models.Doctor", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("AccountType")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("FirstName")
@@ -265,6 +269,10 @@ namespace MyDoctorApp.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("AccountType")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<uint>("Age")
                         .HasColumnType("INTEGER");
 
@@ -368,7 +376,7 @@ namespace MyDoctorApp.Infrastructure.Migrations
 
                     b.HasIndex("DoctorId");
 
-                    b.ToTable("ScheduleInterval");
+                    b.ToTable("ScheduleIntervals");
                 });
 
             modelBuilder.Entity("MyDoctor.AppointmentInterval", b =>

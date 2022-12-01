@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyDoctor.API.DTOs;
+using MyDoctor.API.Helpers;
 using MyDoctor.Domain.Models;
 using MyDoctorApp.Infrastructure.Generics;
+using MyDoctorApp.Infrastructure.Generics.GenericRepositories;
+using System.ComponentModel.DataAnnotations;
 
 namespace MyDoctor.API.Controllers
 {
@@ -11,11 +14,15 @@ namespace MyDoctor.API.Controllers
     {
         private readonly IRepository<Patient> patientsRepository;
         private readonly IRepository<MedicalHistory> medicalHistoryRepository;
+        private readonly IRepository<Doctor> doctorsRepository;
 
-        public PatientsController(IRepository<Patient> patientsRepository, IRepository<MedicalHistory> medicalHistoryRepository)
+        public PatientsController(IRepository<Patient> patientsRepository,
+            IRepository<MedicalHistory> medicalHistoryRepository,
+            IRepository<Doctor> doctorsRepository)
         {
             this.patientsRepository = patientsRepository;
             this.medicalHistoryRepository = medicalHistoryRepository;
+            this.doctorsRepository = doctorsRepository;
         }
 
         [HttpGet]
@@ -27,7 +34,20 @@ namespace MyDoctor.API.Controllers
         [HttpPost]
         public IActionResult Create([FromBody] CreatePatientDto dto)
         {
-            var patient = new Patient(dto.Email, dto.Password, dto.FirstName, dto.LastName, dto.Age);
+            var oldPatient = patientsRepository.Find(p => p.Mail == dto.UserDetails.Email).FirstOrDefault();
+            var oldDoctor = doctorsRepository.Find(d => d.Mail == dto.UserDetails.Email).FirstOrDefault();
+            if (oldPatient != null || oldDoctor != null)
+            {
+                return BadRequest("The email is already used!");
+            }
+
+            if (!AccountInfoManager.ValidateEmail(dto.UserDetails.Email))
+            {
+                return BadRequest("The email is invalid!");
+            }
+
+            string hashedPassword = AccountInfoManager.HashPassword(dto.UserDetails.Password);
+            var patient = new Patient(dto.UserDetails.Email, hashedPassword, dto.UserDetails.FirstName, dto.UserDetails.LastName, dto.Age);
             var medicalHistory = new MedicalHistory();
 
             patient.RegisterMedicalHistory(medicalHistory);

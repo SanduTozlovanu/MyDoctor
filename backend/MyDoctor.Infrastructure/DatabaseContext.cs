@@ -30,5 +30,13 @@ namespace MyDoctorApp.Infrastructure
         {
             optionsBuilder.UseSqlite("Data Source = MyDoctorApp.db");
         }
+
+
+        //protected override void OnModelCreating(ModelBuilder modelBuilder)
+        //{
+        //    modelBuilder.Entity<User>()
+        //        .HasIndex(u => u.Mail)
+        //        .IsUnique();
+        //}
     }
 }

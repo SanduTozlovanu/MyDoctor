@@ -2,34 +2,18 @@
 
 namespace MyDoctor.Domain.Models
 {
-    public class Doctor
+    public class Doctor: User
     {
-        public Doctor(string mail, string password, string firstName, string lastName, string speciality)
+        public Doctor(string mail, string password, string firstName, string lastName, string speciality):
+            base(AccountTypes.Doctor, mail, password, firstName, lastName)
         {
-            this.Id = Guid.NewGuid();
-            this.Mail = mail;
-            this.Password = password;
-            this.FirstName = firstName;
-            this.Password = password;   
-            this.LastName = lastName;
             this.Speciality = speciality;
         }
-        private const string SEPARATOR = ", ";
-        public Guid Id { get; private set; }
         public virtual MedicalRoom MedicalRoom { get; private set; }
         public Guid MedicalRoomId { get; private set; }
-        public string Mail { get; private set; }
-        public string Password { get; private set; }
         public string Speciality { get; private set; }
-        public string FirstName { get; private set; }
-        public string LastName { get; private set; }
         public List<Appointment> Appointments { get; private set; } = new List<Appointment>();
         public List<ScheduleInterval> ScheduleIntervals { get; private set; } = new List<ScheduleInterval>();
-
-        public string GetFullName()
-        {
-            return FirstName + SEPARATOR + LastName;
-        }
 
         public void AttachToMedicalRoom(MedicalRoom medicalRoom)
         {
