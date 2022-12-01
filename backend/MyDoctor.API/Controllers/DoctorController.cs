@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyDoctor.API.DTOs;
+using MyDoctor.API.Helpers;
 using MyDoctor.Domain.Models;
 using MyDoctorApp.Infrastructure.Generics;
 
@@ -9,19 +10,23 @@ namespace MyDoctor.API.Controllers
     [ApiController]
     public class DoctorController : ControllerBase
     {
-        private readonly IRepository<Doctor> doctorRepository;
+        private readonly IRepository<Doctor> doctorsRepository;
         private readonly IRepository<MedicalRoom> medicalRoomRepository;
+        private readonly IRepository<Patient> patientsRepository;
 
-        public DoctorController(IRepository<Doctor> doctorRepository, IRepository<MedicalRoom> medicalRoomRepository)
+        public DoctorController(IRepository<Doctor> doctorsRepository,
+            IRepository<MedicalRoom> medicalRoomRepository,
+            IRepository<Patient> patientsRepository)
         {
-            this.doctorRepository = doctorRepository;
+            this.doctorsRepository = doctorsRepository;
             this.medicalRoomRepository = medicalRoomRepository;
+            this.patientsRepository = patientsRepository;
         }
 
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(doctorRepository.All().Select(d => new DisplayDoctorDto(d.Id, d.MedicalRoomId, d.Email, d.Speciality, d.FirstName, d.LastName)));
+            return Ok(doctorsRepository.All().Select(d => new DisplayDoctorDto(d.Id, d.MedicalRoomId, d.Email, d.Speciality, d.FirstName, d.LastName)));
         }
         [HttpPost]
         public IActionResult Create([FromBody] CreateDoctorDto dto)
@@ -30,7 +35,7 @@ namespace MyDoctor.API.Controllers
             (MedicalRoom?, int) medicalRoomWithFewestDoctors = new(null, int.MaxValue);
             medicalRooms.ForEach(mr =>
             {
-                int doctorNumber = doctorRepository.Find(d => mr.Id == d.MedicalRoomId).Count();
+                int doctorNumber = doctorsRepository.Find(d => mr.Id == d.MedicalRoomId).Count();
                 if(doctorNumber < medicalRoomWithFewestDoctors.Item2)
                     medicalRoomWithFewestDoctors = (mr, doctorNumber);
 
@@ -45,11 +50,25 @@ namespace MyDoctor.API.Controllers
                 return NotFound("Could not find a medicalRoom with this Id.");
             }
 
-            var doctor = new Doctor(dto.FirstName, dto.LastName, dto.Speciality, dto.Email, dto.Password);
+            var oldPatient = patientsRepository.Find(p => p.Email == dto.UserDetails.Email).FirstOrDefault();
+            var oldDoctor = doctorsRepository.Find(d => d.Email == dto.UserDetails.Email).FirstOrDefault();
+            if (oldPatient != null || oldDoctor != null)
+            {
+                return BadRequest("The email is already used!");
+            }
+
+            if (!AccountInfoManager.ValidateEmail(dto.UserDetails.Email))
+            {
+                return BadRequest("The email is invalid!");
+            }
+
+
+            string hashedPassword = AccountInfoManager.HashPassword(dto.UserDetails.Password);
+            var doctor = new Doctor(dto.UserDetails.Email, hashedPassword, dto.UserDetails.FirstName, dto.UserDetails.LastName, dto.Speciality);
             medicalRoom.RegisterDoctors(new List<Doctor> { doctor });
 
-            doctorRepository.Add(doctor);
-            doctorRepository.SaveChanges();
+            doctorsRepository.Add(doctor);
+            doctorsRepository.SaveChanges();
             medicalRoomRepository.SaveChanges();
 
             return Ok(new DisplayDoctorDto(doctor.Id, doctor.MedicalRoomId, doctor.Email, doctor.Speciality, doctor.FirstName, doctor.LastName));
