@@ -51,6 +51,7 @@ import {
   Row,
   Col
 } from "reactstrap";
+import { useHistory } from "react-router-dom";
 
 var ps;
 
@@ -100,6 +101,8 @@ const Sidebar = (props) => {
       target: "_blank"
     };
   }
+
+  const history = useHistory()
 
   return (
     <Navbar
@@ -175,7 +178,7 @@ const Sidebar = (props) => {
                 <span>Support</span>
               </DropdownItem>
               <DropdownItem divider />
-              <DropdownItem href="#pablo" onClick={(e) => e.preventDefault()}>
+              <DropdownItem href="#pablo" onClick={() => history.push("/auth/logout")}>
                 <i className="ni ni-user-run" />
                 <span>Logout</span>
               </DropdownItem>
