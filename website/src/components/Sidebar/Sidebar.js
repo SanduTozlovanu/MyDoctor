@@ -16,10 +16,10 @@
 
 */
 /*eslint-disable*/
-import { useState } from "react";
-import { NavLink as NavLinkRRD, Link } from "react-router-dom";
+import { useState } from 'react'
+import { NavLink as NavLinkRRD, Link } from 'react-router-dom'
 // nodejs library to set properties for components
-import { PropTypes } from "prop-types";
+import { PropTypes } from 'prop-types'
 
 // reactstrap components
 import {
@@ -49,29 +49,32 @@ import {
   Table,
   Container,
   Row,
-  Col
-} from "reactstrap";
-import { useHistory } from "react-router-dom";
+  Col,
+} from 'reactstrap'
+import { useHistory } from 'react-router-dom'
 
-var ps;
+var ps
 
 const Sidebar = (props) => {
-  const [collapseOpen, setCollapseOpen] = useState();
+  const [collapseOpen, setCollapseOpen] = useState()
   // verifies if routeName is the one active (in browser input)
   const activeRoute = (routeName) => {
-    return props.location.pathname.indexOf(routeName) > -1 ? "active" : "";
-  };
+    return props.location.pathname.indexOf(routeName) > -1 ? 'active' : ''
+  }
   // toggles collapse between opened and closed (true/false)
   const toggleCollapse = () => {
-    setCollapseOpen((data) => !data);
-  };
+    setCollapseOpen((data) => !data)
+  }
   // closes the collapse
   const closeCollapse = () => {
-    setCollapseOpen(false);
-  };
+    setCollapseOpen(false)
+  }
   // creates the links that appear in the left menu / Sidebar
   const createLinks = (routes) => {
     return routes.map((prop, key) => {
+      if (prop.hide) {
+        return 
+      }
       return (
         <NavItem key={key}>
           <NavLink
@@ -84,22 +87,22 @@ const Sidebar = (props) => {
             {prop.name}
           </NavLink>
         </NavItem>
-      );
-    });
-  };
+      )
+    })
+  }
 
-  const { bgColor, routes, logo } = props;
-  let navbarBrandProps;
+  const { bgColor, routes, logo } = props
+  let navbarBrandProps
   if (logo && logo.innerLink) {
     navbarBrandProps = {
       to: logo.innerLink,
-      tag: Link
-    };
+      tag: Link,
+    }
   } else if (logo && logo.outterLink) {
     navbarBrandProps = {
       href: logo.outterLink,
-      target: "_blank"
-    };
+      target: '_blank',
+    }
   }
 
   const history = useHistory()
@@ -152,7 +155,7 @@ const Sidebar = (props) => {
                 <span className="avatar avatar-sm rounded-circle">
                   <img
                     alt="..."
-                    src={require("../../assets/img/theme/team-1-800x800.jpg")}
+                    src={require('../../assets/img/theme/team-1-800x800.jpg')}
                   />
                 </span>
               </Media>
@@ -178,7 +181,10 @@ const Sidebar = (props) => {
                 <span>Support</span>
               </DropdownItem>
               <DropdownItem divider />
-              <DropdownItem href="#pablo" onClick={() => history.push("/auth/logout")}>
+              <DropdownItem
+                href="#pablo"
+                onClick={() => history.push('/auth/logout')}
+              >
                 <i className="ni ni-user-run" />
                 <span>Logout</span>
               </DropdownItem>
@@ -234,47 +240,16 @@ const Sidebar = (props) => {
           {/* Navigation */}
           <Nav navbar>{createLinks(routes)}</Nav>
           {/* Divider */}
-          <hr className="my-3" />
-          {/* Heading */}
-          <h6 className="navbar-heading text-muted">Documentation</h6>
-          {/* Navigation */}
-          <Nav className="mb-md-3" navbar>
-            <NavItem>
-              <NavLink href="https://demos.creative-tim.com/argon-dashboard-react/#/documentation/overview?ref=adr-admin-sidebar">
-                <i className="ni ni-spaceship" />
-                Getting started
-              </NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink href="https://demos.creative-tim.com/argon-dashboard-react/#/documentation/colors?ref=adr-admin-sidebar">
-                <i className="ni ni-palette" />
-                Foundation
-              </NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink href="https://demos.creative-tim.com/argon-dashboard-react/#/documentation/alerts?ref=adr-admin-sidebar">
-                <i className="ni ni-ui-04" />
-                Components
-              </NavLink>
-            </NavItem>
-          </Nav>
-          <Nav className="mb-md-3" navbar>
-            <NavItem className="active-pro active">
-              <NavLink href="https://www.creative-tim.com/product/argon-dashboard-pro-react?ref=adr-admin-sidebar">
-                <i className="ni ni-spaceship" />
-                Upgrade to PRO
-              </NavLink>
-            </NavItem>
-          </Nav>
+          {/* <hr className="my-3" /> */}
         </Collapse>
       </Container>
     </Navbar>
-  );
-};
+  )
+}
 
 Sidebar.defaultProps = {
-  routes: [{}]
-};
+  routes: [{}],
+}
 
 Sidebar.propTypes = {
   // links that will be displayed inside the component
@@ -289,8 +264,8 @@ Sidebar.propTypes = {
     // the image src of the logo
     imgSrc: PropTypes.string.isRequired,
     // the alt for the img
-    imgAlt: PropTypes.string.isRequired
-  })
-};
+    imgAlt: PropTypes.string.isRequired,
+  }),
+}
 
-export default Sidebar;
+export default Sidebar
