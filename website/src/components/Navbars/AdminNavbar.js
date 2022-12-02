@@ -33,8 +33,11 @@ import {
   Container,
   Media
 } from "reactstrap";
+import { useHistory } from "react-router-dom";
 
 const AdminNavbar = (props) => {
+  const history = useHistory()
+
   return (
     <>
       <Navbar className="navbar-top navbar-dark" expand="md" id="navbar-main">
@@ -95,7 +98,7 @@ const AdminNavbar = (props) => {
                   <span>Support</span>
                 </DropdownItem>
                 <DropdownItem divider />
-                <DropdownItem href="#pablo" onClick={(e) => e.preventDefault()}>
+                <DropdownItem href="#pablo" onClick={() => history.push("/auth/logout")}>
                   <i className="ni ni-user-run" />
                   <span>Logout</span>
                 </DropdownItem>
