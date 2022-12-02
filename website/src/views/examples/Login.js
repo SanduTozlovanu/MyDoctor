@@ -17,6 +17,7 @@
 */
 
 // reactstrap components
+import { useEffect, useState } from 'react'
 import {
   Button,
   Card,
@@ -27,11 +28,44 @@ import {
   InputGroupAddon,
   InputGroupText,
   InputGroup,
-  Row,
-  Col
-} from "reactstrap";
+  Col,
+} from 'reactstrap'
+import AuthApi from 'api/auth'
+import { useHistory } from 'react-router-dom'
 
 const Login = () => {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState(null)
+  const [showPassword, setShowPassword] = useState(false)
+  const history = useHistory()
+
+  useEffect(() => {
+    setError(null)
+  }, [email, password])
+
+  const login = async () => {
+    if (!email || !password) {
+      return setError('Please fill in your credentials.')
+    }
+    try {
+      const credentials = {
+        email: email,
+        password: password,
+      }
+      const response = await AuthApi.Login(credentials)
+      console.log(response)
+      localStorage.setItem('user', JSON.stringify(response.data))
+      return history.push("/admin/index")
+    } catch (err) {
+      console.log(err)
+      if (err && err.response && err.response.data) {
+        return setError(err.response.data)
+      }
+      return setError('There has been an error.')
+    }
+  }
+
   return (
     <>
       <Col lg="5" md="7">
@@ -49,6 +83,7 @@ const Login = () => {
                     </InputGroupText>
                   </InputGroupAddon>
                   <Input
+                    onChange={(e) => setEmail(e.target.value)}
                     placeholder="Email"
                     type="email"
                     autoComplete="new-email"
@@ -59,12 +94,20 @@ const Login = () => {
                 <InputGroup className="input-group-alternative">
                   <InputGroupAddon addonType="prepend">
                     <InputGroupText>
-                      <i className="ni ni-lock-circle-open" />
+                    <i
+                    onClick={() => setShowPassword(!showPassword)}
+                    className={
+                      showPassword
+                        ? 'fas fa-eye-slash c-pointer'
+                        : 'fas fa-eye c-pointer'
+                    }
+                    />
                     </InputGroupText>
                   </InputGroupAddon>
                   <Input
+                    onChange={(e) => setPassword(e.target.value)}
                     placeholder="Password"
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     autoComplete="new-password"
                   />
                 </InputGroup>
@@ -82,37 +125,27 @@ const Login = () => {
                   <span className="text-muted">Remember me</span>
                 </label>
               </div>
+              {error ? (
+                <h4 className="text-center text-danger mt-3 font-weight-400">
+                  {error}
+                </h4>
+              ) : null}
               <div className="text-center">
-                <Button className="my-4" color="primary" type="button">
+                <Button
+                  onClick={login}
+                  className="my-4"
+                  color="primary"
+                  type="button"
+                >
                   Sign in
                 </Button>
               </div>
             </Form>
           </CardBody>
         </Card>
-        <Row className="mt-3">
-          <Col xs="6">
-            <a
-              className="text-light"
-              href="#pablo"
-              onClick={(e) => e.preventDefault()}
-            >
-              <small>Forgot password?</small>
-            </a>
-          </Col>
-          <Col className="text-right" xs="6">
-            <a
-              className="text-light"
-              href="#pablo"
-              onClick={(e) => e.preventDefault()}
-            >
-              <small>Create new account</small>
-            </a>
-          </Col>
-        </Row>
       </Col>
     </>
-  );
-};
+  )
+}
 
-export default Login;
+export default Login
