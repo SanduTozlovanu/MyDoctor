@@ -31,14 +31,14 @@ namespace MyDoctor.API.Controllers
             {
                 if (AccountInfoManager.ValidatePassword(patient.Password, dto.Password))
                 {
-                    return Ok(new DisplayLoginDto(patient.Id, patient.AccountType));
+                    return Ok(new DisplayLoginDto(patient.Id, patient.AccountType, patient.FirstName, patient.LastName, patient.Email));
                 }
             }
             else if (doctor != null)
             {
                 if (AccountInfoManager.ValidatePassword(doctor.Password, dto.Password))
                 {
-                    return Ok(new DisplayLoginDto(doctor.Id, doctor.AccountType));
+                    return Ok(new DisplayLoginDto(doctor.Id, doctor.AccountType, doctor.FirstName, doctor.LastName, doctor.Email));
                 }
             }
 

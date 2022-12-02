@@ -37,7 +37,6 @@ import StepWizard from 'react-step-wizard'
 import { useEffect, useState } from 'react'
 import Select from 'react-select'
 import AuthApi from 'api/auth'
-import axios from 'axios'
 import { useHistory } from 'react-router-dom'
 
 const Register = () => {
@@ -123,14 +122,21 @@ const Register = () => {
     try {
       setCreating(true)
       const credentials = {
-        firstName: firstName,
-        lastName: lastName,
-        email: email,
-        password: password,
+        userDetails: {
+          firstName: firstName,
+          lastName: lastName,
+          email: email,
+          password: password,
+        },
         age: age,
       }
-      const response = await AuthApi.RegisterPatient(credentials)
-      console.log(response)
+      const register_response = await AuthApi.RegisterPatient(credentials)
+      const user_response = await AuthApi.Login({
+        email: email,
+        password: password,
+      })
+      const user = { ...register_response.data, ...user_response.data }
+      localStorage.setItem('user', JSON.stringify(user))
       return history.push('/admin/index')
     } catch (err) {
       console.log(err)
@@ -414,10 +420,7 @@ const SecondStep = ({
 }
 
 const ThirdStep = ({ firstName, lastName, email, password, history }) => {
-  const [specialities, setSpecialities] = useState([])
-  const [hospitals, setHospitals] = useState([])
-  const [locations, setLocations] = useState([])
-  const [location, setLocation] = useState('')
+  const [speciality, setSpeciality] = useState('')
   const [degreePhoto, setDegreePhoto] = useState('')
   const [profilePhoto, setProfilePhoto] = useState('')
   const [error, setError] = useState(null)
@@ -429,33 +432,6 @@ const ThirdStep = ({ firstName, lastName, email, password, history }) => {
     { value: 'family medicine', label: 'Family medicine' },
     { value: 'internal medicine', label: 'Internal medicine' },
   ]
-  const hospitalsOptions = [
-    { value: 'IRO Iasi', label: 'IRO Iasi' },
-    { value: 'Sf. Spiridon Iasi', label: 'Sf. Spiridon Iasi' },
-    {
-      value: 'Spitalul de Neurologie Iasi',
-      label: 'Spitalul de Neurologie Iasi',
-    },
-    {
-      value: 'Spitalul de Neurologie Botosani',
-      label: 'Spitalul de Neurologie Botosani',
-    },
-  ]
-
-  useEffect(() => {
-    const fetchCounties = async () => {
-      const response = await axios.get('https://roloca.coldfuse.io/judete')
-      const countiesResponse = response.data
-      const countiesArray = countiesResponse.map((county) => {
-        return {
-          value: county.nume.toLowerCase(),
-          label: county.nume,
-        }
-      })
-      setLocations(countiesArray)
-    }
-    fetchCounties()
-  }, [])
 
   function uploadFile(event, type) {
     var blobFile = event.target.files[0]
@@ -478,13 +454,7 @@ const ThirdStep = ({ firstName, lastName, email, password, history }) => {
   }
 
   const verifyCredentials = () => {
-    if (
-      !specialities ||
-      !specialities.length ||
-      !location ||
-      !profilePhoto ||
-      !degreePhoto
-    ) {
+    if (!speciality || !profilePhoto || !degreePhoto) {
       setError('Please fill in all required fields.')
       return true
     }
@@ -499,20 +469,23 @@ const ThirdStep = ({ firstName, lastName, email, password, history }) => {
     setCreating(true)
     try {
       const credentials = {
-        firstName: firstName,
-        lastName: lastName,
+        userDetails: {
+          firstName: firstName,
+          lastName: lastName,
+          email: email,
+          password: password,
+          profilePhoto: profilePhoto,
+          degreePhoto: degreePhoto,
+        },
+        speciality: speciality,
+      }
+      const register_response = await AuthApi.RegisterDoctor(credentials)
+      const user_response = await AuthApi.Login({
         email: email,
         password: password,
-        speciality: 'd',
-        specialities: specialities,
-        hospitals: hospitals,
-        location: location,
-        profilePhoto: profilePhoto,
-        degreePhoto: degreePhoto,
-      }
-      const response = await AuthApi.RegisterDoctor(credentials)
-      // todo: login and then redirect to dashboard
-      console.log(response)
+      })
+      const user = { ...register_response.data, ...user_response.data }
+      localStorage.setItem('user', JSON.stringify(user))
       return history.push('/admin/index')
     } catch (err) {
       console.log(err)
@@ -532,47 +505,14 @@ const ThirdStep = ({ firstName, lastName, email, password, history }) => {
         </div>
         <Form role="form">
           <FormGroup className="mb-3">
-            <Label>Choose your specialities *</Label>
+            <Label>Choose your speciality *</Label>
             <Select
-              onChange={(value) => setSpecialities([...value])}
-              closeMenuOnSelect={false}
+              onChange={(value) => setSpeciality(value ? value.label : '')}
               defaultValue={null}
-              isMulti
               isSearchable
               isClearable
-              name="specialities"
+              name="speciality"
               options={specialitiesOptions}
-              className="basic-multi-select"
-              classNamePrefix="select"
-            />
-          </FormGroup>
-
-          <FormGroup className="mb-3">
-            <Label>Choose hospitals you've worked at</Label>
-            <Select
-              onChange={(value) => setHospitals([...value])}
-              closeMenuOnSelect={false}
-              defaultValue={null}
-              isSearchable
-              isClearable
-              isMulti
-              name="hospitals"
-              options={hospitalsOptions}
-              className="basic-multi-select"
-              classNamePrefix="select"
-            />
-          </FormGroup>
-
-          <FormGroup className="mb-3">
-            <Label>Current location *</Label>
-            <Select
-              onChange={(value) => setLocation(value ? value.label : '')}
-              closeMenuOnSelect={true}
-              defaultValue={null}
-              isSearchable
-              isClearable
-              name="locations"
-              options={locations}
               className="basic-single"
               classNamePrefix="select"
             />
@@ -646,7 +586,7 @@ const ThirdStep = ({ firstName, lastName, email, password, history }) => {
               type="button"
               disabled={creating}
             >
-              {creating ? <Spinner /> : 'Create account'}
+              {creating ? <Spinner size="sm" /> : 'Create account'}
             </Button>
           </div>
         </Form>
