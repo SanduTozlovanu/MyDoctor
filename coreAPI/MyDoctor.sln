@@ -17,11 +17,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyDoctor.API", "MyDoctor.AP
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{C3577B02-1271-4B18-94C0-05663BE16B3B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyDoctor.Tests", "MyDoctor.Tests\MyDoctor.Tests.csproj", "{96517B29-7C1F-4E5A-B22F-E26ACD1E0EF2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyDoctor.Tests", "MyDoctor.Tests\MyDoctor.Tests.csproj", "{96517B29-7C1F-4E5A-B22F-E26ACD1E0EF2}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IntegTests", "IntegTests", "{9D3F4B45-2B87-4ADC-84A6-8C9AE924198A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestProject1", "TestProject1\TestProject1.csproj", "{87D824AA-C168-4580-8D62-961FCEC3FD38}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyDoctor.IntegTests", "TestProject1\MyDoctor.IntegTests.csproj", "{87D824AA-C168-4580-8D62-961FCEC3FD38}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

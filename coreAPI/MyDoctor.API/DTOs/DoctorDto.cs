@@ -1,8 +1,12 @@
-﻿namespace MyDoctor.API.DTOs
+﻿using Microsoft.AspNetCore.Mvc;
+
+namespace MyDoctor.API.DTOs
 {
     public class CreateDoctorDto
     {
         public CreateUserDto UserDetails { get; set; }
+        public IFormFile ProfilePhoto { get; set; }
+        public IFormFile DiplomaPhoto { get; set; }
         public string Speciality { get; set; }
     }
     public class DisplayDoctorDto
