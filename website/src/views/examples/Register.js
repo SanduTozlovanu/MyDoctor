@@ -38,6 +38,7 @@ import { useEffect, useState } from 'react'
 import Select from 'react-select'
 import AuthApi from 'api/auth'
 import { useHistory } from 'react-router-dom'
+import { useUserContext } from "context/UserContext";
 
 const Register = () => {
   const [accountType, setAccountType] = useState('')
@@ -54,6 +55,7 @@ const Register = () => {
 
   const [stepWizardRef, setStepWizardRef] = useState(null)
   const history = useHistory()
+  const { login: loginContext } = useUserContext()
 
   var strongRegex = new RegExp(
     '(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,50})',
@@ -130,13 +132,17 @@ const Register = () => {
         },
         age: age,
       }
-      const register_response = await AuthApi.RegisterPatient(credentials)
+      await AuthApi.RegisterPatient(credentials)
       const user_response = await AuthApi.Login({
         email: email,
         password: password,
       })
-      const user = { ...register_response.data, ...user_response.data }
-      localStorage.setItem('user', JSON.stringify(user))
+      const user = user_response.data
+      localStorage.setItem(
+        'user',
+        JSON.stringify({ ...user.userDetails, jwtToken: user.jwtToken }),
+      )
+      loginContext()
       return history.push('/admin/index')
     } catch (err) {
       console.log(err)
@@ -425,6 +431,7 @@ const ThirdStep = ({ firstName, lastName, email, password, history }) => {
   const [profilePhoto, setProfilePhoto] = useState('')
   const [error, setError] = useState(null)
   const [creating, setCreating] = useState(false)
+  const { login: loginContext } = useUserContext()
 
   const specialitiesOptions = [
     { value: 'neurologist', label: 'Neurologist' },
@@ -479,13 +486,17 @@ const ThirdStep = ({ firstName, lastName, email, password, history }) => {
         profilePhoto: profilePhoto,
         diplomaPhoto: degreePhoto,
       }
-      const register_response = await AuthApi.RegisterDoctor(credentials)
+      await AuthApi.RegisterDoctor(credentials)
       const user_response = await AuthApi.Login({
         email: email,
         password: password,
       })
-      const user = { ...register_response.data, ...user_response.data }
-      localStorage.setItem('user', JSON.stringify(user))
+      const user = user_response.data
+      localStorage.setItem(
+        'user',
+        JSON.stringify({ ...user.userDetails, jwtToken: user.jwtToken }),
+      )
+      loginContext()
       return history.push('/admin/index')
     } catch (err) {
       console.log(err)
