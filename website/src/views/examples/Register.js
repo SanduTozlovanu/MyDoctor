@@ -474,10 +474,10 @@ const ThirdStep = ({ firstName, lastName, email, password, history }) => {
           lastName: lastName,
           email: email,
           password: password,
-          profilePhoto: profilePhoto,
-          degreePhoto: degreePhoto,
         },
         speciality: speciality,
+        profilePhoto: profilePhoto,
+        diplomaPhoto: degreePhoto,
       }
       const register_response = await AuthApi.RegisterDoctor(credentials)
       const user_response = await AuthApi.Login({

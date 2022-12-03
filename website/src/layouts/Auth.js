@@ -44,9 +44,6 @@ const Auth = (props) => {
 
   const getRoutes = (routes) => {
     return routes.map((prop, key) => {
-      if (prop.hide) {
-        return null
-      }
       if (prop.layout === "/auth") {
         return (
           <Route
