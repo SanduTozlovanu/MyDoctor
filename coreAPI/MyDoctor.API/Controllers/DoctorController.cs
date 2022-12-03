@@ -67,28 +67,28 @@ namespace MyDoctor.API.Controllers
             var doctor = new Doctor(dto.UserDetails.Email, hashedPassword, dto.UserDetails.FirstName, dto.UserDetails.LastName, dto.Speciality);
             medicalRoom.RegisterDoctors(new List<Doctor> { doctor });
 
-            if (dto.ProfilePhoto == null)
-            {
-                return BadRequest("No profile photo has been loaded.");
-            }
-            if (dto.DiplomaPhoto == null)
-            {
-                return BadRequest("No diploma photo has been loaded.");
-            }
-            try
-            {
-                var profilePhotoPath = Path.Combine(Directory.GetCurrentDirectory(), "profilePhotos", dto.ProfilePhoto.FileName);
-                var diplomaPhotoPath = Path.Combine(Directory.GetCurrentDirectory(), "diplomaPhotos", dto.DiplomaPhoto.FileName);
+            //if (dto.ProfilePhoto == null)
+            //{
+            //    return BadRequest("No profile photo has been loaded.");
+            //}
+            //if (dto.DiplomaPhoto == null)
+            //{
+            //    return BadRequest("No diploma photo has been loaded.");
+            //}
+            //try
+            //{
+            //    var profilePhotoPath = Path.Combine(Directory.GetCurrentDirectory(), "profilePhotos", dto.ProfilePhoto.FileName);
+            //    var diplomaPhotoPath = Path.Combine(Directory.GetCurrentDirectory(), "diplomaPhotos", dto.DiplomaPhoto.FileName);
 
-                var profileStream = new FileStream(profilePhotoPath, FileMode.Create);
-                var diplomaStream = new FileStream(diplomaPhotoPath, FileMode.Create);
-                dto.ProfilePhoto.CopyToAsync(profileStream);
-                dto.DiplomaPhoto.CopyToAsync(diplomaStream);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest($"An error occured during processing the images - {ex}.");
-            }
+            //    var profileStream = new FileStream(profilePhotoPath, FileMode.Create);
+            //    var diplomaStream = new FileStream(diplomaPhotoPath, FileMode.Create);
+            //    dto.ProfilePhoto.CopyToAsync(profileStream);
+            //    dto.DiplomaPhoto.CopyToAsync(diplomaStream);
+            //}
+            //catch (Exception ex)
+            //{
+            //    return BadRequest($"An error occured during processing the images - {ex}.");
+            //}
 
             doctorsRepository.Add(doctor);
             doctorsRepository.SaveChanges();
