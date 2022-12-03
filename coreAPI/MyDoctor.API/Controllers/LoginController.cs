@@ -32,7 +32,7 @@ namespace MyDoctor.API.Controllers
                 if (AccountInfoManager.ValidatePassword(user.Password, dto.Password))
                 {
                     string jwtToken = JwtManager.GenerateToken(user);
-                    return Ok(new DisplayLoginDto(user.Id, user.AccountType, user.FirstName, user.LastName, user.Email, jwtToken));
+                    return Ok(new DisplayLoginDto(user, jwtToken));
                 }
             }
 
