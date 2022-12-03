@@ -23,6 +23,7 @@ import Login from "views/examples/Login.js";
 import Tables from "views/examples/Tables.js";
 import Icons from "views/examples/Icons.js";
 import Logout from "views/examples/Logout";
+import CreateAppointment from "views/examples/CreateAppointment";
 
 var routes = [
   {
@@ -83,6 +84,13 @@ var routes = [
     component: Logout,
     layout: "/auth",
     hide: true
+  },
+  {
+    path: "/create-appointment",
+    name: "Create Appointment",
+    icon: "ni ni-book-bookmark",
+    component: CreateAppointment,
+    layout: "/admin"
   }
 ];
 export default routes;

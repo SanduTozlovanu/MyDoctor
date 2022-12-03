@@ -15,7 +15,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom'
 // reactstrap components
 import {
   UncontrolledCollapse,
@@ -26,10 +26,12 @@ import {
   Nav,
   Container,
   Row,
-  Col
-} from "reactstrap";
+  Col,
+} from 'reactstrap'
+import { useUserContext } from 'context/UserContext'
 
 const AdminNavbar = () => {
+  const { user } = useUserContext()
   return (
     <>
       <Navbar className="navbar-top navbar-horizontal navbar-dark" expand="md">
@@ -37,7 +39,7 @@ const AdminNavbar = () => {
           <NavbarBrand to="/" tag={Link}>
             <img
               alt="..."
-              src={require("../../assets/img/brand/logo-white.png")}
+              src={require('../../assets/img/brand/logo-white.png')}
             />
           </NavbarBrand>
           <button className="navbar-toggler" id="navbar-collapse-main">
@@ -50,7 +52,7 @@ const AdminNavbar = () => {
                   <Link to="/">
                     <img
                       alt="..."
-                      src={require("../../assets/img/brand/argon-react.png")}
+                      src={require('../../assets/img/brand/argon-react.png')}
                     />
                   </Link>
                 </Col>
@@ -64,7 +66,11 @@ const AdminNavbar = () => {
             </div>
             <Nav className="ml-auto" navbar>
               <NavItem>
-                <NavLink className="nav-link-icon" to="/" tag={Link}>
+                <NavLink
+                  className="nav-link-icon"
+                  to={user && user.id ? '/' : '/auth/login'}
+                  tag={Link}
+                >
                   <i className="ni ni-planet" />
                   <span className="nav-link-inner--text">Dashboard</span>
                 </NavLink>
@@ -88,7 +94,7 @@ const AdminNavbar = () => {
               <NavItem>
                 <NavLink
                   className="nav-link-icon"
-                  to="/admin/user-profile"
+                  to={user && user.id ? '/' : '/auth/login'}
                   tag={Link}
                 >
                   <i className="ni ni-single-02" />
@@ -100,7 +106,7 @@ const AdminNavbar = () => {
         </Container>
       </Navbar>
     </>
-  );
-};
+  )
+}
 
-export default AdminNavbar;
+export default AdminNavbar

@@ -10,7 +10,9 @@ axios.interceptors.request.use(
     let user = localStorage.getItem('user')
     if (user) {
       user = JSON.parse(user)
-      config.headers.Authorization = user && user.jwtToken ? user.jwtToken : null
+      if (user.jwtToken) {
+        config.headers.Authorization = user.jwtToken
+      }
     }
     return Promise.resolve(config)
   },
