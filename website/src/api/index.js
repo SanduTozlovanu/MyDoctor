@@ -7,8 +7,11 @@ const axios = Axios.create({
 
 axios.interceptors.request.use(
   (config) => {
-    const token = 'faketoken'
-    config.headers.Authorization = token
+    let user = localStorage.getItem('user')
+    if (user) {
+      user = JSON.parse(user)
+      config.headers.Authorization = user && user.jwtToken ? user.jwtToken : null
+    }
     return Promise.resolve(config)
   },
   (error) => Promise.reject(error),
