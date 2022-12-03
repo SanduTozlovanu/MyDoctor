@@ -15,10 +15,12 @@ namespace TestProject1
     public class IntegrationTests : IClassFixture<WebApplicationFactory<Program>>
     {
         private readonly HttpClient _client;
+        private readonly DatabaseContext dbContext;
 
         public IntegrationTests(WebApplicationFactory<Program> factory)
         {
             _client = factory.CreateClient();
+            dbContext = CreateDbContext();
         }
 
         private DatabaseContext CreateDbContext()
@@ -30,12 +32,21 @@ namespace TestProject1
             return context;
         }
 
+        private void Init()
+        {
+            // Create 1
+
+            // Create 2
+
+        }
+
         [Fact]
         public async Task PatientsController()
         {
 
             // Given
-            var dbContext = CreateDbContext();
+            Init();
+            
 
             // When
             string request = "https://localhost:7244/api/Patients";
