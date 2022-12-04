@@ -13,8 +13,7 @@ namespace MyDoctor.IntegTests
     public class MedicalRoomControllerTest : IClassFixture<DatabaseFixture>
     {
         private readonly HttpClient _client;
-        private readonly DatabaseContext dbContext;
-        private readonly DatabaseFixture databaseFixture;
+        private DatabaseFixture databaseFixture;
 
         public MedicalRoomControllerTest(DatabaseFixture databaseFixture)
         {
@@ -48,7 +47,7 @@ namespace MyDoctor.IntegTests
             var cont = JsonConvert.DeserializeObject<DisplayMedicalRoomDto>(jsonString);
             DisplayMedicalRoomDto expectedObject = new DisplayMedicalRoomDto(cont.Id, mdDto.Adress);
             Assert.True(expectedObject.Equals(cont));
-            MedicalRoom medicalRoom = dbContext.MedicalRooms.Find(cont.Id);
+            MedicalRoom medicalRoom = databaseFixture.DatabaseContext.MedicalRooms.Find(cont.Id);
             Assert.NotNull(medicalRoom);
             Assert.Equal(medicalRoom.Adress, mdDto.Adress);
             Assert.Equal(medicalRoom.Id, cont.Id);

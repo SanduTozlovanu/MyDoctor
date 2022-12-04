@@ -13,7 +13,7 @@ namespace MyDoctor.IntegTests
     public class PatientControllerTest : IClassFixture<DatabaseFixture>
     {
         private readonly HttpClient _client;
-        DatabaseFixture databaseFixture;
+        private DatabaseFixture databaseFixture;
 
         // Ctor is called for every test method
         public PatientControllerTest(DatabaseFixture databaseFixture)
