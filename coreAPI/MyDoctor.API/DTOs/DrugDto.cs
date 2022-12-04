@@ -30,5 +30,19 @@
         public string Description { get; set; }
         public double Price { get; set; }
         public uint Quantity { get; set; }
+
+        public override bool Equals(Object obj)
+        {
+            //Check for null and compare run-time types.
+            if ((obj == null) || !this.GetType().Equals(obj.GetType()))
+            {
+                return false;
+            }
+            else
+            {
+                DisplayDrugDto dto = (DisplayDrugDto)obj;
+                return (this.Id == dto.Id) && (this.Name == dto.Name) && (this.Price == dto.Price) && (this.Description == dto.Description) && (this.Quantity == dto.Quantity);
+            }
+        }
     }
 }

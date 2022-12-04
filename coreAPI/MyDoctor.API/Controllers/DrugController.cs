@@ -9,6 +9,7 @@ namespace MyDoctor.API.Controllers
     [ApiController]
     public class DrugController : ControllerBase
     {
+        private const string DrugStockNotFoundError = "Could not find a drugStock with this Id.";
         private readonly IRepository<Drug> drugRepository;
         private readonly IRepository<DrugStock> drugStockRepository;
 
@@ -30,13 +31,13 @@ namespace MyDoctor.API.Controllers
         ///     You can put multiple drugs.
         ///         
         /// </remarks>
-        [HttpPost]
+        [HttpPost("{drugStockId:guid}")]
         public IActionResult Create(Guid drugStockId, [FromBody] List<CreateDrugDto> dtos)
         {
             var drugStock = drugStockRepository.Get(drugStockId);
             if (drugStock == null)
             {
-                return NotFound("Could not find a drugStock with this Id.");
+                return NotFound(DrugStockNotFoundError);
             }
 
             List<Drug> drugs = dtos.Select(dto => new Drug(dto.Name, dto.Description, dto.Price, dto.Quantity)).ToList();
@@ -51,5 +52,6 @@ namespace MyDoctor.API.Controllers
             drugs.ForEach(drug => drugDtos.Add(new DisplayDrugDto(drug.Id, drug.DrugStockId, drug.Name, drug.Description, drug.Price, drug.Quantity)));
             return Ok(drugDtos);
         }
+
     }
 }

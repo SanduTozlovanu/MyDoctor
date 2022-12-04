@@ -1,44 +1,21 @@
 ﻿using Microsoft.AspNetCore.Mvc.Testing;
 using MyDoctor.API.DTOs;
 using MyDoctor.Domain.Models;
-using MyDoctorApp.Infrastructure;
 using Newtonsoft.Json;
 using System.Text;
 
 namespace MyDoctor.IntegTests
 {
-    public class MedicalRoomControllerTest : IClassFixture<WebApplicationFactory<Program>>
+    public class MedicalRoomControllerTest : AIntegrationTest
     {
-        private readonly HttpClient _client;
-        private readonly DatabaseContext dbContext;
-
-        public MedicalRoomControllerTest(WebApplicationFactory<Program> factory)
+        public MedicalRoomControllerTest(WebApplicationFactory<Program> factory) : base(factory)
         {
-            _client = factory.CreateClient();
-            dbContext = CreateDbContext();
-        }
-
-        private DatabaseContext CreateDbContext()
-        {
-            var context = new DatabaseContext();
-            DatabaseContext.DatabaseName = "Tests.db";
-            context.Database.EnsureCreated();
-
-            return context;
-        }
-
-        private void Init()
-        {
-
         }
 
         [Fact]
-        public async Task TestCreatePacient()
+        public async Task TestCreateMedicalRoom()
         {
-
-            // Given
-            Init();
-
+        
             // When
             string request = "https://localhost:7244/api/MedicalRoom";
             CreateMedicalRoomDto mdDto = new CreateMedicalRoomDto();
@@ -58,11 +35,8 @@ namespace MyDoctor.IntegTests
         }
 
         [Fact]
-        public async Task TestGetPacients()
+        public async Task TestGetMedicalRooms()
         {
-
-            // Given
-            Init();
 
             // When
             string request = "https://localhost:7244/api/MedicalRoom";
@@ -76,7 +50,7 @@ namespace MyDoctor.IntegTests
             var res1 = await _client.PostAsync(request, content1);
             var res2 = await _client.PostAsync(request, content2);
             Assert.Equal(System.Net.HttpStatusCode.OK, res1.StatusCode);
-            Assert.Equal(res2.StatusCode, System.Net.HttpStatusCode.OK);
+            Assert.Equal(System.Net.HttpStatusCode.OK, res2.StatusCode);
 
             var res = await _client.GetAsync(request);
 

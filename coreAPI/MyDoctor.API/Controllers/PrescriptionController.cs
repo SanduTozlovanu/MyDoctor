@@ -9,6 +9,12 @@ namespace MyDoctor.API.Controllers
     [ApiController]
     public class PrescriptionController : ControllerBase
     {
+        private const string AppointmentNotFoundError = "Could not find an appointment with this Id.";
+        private const string DoctorNotFoundError = "Could not find the doctor in the DataBase";
+        private const string DrugStockNotFoundError = "Could not find the drugStock in the DataBase";
+        private const string DrugCreateError = "Could not create drugs.";
+        private const string TooManyDrugsTakenError = "You tried to take more drugs than it's available.";
+        private const string BillNotFoundError = "Could not find the bill of the appointment with this Id.";
         private readonly IRepository<Prescription> prescriptonRepository;
         private readonly IRepository<Appointment> appointmentRepository;
         private readonly IRepository<DrugStock> drugStockRepository;
@@ -52,14 +58,14 @@ namespace MyDoctor.API.Controllers
         ///     procedures and drugs fields are optional.
         ///     
         /// </remarks>
-        [HttpPost("{appointmentId:guid}/create_prescription")]
+        [HttpPost("{appointmentId:guid}")]
         public IActionResult Create(Guid appointmentId, [FromBody] CreatePrescriptionDto dto)
         {
             Prescription prescription = new Prescription(dto.Description, dto.Name);
             Appointment appointment = appointmentRepository.Get(appointmentId);
             if (appointment == null)
             {
-                return NotFound("Could not find an appointment with this Id.");
+                return NotFound(AppointmentNotFoundError);
             }
             if (dto.procedures.Any())
             {
@@ -72,12 +78,12 @@ namespace MyDoctor.API.Controllers
                 Doctor doctor = doctorRepository.Get(appointment.DoctorId);
                 if (doctor == null)
                 {
-                    return NotFound("Could not find the doctor in the DataBase");
+                    return NotFound(DoctorNotFoundError);
                 }
                 DrugStock? drugStock = drugStockRepository.Find(ds => ds.MedicalRoomId == doctor.MedicalRoomId).FirstOrDefault();
                 if (drugStock == null) 
                 {
-                    return NotFound("Could not find the drugStock in the DataBase");
+                    return NotFound(DrugStockNotFoundError);
                 }
                 bool drugNotFound = false;
                 List<Tuple<Guid, uint>> getDrugTuples = dto.drugs.Select(dto => Tuple.Create(dto.drugId, dto.Quantity)).ToList();
@@ -98,15 +104,9 @@ namespace MyDoctor.API.Controllers
                         drugTuples.Add(Tuple.Create(drug, quantityToTake));
                     }
                 }
-
-
-                if (drugStock == null)
-                {
-                    return NotFound("Could not find a drugStock with this Id.");
-                }
                 if (drugNotFound == true)
                 {
-                    return NotFound("Could not create drugs.");
+                    return NotFound(DrugCreateError);
                 }
 
                 List<Drug> drugs = new List<Drug>();
@@ -117,7 +117,7 @@ namespace MyDoctor.API.Controllers
 
                     if (drug.GetDrugs(quantityToTake).IsFailure)
                     {
-                        return BadRequest("You tried to take more drugs than it's available.");
+                        return BadRequest(TooManyDrugsTakenError);
                     }
                     drugRepository.Update(drug);
 
@@ -141,7 +141,7 @@ namespace MyDoctor.API.Controllers
             Bill? bill = billRepository.Find(b => b.AppointmentId == appointment.Id).FirstOrDefault();
             if (bill == null)
             {
-                return NotFound("Could not find the bill of the appointment with this Id.");
+                return NotFound(BillNotFoundError);
             }
             appointment.RegisterBill(bill);
             billRepository.Update(bill);

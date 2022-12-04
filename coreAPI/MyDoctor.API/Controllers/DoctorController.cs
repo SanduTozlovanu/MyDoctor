@@ -10,6 +10,10 @@ namespace MyDoctor.API.Controllers
     [ApiController]
     public class DoctorController : ControllerBase
     {
+        private const string FreeMedicalRoomNotFoundError = "Could not find a free medical room for this doctor.";
+        private const string MedicalRoomNotFoundError = "Could not find a medicalRoom with this Id.";
+        private const string UsedEmailError = "The email is already used!";
+        private const string InvalidEmailError = "The email is invalid!";
         private readonly IRepository<Doctor> doctorsRepository;
         private readonly IRepository<MedicalRoom> medicalRoomRepository;
         private readonly IRepository<Patient> patientsRepository;
@@ -29,7 +33,7 @@ namespace MyDoctor.API.Controllers
             return Ok(doctorsRepository.All().Select(d => new DisplayDoctorDto(d.Id, d.MedicalRoomId, d.Email, d.Speciality, d.FirstName, d.LastName)));
         }
         [HttpPost]
-        public IActionResult Create([FromForm] CreateDoctorDto dto)
+        public IActionResult Create([FromBody] CreateDoctorDto dto)
         {
             List<MedicalRoom> medicalRooms = medicalRoomRepository.All().ToList();
             (MedicalRoom?, int) medicalRoomWithFewestDoctors = new(null, int.MaxValue);
@@ -42,24 +46,24 @@ namespace MyDoctor.API.Controllers
             });
             if (medicalRoomWithFewestDoctors.Item1 == null)
             {
-                return NotFound("Could not find a free medical room for this doctor.");
+                return NotFound(FreeMedicalRoomNotFoundError);
             }
             MedicalRoom medicalRoom = medicalRoomWithFewestDoctors.Item1;
             if (medicalRoom == null)
             {
-                return NotFound("Could not find a medicalRoom with this Id.");
+                return NotFound(MedicalRoomNotFoundError);
             }
 
             var oldPatient = patientsRepository.Find(p => p.Email == dto.UserDetails.Email).FirstOrDefault();
             var oldDoctor = doctorsRepository.Find(d => d.Email == dto.UserDetails.Email).FirstOrDefault();
             if (oldPatient != null || oldDoctor != null)
             {
-                return BadRequest("The email is already used!");
+                return BadRequest(UsedEmailError);
             }
 
             if (!AccountInfoManager.ValidateEmail(dto.UserDetails.Email))
             {
-                return BadRequest("The email is invalid!");
+                return BadRequest(InvalidEmailError);
             }
 
 

@@ -9,6 +9,8 @@ namespace MyDoctor.API.Controllers
     [ApiController]
     public class AppointmentController : ControllerBase
     {
+        private const string PatientNotFoundError = "Could not find a patient with this Id.";
+        private const string DoctorNotFoundError = "Could not find a doctor with this Id.";
         private readonly IRepository<Appointment> appointmentRepository;
         private readonly IRepository<AppointmentInterval> appointmentIntervalRepository;
         private readonly IRepository<Bill> billRepository;
@@ -41,11 +43,11 @@ namespace MyDoctor.API.Controllers
             var doctor = doctorRepository.Get(doctorId);
             if (patient == null)
             {
-                return NotFound("Could not find a patient with this Id.");
+                return NotFound(PatientNotFoundError);
             }
             if (doctor == null)
             {
-                return NotFound("Could not find a doctor with this Id.");
+                return NotFound(DoctorNotFoundError);
             }
 
             var appointment = new Appointment(dto.Price);

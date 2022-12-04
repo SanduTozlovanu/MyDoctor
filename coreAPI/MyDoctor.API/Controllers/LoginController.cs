@@ -11,6 +11,7 @@ namespace MyDoctor.API.Controllers
     [ApiController]
     public class LoginController : ControllerBase
     {
+        private const string InvalidCredentialsError = "Invalid credentials!";
         private readonly IRepository<Patient> patientsRepository;
         private readonly IRepository<Doctor> doctorsRepository;
 
@@ -36,7 +37,7 @@ namespace MyDoctor.API.Controllers
                 }
             }
 
-            return BadRequest("Invalid credentials!");
+            return BadRequest(InvalidCredentialsError);
         }
     }
 }

@@ -12,6 +12,9 @@ namespace MyDoctor.API.Controllers
     [ApiController]
     public class PatientsController : ControllerBase
     {
+        private const string UsedEmailError = "The email is already used!";
+        private const string InvalidEmailError = "The email is invalid!";
+        private const string BigAgeError = "Too big age value.";
         private readonly IRepository<Patient> patientsRepository;
         private readonly IRepository<MedicalHistory> medicalHistoryRepository;
         private readonly IRepository<Doctor> doctorsRepository;
@@ -34,16 +37,18 @@ namespace MyDoctor.API.Controllers
         [HttpPost]
         public IActionResult Create([FromBody] CreatePatientDto dto)
         {
+            if (dto.Age > 120) return BadRequest(BigAgeError);
+
             var oldPatient = patientsRepository.Find(p => p.Email == dto.UserDetails.Email).FirstOrDefault();
             var oldDoctor = doctorsRepository.Find(d => d.Email == dto.UserDetails.Email).FirstOrDefault();
             if (oldPatient != null || oldDoctor != null)
             {
-                return BadRequest("The email is already used!");
+                return BadRequest(UsedEmailError);
             }
 
             if (!AccountInfoManager.ValidateEmail(dto.UserDetails.Email))
             {
-                return BadRequest("The email is invalid!");
+                return BadRequest(InvalidEmailError);
             }
 
             string hashedPassword = AccountInfoManager.HashPassword(dto.UserDetails.Password);
