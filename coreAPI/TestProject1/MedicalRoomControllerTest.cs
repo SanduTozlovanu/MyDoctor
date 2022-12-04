@@ -18,7 +18,7 @@ namespace MyDoctor.IntegTests
 
         public MedicalRoomControllerTest(DatabaseFixture databaseFixture)
         {
-            var app = new WebApplicationFactory<PatientsController>()
+            var app = new WebApplicationFactory<MedicalRoom>()
                 .WithWebHostBuilder(builder => { });
             _client = app.CreateClient();
             this.databaseFixture = databaseFixture;
