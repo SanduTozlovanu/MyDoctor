@@ -1,6 +1,6 @@
-namespace MyDoctor.IntegrationTests
+namespace MyDoctor.UnitTests
 {
-    public class PatientControllerTest
+    public class DomainTest
     {
         [Fact]
         public void Test1()
