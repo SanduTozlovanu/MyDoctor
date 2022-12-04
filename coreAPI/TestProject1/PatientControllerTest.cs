@@ -85,7 +85,7 @@ namespace MyDoctor.IntegTests
             Assert.Equal(actualJsonString, expectedJsonString);
         }
 
-        [Fact, TestPriority(2)]
+        [Fact]
         public async Task CreatePacient_InvalidEmail()
         {
 
