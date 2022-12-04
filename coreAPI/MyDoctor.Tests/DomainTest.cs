@@ -1,5 +1,4 @@
 using MyDoctor.Domain.Models;
-using System.Runtime.InteropServices;
 
 namespace MyDoctor.Tests
 {

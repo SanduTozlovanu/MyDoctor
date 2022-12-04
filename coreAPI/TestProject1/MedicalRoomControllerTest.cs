@@ -1,39 +1,37 @@
 ﻿using Microsoft.AspNetCore.Mvc.Testing;
+using MyDoctor.API.Controllers;
 using MyDoctor.API.DTOs;
 using MyDoctor.Domain.Models;
+using MyDoctor.IntegTests.Helpers;
+using MyDoctor.IntegTests.Orderers;
 using MyDoctorApp.Infrastructure;
 using Newtonsoft.Json;
 using System.Text;
 
 namespace MyDoctor.IntegTests
 {
-    public class MedicalRoomControllerTest : IClassFixture<WebApplicationFactory<Program>>
+    public class MedicalRoomControllerTest : IClassFixture<DatabaseFixture>
     {
         private readonly HttpClient _client;
         private readonly DatabaseContext dbContext;
+        private readonly DatabaseFixture databaseFixture;
 
-        public MedicalRoomControllerTest(WebApplicationFactory<Program> factory)
+        public MedicalRoomControllerTest(DatabaseFixture databaseFixture)
         {
-            _client = factory.CreateClient();
-            dbContext = CreateDbContext();
+            var app = new WebApplicationFactory<PatientsController>()
+                .WithWebHostBuilder(builder => { });
+            _client = app.CreateClient();
+            this.databaseFixture = databaseFixture;
         }
 
-        private DatabaseContext CreateDbContext()
-        {
-            var context = new DatabaseContext();
-            DatabaseContext.DatabaseName = "Tests.db";
-            context.Database.EnsureCreated();
-
-            return context;
-        }
 
         private void Init()
         {
 
         }
 
-        [Fact]
-        public async Task TestCreatePacient()
+        [Fact, TestPriority(0)]
+        public async Task CreatePacient()
         {
 
             // Given
@@ -57,8 +55,8 @@ namespace MyDoctor.IntegTests
             
         }
 
-        [Fact]
-        public async Task TestGetPacients()
+        [Fact, TestPriority(1)]
+        public async Task GetPacients()
         {
 
             // Given

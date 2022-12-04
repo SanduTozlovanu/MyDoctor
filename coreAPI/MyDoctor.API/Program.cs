@@ -1,4 +1,3 @@
-using MyDoctor;
 using MyDoctor.Domain.Models;
 using MyDoctorApp.Infrastructure;
 using MyDoctorApp.Infrastructure.Generics;
