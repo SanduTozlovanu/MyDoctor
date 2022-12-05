@@ -440,6 +440,7 @@ const ThirdStep = ({ firstName, lastName, email, password, history }) => {
     { value: 'internal medicine', label: 'Internal medicine' },
   ]
 
+
   function uploadFile(event, type) {
     var blobFile = event.target.files[0]
     const img = new Image()
@@ -450,7 +451,6 @@ const ThirdStep = ({ firstName, lastName, email, password, history }) => {
     } else if (type === 'degree') {
       setDegreePhoto(img.src)
     }
-
     const formData = new FormData()
     formData.append('fileToUpload', blobFile)
     try {
@@ -475,17 +475,28 @@ const ThirdStep = ({ firstName, lastName, email, password, history }) => {
     }
     setCreating(true)
     try {
-      const credentials = {
-        userDetails: {
-          firstName: firstName,
-          lastName: lastName,
-          email: email,
-          password: password,
-        },
-        speciality: speciality,
-        profilePhoto: profilePhoto,
-        diplomaPhoto: degreePhoto,
+      const credentials = new  FormData()
+      const data = {
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        password: password
       }
+      credentials.append("userDetails", data);
+      credentials.append("speciality", speciality)
+      credentials.append("profilePhoto", profilePhoto)
+      credentials.append("diplomaPhoto", degreePhoto)
+      // const credentials = {
+      //   userDetails: {
+      //     firstName: firstName,
+      //     lastName: lastName,
+      //     email: email,
+      //     password: password,
+      //   },
+      //   speciality: speciality,
+      //   profilePhoto: profilePhoto,
+      //   diplomaPhoto: degreePhoto,
+      // }
       await AuthApi.RegisterDoctor(credentials)
       const user_response = await AuthApi.Login({
         email: email,
