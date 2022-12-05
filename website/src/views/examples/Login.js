@@ -32,6 +32,7 @@ import {
 } from 'reactstrap'
 import AuthApi from 'api/auth'
 import { useHistory } from 'react-router-dom'
+import { useUserContext } from "context/UserContext";
 
 const Login = () => {
   const [email, setEmail] = useState('')
@@ -39,6 +40,7 @@ const Login = () => {
   const [error, setError] = useState(null)
   const [showPassword, setShowPassword] = useState(false)
   const history = useHistory()
+  const { login: loginContext } = useUserContext()
 
   useEffect(() => {
     setError(null)
@@ -54,9 +56,13 @@ const Login = () => {
         password: password,
       }
       const response = await AuthApi.Login(credentials)
-      console.log(response)
-      localStorage.setItem('user', JSON.stringify(response.data))
-      return history.push("/admin/index")
+      const user = response.data
+      localStorage.setItem(
+        'user',
+        JSON.stringify({ ...user.userDetails, jwtToken: user.jwtToken }),
+      )
+      loginContext();
+      return history.push('/admin/index')
     } catch (err) {
       console.log(err)
       if (err && err.response && err.response.data) {
@@ -94,20 +100,20 @@ const Login = () => {
                 <InputGroup className="input-group-alternative">
                   <InputGroupAddon addonType="prepend">
                     <InputGroupText>
-                    <i
-                    onClick={() => setShowPassword(!showPassword)}
-                    className={
-                      showPassword
-                        ? 'fas fa-eye-slash c-pointer'
-                        : 'fas fa-eye c-pointer'
-                    }
-                    />
+                      <i
+                        onClick={() => setShowPassword(!showPassword)}
+                        className={
+                          showPassword
+                            ? 'fas fa-eye-slash c-pointer'
+                            : 'fas fa-eye c-pointer'
+                        }
+                      />
                     </InputGroupText>
                   </InputGroupAddon>
                   <Input
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Password"
-                    type={showPassword ? "text" : "password"}
+                    type={showPassword ? 'text' : 'password'}
                     autoComplete="new-password"
                   />
                 </InputGroup>

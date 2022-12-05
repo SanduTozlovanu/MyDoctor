@@ -15,64 +15,89 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React from "react";
-import { useLocation, Route, Switch, Redirect } from "react-router-dom";
+import React, { useEffect, useState } from 'react'
+import { useLocation, Route, Switch } from 'react-router-dom'
 // reactstrap components
-import { Container } from "reactstrap";
+import { Container } from 'reactstrap'
 // core components
-import AdminNavbar from "components/Navbars/AdminNavbar.js";
-import AdminFooter from "components/Footers/AdminFooter.js";
-import Sidebar from "components/Sidebar/Sidebar.js";
+import AdminNavbar from 'components/Navbars/AdminNavbar.js'
+import AdminFooter from 'components/Footers/AdminFooter.js'
+import Sidebar from 'components/Sidebar/Sidebar.js'
+import { useUserContext } from 'context/UserContext'
+import { useHistory } from 'react-router-dom'
 
-import routes from "routes.js";
+import routes from 'routes.js'
 
 const Admin = (props) => {
-  const mainContent = React.useRef(null);
-  const location = useLocation();
+  const [paths, setPaths] = useState([])
+  const { user } = useUserContext()
+  const history = useHistory()
+
+  const mainContent = React.useRef(null)
+  const location = useLocation()
+
+  useEffect(() => {
+    if (user && user.id) {
+      switch (user.accountType) {
+        case 'ADMIN':
+          setPaths(routes.ADMIN)
+          break
+        case 'DOCTOR':
+          setPaths(routes.DOCTOR)
+          break
+        case 'PATIENT':
+          setPaths(routes.PATIENT)
+          break
+        default:
+          setPaths(routes.PATIENT)
+          break
+      }
+    }
+  }, [history, user])
 
   React.useEffect(() => {
-    document.documentElement.scrollTop = 0;
-    document.scrollingElement.scrollTop = 0;
-    mainContent.current.scrollTop = 0;
-  }, [location]);
+    document.documentElement.scrollTop = 0
+    document.scrollingElement.scrollTop = 0
+    mainContent.current.scrollTop = 0
+  }, [location])
 
-  const getRoutes = (routes) => {
-    return routes.map((prop, key) => {
-      if (prop.layout === "/admin") {
+  const getRoutes = (routing) => {
+    return routing.map((prop, key) => {
+      if (prop.layout === '/admin') {
         return (
           <Route
             path={prop.layout + prop.path}
             component={prop.component}
             key={key}
           />
-        );
+        )
       } else {
-        return null;
+        return null
       }
-    });
-  };
+    })
+  }
 
   const getBrandText = (path) => {
-    for (let i = 0; i < routes.length; i++) {
+    for (let i = 0; i < paths.length; i++) {
       if (
-        props.location.pathname.indexOf(routes[i].layout + routes[i].path) !==
+        props.location.pathname.indexOf(paths[i].layout + paths[i].path) !==
         -1
       ) {
-        return routes[i].name;
+        return paths[i].name
       }
     }
-    return "Brand";
-  };
+    return 'Brand'
+  }
 
   return (
     <>
       <Sidebar
         {...props}
-        routes={routes}
+        routes={paths}
         logo={{
-          innerLink: "/admin/index",
-          imgSrc: require("../assets/img/brand/logo.png"),
-          imgAlt: "..."
+          innerLink: '/admin/index',
+          imgSrc: require('../assets/img/brand/logo.png'),
+          imgAlt: '...',
         }}
       />
       <div className="main-content" ref={mainContent}>
@@ -81,15 +106,15 @@ const Admin = (props) => {
           brandText={getBrandText(props.location.pathname)}
         />
         <Switch>
-          {getRoutes(routes)}
-          <Redirect from="*" to="/admin/index" />
+          {getRoutes(paths)}
+          {/* <Redirect from="*" to="/admin/index" /> */}
         </Switch>
         <Container fluid>
           <AdminFooter />
         </Container>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default Admin;
+export default Admin
