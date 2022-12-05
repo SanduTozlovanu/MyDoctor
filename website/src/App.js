@@ -15,10 +15,10 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { createContext, useState, useEffect } from 'react'
+import React from 'react'
 
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom'
-
+import { UserContextProvider } from 'context/UserContext'
 import 'assets/plugins/nucleo/css/nucleo.css'
 import '@fortawesome/fontawesome-free/css/all.min.css'
 // eslint-disable-next-line
@@ -26,30 +26,19 @@ import 'assets/scss/argon-dashboard-react.scss'
 
 import AdminLayout from 'layouts/Admin.js'
 import AuthLayout from 'layouts/Auth.js'
-
-const UserContext = createContext()
+import ProtectedRoute from 'ProtectedRoute'
 
 const App = () => {
-  const [user, setUser] = useState(null)
-
-  useEffect(() => {
-    let userLocal = localStorage.getItem("user");
-    if (userLocal && typeof userLocal === 'string') {
-      userLocal = JSON.parse(userLocal)
-      setUser(userLocal)
-    }
-  }, [])
-
   return (
-    <UserContext.Provider value={user}>
+    <UserContextProvider>
       <BrowserRouter>
         <Switch>
-          <Route path="/admin" render={(props) => <AdminLayout {...props} />} />
-          <Route path="/auth" render={(props) => <AuthLayout {...props} />} />
+          <ProtectedRoute path="/admin" component={AdminLayout} />
+          <Route path="/auth" component={AuthLayout} />
           <Redirect from="/" to="/admin/index" />
         </Switch>
       </BrowserRouter>
-    </UserContext.Provider>
+    </UserContextProvider>
   )
 }
 
