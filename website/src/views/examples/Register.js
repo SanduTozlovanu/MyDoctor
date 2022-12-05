@@ -475,28 +475,15 @@ const ThirdStep = ({ firstName, lastName, email, password, history }) => {
     }
     setCreating(true)
     try {
-      const credentials = new  FormData()
-      const data = {
-        firstName: firstName,
-        lastName: lastName,
-        email: email,
-        password: password
+      const credentials = {
+        userDetails: {
+          email: email,
+          password: password,
+          firstName: firstName,
+          lastName: lastName
+        },
+        speciality: speciality
       }
-      credentials.append("userDetails", data);
-      credentials.append("speciality", speciality)
-      credentials.append("profilePhoto", profilePhoto)
-      credentials.append("diplomaPhoto", degreePhoto)
-      // const credentials = {
-      //   userDetails: {
-      //     firstName: firstName,
-      //     lastName: lastName,
-      //     email: email,
-      //     password: password,
-      //   },
-      //   speciality: speciality,
-      //   profilePhoto: profilePhoto,
-      //   diplomaPhoto: degreePhoto,
-      // }
       await AuthApi.RegisterDoctor(credentials)
       const user_response = await AuthApi.Login({
         email: email,
