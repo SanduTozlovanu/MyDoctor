@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /*!
 
 =========================================================
@@ -15,7 +16,6 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-/*eslint-disable*/
 import { useState } from 'react'
 import { NavLink as NavLinkRRD, Link } from 'react-router-dom'
 // nodejs library to set properties for components
@@ -23,17 +23,11 @@ import { PropTypes } from 'prop-types'
 
 // reactstrap components
 import {
-  Button,
-  Card,
-  CardHeader,
-  CardBody,
-  CardTitle,
   Collapse,
   DropdownMenu,
   DropdownItem,
   UncontrolledDropdown,
   DropdownToggle,
-  FormGroup,
   Form,
   Input,
   InputGroupAddon,
@@ -45,22 +39,17 @@ import {
   NavItem,
   NavLink,
   Nav,
-  Progress,
-  Table,
   Container,
   Row,
   Col,
 } from 'reactstrap'
 import { useHistory } from 'react-router-dom'
 
-var ps
-
 const Sidebar = (props) => {
   const [collapseOpen, setCollapseOpen] = useState()
-  // verifies if routeName is the one active (in browser input)
-  const activeRoute = (routeName) => {
-    return props.location.pathname.indexOf(routeName) > -1 ? 'active' : ''
-  }
+  const history = useHistory()
+  const { routes, logo } = props
+
   // toggles collapse between opened and closed (true/false)
   const toggleCollapse = () => {
     setCollapseOpen((data) => !data)
@@ -73,7 +62,7 @@ const Sidebar = (props) => {
   const createLinks = (routes) => {
     return routes.map((prop, key) => {
       if (prop.hide) {
-        return 
+        return null;
       }
       return (
         <NavItem key={key}>
@@ -91,7 +80,6 @@ const Sidebar = (props) => {
     })
   }
 
-  const { bgColor, routes, logo } = props
   let navbarBrandProps
   if (logo && logo.innerLink) {
     navbarBrandProps = {
@@ -104,8 +92,6 @@ const Sidebar = (props) => {
       target: '_blank',
     }
   }
-
-  const history = useHistory()
 
   return (
     <Navbar

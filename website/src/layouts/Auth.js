@@ -43,7 +43,7 @@ const Auth = (props) => {
   }, [location]);
 
   const getRoutes = (routes) => {
-    return routes.map((prop, key) => {
+    return routes.PATIENT.map((prop, key) => {
       if (prop.layout === "/auth") {
         return (
           <Route
