@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-namespace MyDoctor.API.DTOs
+﻿namespace MyDoctor.API.DTOs
 {
     public class CreateDoctorDto
     {

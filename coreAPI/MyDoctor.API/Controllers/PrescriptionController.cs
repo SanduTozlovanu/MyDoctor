@@ -9,12 +9,12 @@ namespace MyDoctor.API.Controllers
     [ApiController]
     public class PrescriptionController : ControllerBase
     {
-        private const string AppointmentNotFoundError = "Could not find an appointment with this Id.";
-        private const string DoctorNotFoundError = "Could not find the doctor in the DataBase";
-        private const string DrugStockNotFoundError = "Could not find the drugStock in the DataBase";
-        private const string DrugCreateError = "Could not create drugs.";
-        private const string TooManyDrugsTakenError = "You tried to take more drugs than it's available.";
-        private const string BillNotFoundError = "Could not find the bill of the appointment with this Id.";
+        public const string AppointmentNotFoundError = "Could not find an appointment with this Id.";
+        public const string DoctorNotFoundError = "Could not find the doctor in the DataBase";
+        public const string DrugStockNotFoundError = "Could not find the drugStock in the DataBase";
+        public const string DrugCreateError = "Could not create drugs.";
+        public const string TooManyDrugsTakenError = "You tried to take more drugs than it's available.";
+        public const string BillNotFoundError = "Could not find the bill of the appointment with this Id.";
         private readonly IRepository<Prescription> prescriptonRepository;
         private readonly IRepository<Appointment> appointmentRepository;
         private readonly IRepository<DrugStock> drugStockRepository;

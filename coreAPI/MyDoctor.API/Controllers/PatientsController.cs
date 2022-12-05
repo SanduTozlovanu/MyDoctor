@@ -3,8 +3,6 @@ using MyDoctor.API.DTOs;
 using MyDoctor.API.Helpers;
 using MyDoctor.Domain.Models;
 using MyDoctorApp.Infrastructure.Generics;
-using MyDoctorApp.Infrastructure.Generics.GenericRepositories;
-using System.ComponentModel.DataAnnotations;
 
 namespace MyDoctor.API.Controllers
 {
@@ -12,9 +10,9 @@ namespace MyDoctor.API.Controllers
     [ApiController]
     public class PatientsController : ControllerBase
     {
-        private const string UsedEmailError = "The email is already used!";
-        private const string InvalidEmailError = "The email is invalid!";
-        private const string BigAgeError = "Too big age value.";
+        public const string UsedEmailError = "The email is already used!";
+        public const string InvalidEmailError = "The email is invalid!";
+        public const string BigAgeError = "Too big age value.";
         private readonly IRepository<Patient> patientsRepository;
         private readonly IRepository<MedicalHistory> medicalHistoryRepository;
         private readonly IRepository<Doctor> doctorsRepository;

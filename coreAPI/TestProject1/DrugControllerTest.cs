@@ -1,18 +1,28 @@
 ﻿using Microsoft.AspNetCore.Mvc.Testing;
+using MyDoctor.API.Controllers;
 using MyDoctor.API.DTOs;
+using MyDoctor.IntegTests.Helpers;
+using MyDoctor.IntegTests.Orderers;
 using Newtonsoft.Json;
-using System.Linq;
 using System.Text;
 
 namespace MyDoctor.IntegTests
 {
-    public class DrugControllerTest : AIntegrationTest
+    [TestCaseOrderer("MyDoctor.IntegTests.Orderers.PriorityOrderer", "MyDoctor.IntegTests")]
+    public class DrugControllerTest : IClassFixture<DatabaseFixture>
     {
-        public DrugControllerTest(WebApplicationFactory<Program> factory) : base(factory)
+        private readonly HttpClient _client;
+        private DatabaseFixture databaseFixture;
+
+        public DrugControllerTest(DatabaseFixture databaseFixture)
         {
+            var app = new WebApplicationFactory<DrugController>()
+                .WithWebHostBuilder(builder => { });
+            _client = app.CreateClient();
+            this.databaseFixture = databaseFixture;
         }
 
-        [Fact]
+        [Fact, TestPriority(0)]
         public async Task TestGetDrugs()
         {
 
@@ -21,7 +31,7 @@ namespace MyDoctor.IntegTests
             string request1 = "https://localhost:7244/api/DrugStock";
             string request3 = "https://localhost:7244/api/Drug/{0}";
             CreateMedicalRoomDto mdDto1 = new CreateMedicalRoomDto();
-            mdDto1.Adress = "Arahidei 19";
+            mdDto1.Adress = "Strada Farmaciei 8";
 
             var content1 = new StringContent(JsonConvert.SerializeObject(mdDto1), Encoding.UTF8, "application/json");
             var res1 = await _client.PostAsync(request, content1);

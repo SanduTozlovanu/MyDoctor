@@ -1,8 +1,4 @@
-﻿using MyDoctor.Domain.Models;
-using MyDoctorApp.Domain.Helpers;
-using System.ComponentModel.DataAnnotations;
-
-namespace MyDoctor
+﻿namespace MyDoctor
 {
     public class User
     {

@@ -1,17 +1,28 @@
 ﻿using Microsoft.AspNetCore.Mvc.Testing;
 using MyDoctor.API.DTOs;
+using MyDoctor.IntegTests.Helpers;
+using MyDoctor.IntegTests.Orderers;
+using MyDoctor.API.Controllers;
 using Newtonsoft.Json;
 using System.Text;
 
 namespace MyDoctor.IntegTests
 {
-    public class DrugStockControllerTest : AIntegrationTest
+    [TestCaseOrderer("MyDoctor.IntegTests.Orderers.PriorityOrderer", "MyDoctor.IntegTests")]
+    public class DrugStockControllerTest : IClassFixture<DatabaseFixture>
     {
-        public DrugStockControllerTest(WebApplicationFactory<Program> factory) : base(factory)
+        private readonly HttpClient _client;
+        private DatabaseFixture databaseFixture;
+
+        public DrugStockControllerTest(DatabaseFixture databaseFixture)
         {
+            var app = new WebApplicationFactory<DrugStockController>()
+                .WithWebHostBuilder(builder => { });
+            _client = app.CreateClient();
+            this.databaseFixture = databaseFixture;
         }
 
-        [Fact]
+        [Fact, TestPriority(0)]
         public async Task TestGetDrugStocks()
         {
 
@@ -44,7 +55,12 @@ namespace MyDoctor.IntegTests
             var jsonString = await res.Content.ReadAsStringAsync();
             var cont = JsonConvert.DeserializeObject<List<DisplayDrugStockDto>>(jsonString);
             Assert.True(cont.Count() == 2);
-            cont.ForEach(dto => Assert.True(dto.MedicalRoomId == medRoom1.Id || dto.MedicalRoomId == medRoom2.Id));
+            uint foundTimes = 0;
+            cont.ForEach(dto => {
+                if(dto.MedicalRoomId == medRoom1.Id || dto.MedicalRoomId == medRoom2.Id)
+                    foundTimes++;
+                });
+            Assert.True(foundTimes == 2);
         }
     }
 }

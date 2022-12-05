@@ -9,7 +9,7 @@ namespace MyDoctor.API.Controllers
     [ApiController]
     public class DrugController : ControllerBase
     {
-        private const string DrugStockNotFoundError = "Could not find a drugStock with this Id.";
+        public const string DrugStockNotFoundError = "Could not find a drugStock with this Id.";
         private readonly IRepository<Drug> drugRepository;
         private readonly IRepository<DrugStock> drugStockRepository;
 

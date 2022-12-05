@@ -3,7 +3,6 @@ using MyDoctor.API.DTOs;
 using MyDoctor.API.Helpers;
 using MyDoctor.Domain.Models;
 using MyDoctorApp.Infrastructure.Generics;
-using MyDoctorApp.Infrastructure.Generics.GenericRepositories;
 
 namespace MyDoctor.API.Controllers
 {
@@ -11,7 +10,7 @@ namespace MyDoctor.API.Controllers
     [ApiController]
     public class LoginController : ControllerBase
     {
-        private const string InvalidCredentialsError = "Invalid credentials!";
+        public const string InvalidCredentialsError = "Invalid credentials!";
         private readonly IRepository<Patient> patientsRepository;
         private readonly IRepository<Doctor> doctorsRepository;
 

@@ -1,4 +1,3 @@
-using MyDoctor;
 using MyDoctor.Domain.Models;
 using MyDoctorApp.Infrastructure;
 using MyDoctorApp.Infrastructure.Generics;
@@ -65,5 +64,3 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-
-public partial class Program { }

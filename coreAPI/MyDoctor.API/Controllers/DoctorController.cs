@@ -10,10 +10,10 @@ namespace MyDoctor.API.Controllers
     [ApiController]
     public class DoctorController : ControllerBase
     {
-        private const string FreeMedicalRoomNotFoundError = "Could not find a free medical room for this doctor.";
-        private const string MedicalRoomNotFoundError = "Could not find a medicalRoom with this Id.";
-        private const string UsedEmailError = "The email is already used!";
-        private const string InvalidEmailError = "The email is invalid!";
+        public const string FreeMedicalRoomNotFoundError = "Could not find a free medical room for this doctor.";
+        public const string MedicalRoomNotFoundError = "Could not find a medicalRoom with this Id.";
+        public const string UsedEmailError = "The email is already used!";
+        public const string InvalidEmailError = "The email is invalid!";
         private readonly IRepository<Doctor> doctorsRepository;
         private readonly IRepository<MedicalRoom> medicalRoomRepository;
         private readonly IRepository<Patient> patientsRepository;

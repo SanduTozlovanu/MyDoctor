@@ -9,8 +9,8 @@ namespace MyDoctor.API.Controllers
     [ApiController]
     public class AppointmentController : ControllerBase
     {
-        private const string PatientNotFoundError = "Could not find a patient with this Id.";
-        private const string DoctorNotFoundError = "Could not find a doctor with this Id.";
+        public const string PatientNotFoundError = "Could not find a patient with this Id.";
+        public const string DoctorNotFoundError = "Could not find a doctor with this Id.";
         private readonly IRepository<Appointment> appointmentRepository;
         private readonly IRepository<AppointmentInterval> appointmentIntervalRepository;
         private readonly IRepository<Bill> billRepository;
