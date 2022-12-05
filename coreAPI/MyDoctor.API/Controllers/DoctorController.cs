@@ -29,7 +29,7 @@ namespace MyDoctor.API.Controllers
             return Ok(doctorsRepository.All().Select(d => new DisplayDoctorDto(d.Id, d.MedicalRoomId, d.Email, d.Speciality, d.FirstName, d.LastName)));
         }
         [HttpPost]
-        public IActionResult Create([FromForm] CreateDoctorDto dto)
+        public IActionResult Create([FromBody] CreateDoctorDto dto)
         {
             List<MedicalRoom> medicalRooms = medicalRoomRepository.All().ToList();
             (MedicalRoom?, int) medicalRoomWithFewestDoctors = new(null, int.MaxValue);

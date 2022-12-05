@@ -14,5 +14,19 @@
         }
         public Guid Id { get; set; }
         public string Adress { get; set; }
+
+        public override bool Equals(Object obj)
+        {
+            //Check for null and compare run-time types.
+            if ((obj == null) || !this.GetType().Equals(obj.GetType()))
+            {
+                return false;
+            }
+            else
+            {
+                DisplayMedicalRoomDto dto = (DisplayMedicalRoomDto)obj;
+                return (this.Id == dto.Id) && (this.Adress == dto.Adress);
+            }
+        }
     }
 }
