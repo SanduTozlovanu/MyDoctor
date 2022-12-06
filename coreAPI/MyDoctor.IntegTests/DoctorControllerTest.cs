@@ -58,7 +58,7 @@ namespace MyDoctor.IntegTests
             Init();
             string request2 = "https://localhost:7244/api/MedicalRoom";
             CreateMedicalRoomDto mdDto = new CreateMedicalRoomDto();
-            mdDto.Adress = "Strada Cabinetului 20";
+            mdDto.Adress = "Strada Cabina 20";
 
             var content2 = new StringContent(JsonConvert.SerializeObject(mdDto), Encoding.UTF8, "application/json");
             var res2 = await _client.PostAsync(request2, content2);
