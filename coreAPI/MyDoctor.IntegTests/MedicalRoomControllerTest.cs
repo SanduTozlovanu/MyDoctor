@@ -77,7 +77,7 @@ namespace MyDoctor.IntegTests
 
             var jsonString = await res.Content.ReadAsStringAsync();
             var cont = JsonConvert.DeserializeObject<List<DisplayMedicalRoomDto>>(jsonString);
-            Assert.True(cont.Count() == 2);
+            Assert.True(cont.Count() >= 2);
             cont.ForEach(dto => Assert.True(dto.Adress == this.Address2 || dto.Adress == this.Address1));
         }
     }

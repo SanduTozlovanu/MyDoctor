@@ -8,28 +8,28 @@ namespace MyDoctor.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PatientsController : ControllerBase
+    public class PatientController : ControllerBase
     {
         public const string UsedEmailError = "The email is already used!";
         public const string InvalidEmailError = "The email is invalid!";
         public const string BigAgeError = "Too big age value.";
-        private readonly IRepository<Patient> patientsRepository;
+        private readonly IRepository<Patient> patientRepository;
         private readonly IRepository<MedicalHistory> medicalHistoryRepository;
-        private readonly IRepository<Doctor> doctorsRepository;
+        private readonly IRepository<Doctor> doctorRepository;
 
-        public PatientsController(IRepository<Patient> patientsRepository,
+        public PatientController(IRepository<Patient> patientRepository,
             IRepository<MedicalHistory> medicalHistoryRepository,
-            IRepository<Doctor> doctorsRepository)
+            IRepository<Doctor> doctorRepository)
         {
-            this.patientsRepository = patientsRepository;
+            this.patientRepository = patientRepository;
             this.medicalHistoryRepository = medicalHistoryRepository;
-            this.doctorsRepository = doctorsRepository;
+            this.doctorRepository = doctorRepository;
         }
 
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(patientsRepository.All().Select(p => new DisplayPatientDto(p.Id, p.FirstName, p.LastName, p.Email, p.Age)));
+            return Ok(patientRepository.All().Select(p => new DisplayPatientDto(p.Id, p.FirstName, p.LastName, p.Email, p.Age)));
         }
 
         [HttpPost]
@@ -37,8 +37,8 @@ namespace MyDoctor.API.Controllers
         {
             if (dto.Age > 120) return BadRequest(BigAgeError);
 
-            var oldPatient = patientsRepository.Find(p => p.Email == dto.UserDetails.Email).FirstOrDefault();
-            var oldDoctor = doctorsRepository.Find(d => d.Email == dto.UserDetails.Email).FirstOrDefault();
+            var oldPatient = patientRepository.Find(p => p.Email == dto.UserDetails.Email).FirstOrDefault();
+            var oldDoctor = doctorRepository.Find(d => d.Email == dto.UserDetails.Email).FirstOrDefault();
             if (oldPatient != null || oldDoctor != null)
             {
                 return BadRequest(UsedEmailError);
@@ -56,10 +56,10 @@ namespace MyDoctor.API.Controllers
             patient.RegisterMedicalHistory(medicalHistory);
 
             medicalHistoryRepository.Add(medicalHistory);
-            patientsRepository.Add(patient);
+            patientRepository.Add(patient);
 
             medicalHistoryRepository.SaveChanges();
-            patientsRepository.SaveChanges();
+            patientRepository.SaveChanges();
             return Ok(new DisplayPatientDto(patient.Id, patient.FirstName, patient.LastName, patient.Email, patient.Age));
         }
     }

@@ -10,15 +10,15 @@ using System.Text;
 namespace MyDoctor.IntegTests
 {
     [TestCaseOrderer("MyDoctor.IntegTests.Orderers.PriorityOrderer", "MyDoctor.IntegTests")]
-    public class PatientControllerTest : IClassFixture<DatabaseFixture>
+    public class DoctorControllerTest : IClassFixture<DatabaseFixture>
     {
         private readonly HttpClient _client;
         private DatabaseFixture databaseFixture;
 
         // Ctor is called for every test method
-        public PatientControllerTest(DatabaseFixture databaseFixture)
+        public DoctorControllerTest(DatabaseFixture databaseFixture)
         {
-            var app = new WebApplicationFactory<PatientController>()
+            var app = new WebApplicationFactory<DoctorController>()
                 .WithWebHostBuilder(builder => { });
             _client = app.CreateClient();
             this.databaseFixture = databaseFixture;
@@ -29,85 +29,80 @@ namespace MyDoctor.IntegTests
         {
 
         }
-
         [Fact, TestPriority(0)]
-        public async Task TestCreatePacient_Valid()
+        public async Task TestCreateDoctor_NoMedicalRoom()
         {
-
-            // Given
             Init();
-
-            // When
-            string request = "https://localhost:7244/api/Patient";
-            var pDto = new CreatePatientDto();
+            string request = "https://localhost:7244/api/Doctor";
+            var pDto = new CreateDoctorDto();
             pDto.UserDetails = new CreateUserDto
             {
-                Email = "adresa@gmail.com",
-                FirstName = "Test",
-                LastName = "Test",
+                Email = "doctor@gmail.com",
+                FirstName = "Ion",
+                LastName = "Cutelaba",
                 Password = "Test1234",
             };
-            pDto.Age = 15;
+            pDto.Speciality = "Chirurg";
 
             var content = new StringContent(JsonConvert.SerializeObject(pDto), Encoding.UTF8, "application/json");
             var res = await _client.PostAsync(request, content);
             var jsonString = await res.Content.ReadAsStringAsync();
-            var dto = JsonConvert.DeserializeObject<DisplayPatientDto>(jsonString);
-            Assert.True(dto.FirstName == pDto.UserDetails.FirstName);
-            Assert.True(dto.Email == pDto.UserDetails.Email);
-            Assert.True(dto.LastName == pDto.UserDetails.LastName);
-            Assert.True(dto.Age == pDto.Age);
+            Assert.Equal(HttpStatusCode.NotFound, res.StatusCode);
+            Assert.Equal(DoctorController.FreeMedicalRoomNotFoundError, jsonString);
 
-            // Then
-            Assert.Equal(HttpStatusCode.OK, res.StatusCode);
         }
 
         [Fact, TestPriority(1)]
-        public async Task TestCreatePacient_AlreadyUsedEmail()
+        public async Task TestCreateDoctor_Valid()
         {
-
-            // Given
             Init();
+            string request2 = "https://localhost:7244/api/MedicalRoom";
+            CreateMedicalRoomDto mdDto = new CreateMedicalRoomDto();
+            mdDto.Adress = "Strada Cabinetului 20";
 
-            // When
-            string request = "https://localhost:7244/api/Patient";
-            var pDto = new CreatePatientDto();
+            var content2 = new StringContent(JsonConvert.SerializeObject(mdDto), Encoding.UTF8, "application/json");
+            var res2 = await _client.PostAsync(request2, content2);
+            Assert.Equal(HttpStatusCode.OK, res2.StatusCode);
+
+            string request = "https://localhost:7244/api/Doctor";
+            var pDto = new CreateDoctorDto();
             pDto.UserDetails = new CreateUserDto
             {
-                Email = "adresa@gmail.com",
-                FirstName = "Test",
-                LastName = "Test",
+                Email = "doctor@gmail.com",
+                FirstName = "Ion",
+                LastName = "Cutelaba",
                 Password = "Test1234",
             };
-            pDto.Age = 15;
+            pDto.Speciality = "Chirurg";
 
             var content = new StringContent(JsonConvert.SerializeObject(pDto), Encoding.UTF8, "application/json");
             var res = await _client.PostAsync(request, content);
-            var actualJsonString = await res.Content.ReadAsStringAsync();
-
-            // Then
-            Assert.Equal(HttpStatusCode.BadRequest, res.StatusCode);
-            Assert.Equal(PatientController.UsedEmailError, actualJsonString);
+            var jsonString = await res.Content.ReadAsStringAsync();
+            var dto = JsonConvert.DeserializeObject<DisplayDoctorDto>(jsonString);
+            Assert.True(dto.FirstName == pDto.UserDetails.FirstName);
+            Assert.True(dto.Email == pDto.UserDetails.Email);
+            Assert.True(dto.LastName == pDto.UserDetails.LastName);
+            Assert.True(dto.Speciality == pDto.Speciality);
         }
 
         [Fact, TestPriority(2)]
-        public async Task TestCreatePacient_BigAge()
+        public async Task TestCreateDoctor_AlreadyUsedEmail()
         {
 
             // Given
             Init();
 
             // When
-            string request = "https://localhost:7244/api/Patient";
-            var pDto = new CreatePatientDto();
+            string request = "https://localhost:7244/api/Doctor";
+            var pDto = new CreateDoctorDto();
             pDto.UserDetails = new CreateUserDto
             {
-                Email = "troller@gmail.com",
+                Email = "doctor@gmail.com",
                 FirstName = "Test",
                 LastName = "Test",
                 Password = "Test1234",
             };
-            pDto.Age = 150;
+            pDto.Speciality = "Oculist";
 
             var content = new StringContent(JsonConvert.SerializeObject(pDto), Encoding.UTF8, "application/json");
             var res = await _client.PostAsync(request, content);
@@ -115,19 +110,19 @@ namespace MyDoctor.IntegTests
 
             // Then
             Assert.Equal(HttpStatusCode.BadRequest, res.StatusCode);
-            Assert.Equal(PatientController.BigAgeError, actualJsonString);
+            Assert.Equal(DoctorController.UsedEmailError, actualJsonString);
         }
 
         [Fact, TestPriority(3)]
-        public async Task TestCreatePacient_InvalidEmail()
+        public async Task TestCreateDoctor_InvalidEmail()
         {
 
             // Given
             Init();
 
             // When
-            string request = "https://localhost:7244/api/Patient";
-            var pDto = new CreatePatientDto();
+            string request = "https://localhost:7244/api/Doctor";
+            var pDto = new CreateDoctorDto();
             pDto.UserDetails = new CreateUserDto
             {
                 Email = "adresa",
@@ -135,7 +130,7 @@ namespace MyDoctor.IntegTests
                 LastName = "Test",
                 Password = "Test1234",
             };
-            pDto.Age = 15;
+            pDto.Speciality = "Anarhist";
 
             var content = new StringContent(JsonConvert.SerializeObject(pDto), Encoding.UTF8, "application/json");
             var res = await _client.PostAsync(request, content);
@@ -143,7 +138,7 @@ namespace MyDoctor.IntegTests
 
             // Then
             Assert.Equal(HttpStatusCode.BadRequest, res.StatusCode);
-            Assert.Equal(PatientController.InvalidEmailError, actualJsonString);
+            Assert.Equal(DoctorController.InvalidEmailError, actualJsonString);
         }
 
     }

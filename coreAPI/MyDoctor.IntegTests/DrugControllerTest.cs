@@ -4,16 +4,21 @@ using MyDoctor.API.DTOs;
 using MyDoctor.IntegTests.Helpers;
 using MyDoctor.IntegTests.Orderers;
 using Newtonsoft.Json;
+using System.Net;
 using System.Text;
 
 namespace MyDoctor.IntegTests
 {
+
     [TestCaseOrderer("MyDoctor.IntegTests.Orderers.PriorityOrderer", "MyDoctor.IntegTests")]
     public class DrugControllerTest : IClassFixture<DatabaseFixture>
     {
         private readonly HttpClient _client;
         private DatabaseFixture databaseFixture;
+        private void Init()
+        {
 
+        }
         public DrugControllerTest(DatabaseFixture databaseFixture)
         {
             var app = new WebApplicationFactory<DrugController>()
@@ -25,6 +30,7 @@ namespace MyDoctor.IntegTests
         [Fact, TestPriority(0)]
         public async Task TestGetDrugs()
         {
+            Init();
 
             // When
             string request = "https://localhost:7244/api/MedicalRoom";
@@ -76,6 +82,33 @@ namespace MyDoctor.IntegTests
                  || dto.Equals(new DisplayDrugDto
                 (dto.Id, drugStock.Id, drugDto2.Name, drugDto2.Description, drugDto2.Price, drugDto2.Quantity))));
 
+        }
+        [Fact, TestPriority(1)]
+        public async Task TestGetDrugs_WrongDrugStockId()
+        {
+            string request3 = "https://localhost:7244/api/Drug/{0}";
+
+            CreateDrugDto drugDto1 = new CreateDrugDto();
+            drugDto1.Description = "Peniciline is bad";
+            drugDto1.Name = "Not Peniciline";
+            drugDto1.Price = 35.64;
+            drugDto1.Quantity = 5;
+
+            CreateDrugDto drugDto2 = new CreateDrugDto();
+            drugDto2.Description = "Peniciline is good";
+            drugDto2.Name = "Peniciline";
+            drugDto2.Price = 25.48;
+            drugDto2.Quantity = 2;
+
+            List<CreateDrugDto> dtos = new List<CreateDrugDto>();
+            dtos.Add(drugDto1);
+            dtos.Add(drugDto2);
+            var content = new StringContent(JsonConvert.SerializeObject(dtos), Encoding.UTF8, "application/json");
+
+            var result = await _client.PostAsync(String.Format(request3, "48db124a-e731-4664-9add-44172a403b90"), content);
+            var jsonString1 = await result.Content.ReadAsStringAsync();
+            Assert.Equal(HttpStatusCode.NotFound, result.StatusCode);
+            Assert.Equal(DrugController.DrugStockNotFoundError, jsonString1);
         }
     }
 }
