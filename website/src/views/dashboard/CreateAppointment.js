@@ -8,6 +8,7 @@ import {
   Container,
   Row,
   Col,
+  // eslint-disable-next-line
   Label,
   Button,
   CardFooter,
@@ -27,8 +28,10 @@ const specialitiesOptions = [
 ]
 
 const CreateAppointment = () => {
+  // eslint-disable-next-line
   const [date, setDate] = useState(new Date())
   const [speciality, setSpeciality] = useState('')
+  // eslint-disable-next-line
   const [error, setError] = useState('')
   const [doctors, setDoctors] = useState([])
   const [filteredDoctors, setFilteredDoctors] = useState([])
