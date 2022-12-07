@@ -72,5 +72,29 @@ namespace MyDoctor.Tests.UnitTests.DomainTests
             Assert.Contains(ap, p.Appointments);
             Assert.True(ReferenceEquals(p, ap.Patient));
         }
+
+        [Fact]
+        public void Update()
+        {
+            // Given
+            Patient p = CreateDefaultPatient();
+            string email = "email";
+            string password = "password";
+            string firstName = "firstName";
+            string lastName = "lastName";
+            uint age = 10;
+
+            Patient newPatient = new Patient(email, password, firstName, lastName, age);
+
+            // When
+            p.Update(newPatient);
+
+            // Then
+            Assert.Equal(newPatient.Email, p.Email);
+            Assert.Equal(newPatient.Password, p.Password);
+            Assert.Equal(newPatient.FirstName, p.FirstName);
+            Assert.Equal(newPatient.LastName, p.LastName);
+            Assert.Equal(newPatient.Age, p.Age);
+        }
     }
 }

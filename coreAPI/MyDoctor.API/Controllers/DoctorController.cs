@@ -103,6 +103,40 @@ namespace MyDoctor.API.Controllers
         }
 
 
+
+        [HttpPut("{doctorId:guid}")]
+        public IActionResult Update(Guid doctorId, [FromBody] CreateDoctorDto dto)
+        {
+            var doctor = doctorsRepository.Get(doctorId);
+            if (doctor == null)
+            {
+                return NotFound();
+            }
+
+            var oldPatient = patientsRepository.Find(p => p.Email == dto.UserDetails.Email).FirstOrDefault();
+            var oldDoctor = doctorsRepository.Find(d => d.Email == dto.UserDetails.Email).FirstOrDefault();
+            if (oldPatient != null || oldDoctor != null)
+            {
+                return BadRequest(UsedEmailError);
+            }
+
+            if (!AccountInfoManager.ValidateEmail(dto.UserDetails.Email))
+            {
+                return BadRequest(InvalidEmailError);
+            }
+
+            string hashedPassword = AccountInfoManager.HashPassword(dto.UserDetails.Password);
+            var newDoctor = new Doctor(dto.UserDetails.Email, hashedPassword, dto.UserDetails.FirstName, dto.UserDetails.LastName, dto.Speciality);
+
+            doctor.Update(newDoctor);
+
+            doctorsRepository.Update(doctor);
+
+            doctorsRepository.SaveChanges();
+            return Ok();
+        }
+
+
         [HttpDelete("{doctorId:guid}")]
         public IActionResult Delete(Guid doctorId)
         {

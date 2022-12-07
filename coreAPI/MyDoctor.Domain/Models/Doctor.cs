@@ -41,5 +41,11 @@ namespace MyDoctor.Domain.Models
 
         //    return Result.Success();
         //}
+
+        public void Update(Doctor doctor)
+        {
+            base.Update(doctor);
+            Speciality = doctor.Speciality;
+        }
     }
 }

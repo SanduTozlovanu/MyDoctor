@@ -24,5 +24,13 @@
         {
             get { return $"{FirstName}{SEPARATOR}{LastName}"; }
         }
+
+        public void Update(User user)
+        {
+            Email = user.Email;
+            Password = user.Password;
+            FirstName = user.FirstName;
+            LastName = user.LastName;
+        }
     }
 }

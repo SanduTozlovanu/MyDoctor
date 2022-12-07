@@ -23,5 +23,11 @@ namespace MyDoctor.Domain.Models
             this.Appointments.Add(appointment);
         }
 
+        public void Update(Patient patient)
+        {
+            base.Update(patient);
+            Age = patient.Age;
+        }
+
     }
 }

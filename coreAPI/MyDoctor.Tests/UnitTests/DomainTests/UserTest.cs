@@ -22,7 +22,7 @@ namespace MyDoctor.Tests.UnitTests.DomainTests
             return new Patient(email, password, firstName, lastName, age);
         }
 
-        [Fact, TestPriority(0)]
+        [Fact]
         public void Create()
         {
             // When
@@ -38,7 +38,7 @@ namespace MyDoctor.Tests.UnitTests.DomainTests
             Assert.Contains(u.AccountType, new List<String>(){AccountTypes.Admin, AccountTypes.Patient, AccountTypes.Doctor});
         }
 
-        [Fact, TestPriority(1)]
+        [Fact]
         public void ValidateFullname()
         {
             // Given
@@ -50,6 +50,29 @@ namespace MyDoctor.Tests.UnitTests.DomainTests
 
             // Then
             Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Update()
+        {
+            // Given
+            User u = CreateDefaultPatient();
+            string accType = "type";
+            string email = "email";
+            string password = "password";
+            string firstName = "firstName";
+            string lastName = "lastName";
+
+            User newUser = new User(accType, email, password, firstName, lastName);
+
+            // When
+            u.Update(newUser);
+
+            // Then
+            Assert.Equal(newUser.Email, u.Email);
+            Assert.Equal(newUser.Password, u.Password);
+            Assert.Equal(newUser.FirstName, u.FirstName);
+            Assert.Equal(newUser.LastName, u.LastName);
         }
     }
 }
