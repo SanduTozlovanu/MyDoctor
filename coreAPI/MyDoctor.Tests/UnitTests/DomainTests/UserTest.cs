@@ -1,4 +1,5 @@
 ﻿using MyDoctor.Domain.Models;
+using MyDoctor.Tests.Orderers;
 using MyDoctorApp.Domain.Helpers;
 
 namespace MyDoctor.Tests.UnitTests.DomainTests
@@ -21,31 +22,31 @@ namespace MyDoctor.Tests.UnitTests.DomainTests
             return new Patient(email, password, firstName, lastName, age);
         }
 
-        [Fact]
+        [Fact, TestPriority(0)]
         public void Create()
         {
             // When
-            User p = CreateDefaultPatient();
+            User u = CreateDefaultPatient();
 
             // Then
-            Assert.NotNull(p);
-            Assert.True(p.Id != Guid.Empty);
-            Assert.Equal(EMAIL, p.Email);
-            Assert.Equal(PASSWORD, p.Password);
-            Assert.Equal(FIRST_NAME, p.FirstName);
-            Assert.Equal(LAST_NAME, p.LastName);
-            Assert.Contains(p.AccountType, new List<String>(){AccountTypes.Admin, AccountTypes.Patient, AccountTypes.Doctor});
+            Assert.NotNull(u);
+            Assert.True(u.Id != Guid.Empty);
+            Assert.Equal(EMAIL, u.Email);
+            Assert.Equal(PASSWORD, u.Password);
+            Assert.Equal(FIRST_NAME, u.FirstName);
+            Assert.Equal(LAST_NAME, u.LastName);
+            Assert.Contains(u.AccountType, new List<String>(){AccountTypes.Admin, AccountTypes.Patient, AccountTypes.Doctor});
         }
 
-        [Fact]
+        [Fact, TestPriority(1)]
         public void ValidateFullname()
         {
             // Given
-            User p = CreateDefaultPatient();
+            User u = CreateDefaultPatient();
             var expected = "Ionut, Virgil";
 
             // When
-            var actual = p.FullName;
+            var actual = u.FullName;
 
             // Then
             Assert.Equal(expected, actual);
