@@ -1,5 +1,5 @@
 ﻿using MyDoctorApp.Infrastructure;
-namespace MyDoctor.IntegTests.Helpers
+namespace MyDoctor.Tests.Helpers
 {
     public class DatabaseFixture : IDisposable
     {

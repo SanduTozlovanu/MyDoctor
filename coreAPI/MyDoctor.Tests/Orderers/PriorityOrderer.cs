@@ -1,6 +1,6 @@
 ﻿using Xunit.Abstractions;
 using Xunit.Sdk;
-namespace MyDoctor.IntegTests.Orderers
+namespace MyDoctor.Tests.Orderers
 {
     public class PriorityOrderer : ITestCaseOrderer
     {

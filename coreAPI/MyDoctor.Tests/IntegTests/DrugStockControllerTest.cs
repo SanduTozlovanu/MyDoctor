@@ -1,14 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc.Testing;
 using MyDoctor.API.DTOs;
-using MyDoctor.IntegTests.Helpers;
-using MyDoctor.IntegTests.Orderers;
+using MyDoctor.Tests.Helpers;
+using MyDoctor.Tests.Orderers;
 using MyDoctor.API.Controllers;
 using Newtonsoft.Json;
 using System.Text;
 
-namespace MyDoctor.IntegTests
+namespace MyDoctor.Tests.IntegTests
 {
-    [TestCaseOrderer("MyDoctor.IntegTests.Orderers.PriorityOrderer", "MyDoctor.IntegTests")]
+    [TestCaseOrderer("MyDoctor.Tests.Orderers.PriorityOrderer", "MyDoctor.Tests")]
     public class DrugStockControllerTest : IClassFixture<DatabaseFixture>
     {
         private readonly HttpClient _client;
@@ -56,10 +56,11 @@ namespace MyDoctor.IntegTests
             var cont = JsonConvert.DeserializeObject<List<DisplayDrugStockDto>>(jsonString);
             Assert.True(cont.Count() == 2);
             uint foundTimes = 0;
-            cont.ForEach(dto => {
-                if(dto.MedicalRoomId == medRoom1.Id || dto.MedicalRoomId == medRoom2.Id)
+            cont.ForEach(dto =>
+            {
+                if (dto.MedicalRoomId == medRoom1.Id || dto.MedicalRoomId == medRoom2.Id)
                     foundTimes++;
-                });
+            });
             Assert.True(foundTimes == 2);
         }
     }

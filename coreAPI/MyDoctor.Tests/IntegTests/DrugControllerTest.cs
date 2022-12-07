@@ -1,16 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc.Testing;
 using MyDoctor.API.Controllers;
 using MyDoctor.API.DTOs;
-using MyDoctor.IntegTests.Helpers;
-using MyDoctor.IntegTests.Orderers;
+using MyDoctor.Tests.Helpers;
+using MyDoctor.Tests.Orderers;
 using Newtonsoft.Json;
 using System.Net;
 using System.Text;
 
-namespace MyDoctor.IntegTests
+namespace MyDoctor.Tests.IntegTests
 {
 
-    [TestCaseOrderer("MyDoctor.IntegTests.Orderers.PriorityOrderer", "MyDoctor.IntegTests")]
+    [TestCaseOrderer("MyDoctor.Tests.Orderers.PriorityOrderer", "MyDoctor.Tests")]
     public class DrugControllerTest : IClassFixture<DatabaseFixture>
     {
         private readonly HttpClient _client;
@@ -42,7 +42,7 @@ namespace MyDoctor.IntegTests
             var content1 = new StringContent(JsonConvert.SerializeObject(mdDto1), Encoding.UTF8, "application/json");
             var res1 = await _client.PostAsync(request, content1);
 
-            Assert.Equal(System.Net.HttpStatusCode.OK, res1.StatusCode);
+            Assert.Equal(HttpStatusCode.OK, res1.StatusCode);
 
             var jsonString1 = await res1.Content.ReadAsStringAsync();
             var con1 = JsonConvert.DeserializeObject<DisplayMedicalRoomDto>(jsonString1);
@@ -73,7 +73,7 @@ namespace MyDoctor.IntegTests
             dtos.Add(drugDto2);
             var content = new StringContent(JsonConvert.SerializeObject(dtos), Encoding.UTF8, "application/json");
 
-            var result = await _client.PostAsync(String.Format(request3,drugStock.Id.ToString()), content);
+            var result = await _client.PostAsync(string.Format(request3, drugStock.Id.ToString()), content);
             var jsonString2 = await result.Content.ReadAsStringAsync();
             var displayDtos = JsonConvert.DeserializeObject<List<DisplayDrugDto>>(jsonString2);
             Assert.Equal(displayDtos.Count, 2);
@@ -105,7 +105,7 @@ namespace MyDoctor.IntegTests
             dtos.Add(drugDto2);
             var content = new StringContent(JsonConvert.SerializeObject(dtos), Encoding.UTF8, "application/json");
 
-            var result = await _client.PostAsync(String.Format(request3, "48db124a-e731-4664-9add-44172a403b90"), content);
+            var result = await _client.PostAsync(string.Format(request3, "48db124a-e731-4664-9add-44172a403b90"), content);
             var jsonString1 = await result.Content.ReadAsStringAsync();
             Assert.Equal(HttpStatusCode.NotFound, result.StatusCode);
             Assert.Equal(DrugController.DrugStockNotFoundError, jsonString1);

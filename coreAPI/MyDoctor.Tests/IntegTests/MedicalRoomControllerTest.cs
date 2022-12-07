@@ -1,16 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc.Testing;
 using MyDoctor.API.DTOs;
 using MyDoctor.API.Controllers;
-using MyDoctor.IntegTests.Helpers;
-using MyDoctor.IntegTests.Orderers;
+using MyDoctor.Tests.Helpers;
+using MyDoctor.Tests.Orderers;
 using Newtonsoft.Json;
 using System.Text;
 using System.Net;
 using MyDoctor.Domain.Models;
 
-namespace MyDoctor.IntegTests
+namespace MyDoctor.Tests.IntegTests
 {
-    [TestCaseOrderer("MyDoctor.IntegTests.Orderers.PriorityOrderer", "MyDoctor.IntegTests")]
+    [TestCaseOrderer("MyDoctor.Tests.Orderers.PriorityOrderer", "MyDoctor.Tests")]
     public class MedicalRoomControllerTest : IClassFixture<DatabaseFixture>
     {
         private readonly HttpClient _client;
@@ -42,9 +42,9 @@ namespace MyDoctor.IntegTests
             // When
             string request = "https://localhost:7244/api/MedicalRoom";
             CreateMedicalRoomDto mdDto = new CreateMedicalRoomDto();
-            mdDto.Adress = this.Address1;
+            mdDto.Adress = Address1;
             CreateMedicalRoomDto mdDto2 = new CreateMedicalRoomDto();
-            mdDto2.Adress = this.Address2;
+            mdDto2.Adress = Address2;
 
             var content = new StringContent(JsonConvert.SerializeObject(mdDto), Encoding.UTF8, "application/json");
             var content2 = new StringContent(JsonConvert.SerializeObject(mdDto2), Encoding.UTF8, "application/json");
@@ -78,7 +78,7 @@ namespace MyDoctor.IntegTests
             var jsonString = await res.Content.ReadAsStringAsync();
             var cont = JsonConvert.DeserializeObject<List<DisplayMedicalRoomDto>>(jsonString);
             Assert.True(cont.Count() >= 2);
-            cont.ForEach(dto => Assert.True(dto.Adress == this.Address2 || dto.Adress == this.Address1));
+            cont.ForEach(dto => Assert.True(dto.Adress == Address2 || dto.Adress == Address1));
         }
     }
 }

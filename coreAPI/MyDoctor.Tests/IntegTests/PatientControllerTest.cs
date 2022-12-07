@@ -1,15 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc.Testing;
 using MyDoctor.API.Controllers;
 using MyDoctor.API.DTOs;
-using MyDoctor.IntegTests.Helpers;
-using MyDoctor.IntegTests.Orderers;
+using MyDoctor.Tests.Helpers;
+using MyDoctor.Tests.Orderers;
 using Newtonsoft.Json;
 using System.Net;
 using System.Text;
 
-namespace MyDoctor.IntegTests
+namespace MyDoctor.Tests.IntegTests
 {
-    [TestCaseOrderer("MyDoctor.IntegTests.Orderers.PriorityOrderer", "MyDoctor.IntegTests")]
+    [TestCaseOrderer("MyDoctor.Tests.Orderers.PriorityOrderer", "MyDoctor.Tests")]
     public class PatientControllerTest : IClassFixture<DatabaseFixture>
     {
         private readonly HttpClient _client;
