@@ -43,6 +43,12 @@ namespace MyDoctorApp.Infrastructure.Generics
                 .Entity;
         }
 
+        public virtual T Delete(T entity)
+        {
+            return context.Remove(entity)
+                .Entity;
+        }
+
         public void SaveChanges()
         {
             context.SaveChanges();

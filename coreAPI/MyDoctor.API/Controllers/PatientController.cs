@@ -3,6 +3,7 @@ using MyDoctor.API.DTOs;
 using MyDoctor.API.Helpers;
 using MyDoctor.Domain.Models;
 using MyDoctorApp.Infrastructure.Generics;
+using MyDoctorApp.Infrastructure.Generics.GenericRepositories;
 
 namespace MyDoctor.API.Controllers
 {
@@ -61,6 +62,21 @@ namespace MyDoctor.API.Controllers
             medicalHistoryRepository.SaveChanges();
             patientRepository.SaveChanges();
             return Ok(new DisplayPatientDto(patient.Id, patient.FirstName, patient.LastName, patient.Email, patient.Age));
+        }
+
+        [HttpDelete("{patientId:guid}")]
+        public IActionResult Delete(Guid patientId)
+        {
+            var patient = patientRepository.Get(patientId);
+            if (patient == null)
+            {
+                return NotFound();
+            }
+
+            patientRepository.Delete(patient);
+
+            patientRepository.SaveChanges();
+            return Ok();
         }
     }
 }
