@@ -10,7 +10,7 @@ namespace MyDoctor.Domain.Models
         }
         public Guid Id { get; private set; }
         public List<Drug> Drugs { get; private set; } = new List<Drug>();
-        public MedicalRoom MedicalRoom { get; private set; }
+        public virtual MedicalRoom MedicalRoom { get; private set; }
         public Guid MedicalRoomId { get; private set; }
 
         public Result RegisterDrugsToDrugStock(List<Drug> drugs)

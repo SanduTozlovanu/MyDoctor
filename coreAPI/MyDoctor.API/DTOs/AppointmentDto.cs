@@ -2,6 +2,14 @@
 {
     public class CreateAppointmentDto
     {
+        public CreateAppointmentDto(double price, DateTime date, DateTime startTime, DateTime endTime)
+        {
+            Price = price;
+            Date = date;
+            StartTime = startTime;
+            EndTime = endTime;
+        }
+
         public double Price { get; set; }
         public DateTime Date { get; set; }
         public DateTime StartTime { get; set; }

@@ -14,6 +14,7 @@ namespace MyDoctor.API.Controllers
         public const string UsedEmailError = "The email is already used!";
         public const string InvalidEmailError = "The email is invalid!";
         public const string BigAgeError = "Too big age value.";
+        private const string CouldNotCreatePatientError = "Could not create a patient from the dto.";
         private readonly IRepository<Patient> patientRepository;
         private readonly IRepository<MedicalHistory> medicalHistoryRepository;
         private readonly IRepository<Doctor> doctorRepository;
@@ -36,23 +37,16 @@ namespace MyDoctor.API.Controllers
         [HttpPost]
         public IActionResult Create([FromBody] CreatePatientDto dto)
         {
-            if (dto.Age > 120) return BadRequest(BigAgeError);
+            var ActionResultPatientTuple = CreatePatientFromDto(dto);
 
-            var oldPatient = patientRepository.Find(p => p.Email == dto.UserDetails.Email).FirstOrDefault();
-            var oldDoctor = doctorRepository.Find(d => d.Email == dto.UserDetails.Email).FirstOrDefault();
-            if (oldPatient != null || oldDoctor != null)
-            {
-                return BadRequest(UsedEmailError);
-            }
+            if (ActionResultPatientTuple.Item2.GetType() != typeof(OkResult))
+                return ActionResultPatientTuple.Item2;
 
-            if (!AccountInfoManager.ValidateEmail(dto.UserDetails.Email))
-            {
-                return BadRequest(InvalidEmailError);
-            }
+            if (ActionResultPatientTuple.Item1 == null)
+                return BadRequest(CouldNotCreatePatientError);
 
-            string hashedPassword = AccountInfoManager.HashPassword(dto.UserDetails.Password);
-            var patient = new Patient(dto.UserDetails.Email, hashedPassword, dto.UserDetails.FirstName, dto.UserDetails.LastName, dto.Age);
             var medicalHistory = new MedicalHistory();
+            Patient patient = ActionResultPatientTuple.Item1;
 
             patient.RegisterMedicalHistory(medicalHistory);
 
@@ -75,24 +69,15 @@ namespace MyDoctor.API.Controllers
                 return NotFound();
             }
 
-            if (dto.Age > 120) return BadRequest(BigAgeError);
+            var ActionResultPatientTuple = CreatePatientFromDto(dto);
 
-            var oldPatient = patientRepository.Find(p => p.Email == dto.UserDetails.Email).FirstOrDefault();
-            var oldDoctor = doctorRepository.Find(d => d.Email == dto.UserDetails.Email).FirstOrDefault();
-            if (oldPatient != null || oldDoctor != null)
-            {
-                return BadRequest(UsedEmailError);
-            }
+            if (ActionResultPatientTuple.Item2.GetType() != typeof(OkResult))
+                return ActionResultPatientTuple.Item2;
 
-            if (!AccountInfoManager.ValidateEmail(dto.UserDetails.Email))
-            {
-                return BadRequest(InvalidEmailError);
-            }
+            if (ActionResultPatientTuple.Item1 == null)
+                return BadRequest(CouldNotCreatePatientError);
 
-            string hashedPassword = AccountInfoManager.HashPassword(dto.UserDetails.Password);
-            var newPatient = new Patient(dto.UserDetails.Email, hashedPassword, dto.UserDetails.FirstName, dto.UserDetails.LastName, dto.Age);
-
-            patient.Update(newPatient);
+            patient.Update(ActionResultPatientTuple.Item1);
 
             patientRepository.Update(patient);
 
@@ -113,6 +98,28 @@ namespace MyDoctor.API.Controllers
 
             patientRepository.SaveChanges();
             return Ok();
+        }
+
+        private (Patient?, IActionResult) CreatePatientFromDto(CreatePatientDto dto)
+        {
+            if (dto.Age > 120) return (null, BadRequest(BigAgeError));
+
+            var oldPatient = patientRepository.Find(p => p.Email == dto.UserDetails.Email).FirstOrDefault();
+            var oldDoctor = doctorRepository.Find(d => d.Email == dto.UserDetails.Email).FirstOrDefault();
+            if (oldPatient != null || oldDoctor != null)
+            {
+                return (null, BadRequest(UsedEmailError));
+            }
+
+            if (!AccountInfoManager.ValidateEmail(dto.UserDetails.Email))
+            {
+                return (null, BadRequest(InvalidEmailError));
+            }
+
+            string hashedPassword = AccountInfoManager.HashPassword(dto.UserDetails.Password);
+            var newPatient = new Patient(dto.UserDetails.Email, hashedPassword, dto.UserDetails.FirstName, dto.UserDetails.LastName, dto.Age);
+
+            return (newPatient, Ok());
         }
     }
 }

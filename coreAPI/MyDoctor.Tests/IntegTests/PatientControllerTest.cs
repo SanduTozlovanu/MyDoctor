@@ -39,15 +39,7 @@ namespace MyDoctor.Tests.IntegTests
 
             // When
             string request = "https://localhost:7244/api/Patient";
-            var pDto = new CreatePatientDto();
-            pDto.UserDetails = new CreateUserDto
-            {
-                Email = "adresa@gmail.com",
-                FirstName = "Test",
-                LastName = "Test",
-                Password = "Test1234",
-            };
-            pDto.Age = 15;
+            var pDto = new CreatePatientDto(new CreateUserDto("adresa@gmail.com", "Test", "Test", "Test1234"), 15);
 
             var content = new StringContent(JsonConvert.SerializeObject(pDto), Encoding.UTF8, "application/json");
             var res = await _client.PostAsync(request, content);
@@ -71,15 +63,11 @@ namespace MyDoctor.Tests.IntegTests
 
             // When
             string request = "https://localhost:7244/api/Patient";
-            var pDto = new CreatePatientDto();
-            pDto.UserDetails = new CreateUserDto
-            {
-                Email = "adresa@gmail.com",
-                FirstName = "Test",
-                LastName = "Test",
-                Password = "Test1234",
-            };
-            pDto.Age = 15;
+            var pDto2 = new CreatePatientDto(new CreateUserDto("adresa@gmail.com", "Test", "Test", "Test1234"), 15);
+
+            var content2 = new StringContent(JsonConvert.SerializeObject(pDto2), Encoding.UTF8, "application/json");
+            var res2 = await _client.PostAsync(request, content2);
+            var pDto = new CreatePatientDto(new CreateUserDto("adresa@gmail.com", "Test", "Test", "Test1234"), 15);
 
             var content = new StringContent(JsonConvert.SerializeObject(pDto), Encoding.UTF8, "application/json");
             var res = await _client.PostAsync(request, content);
@@ -99,15 +87,8 @@ namespace MyDoctor.Tests.IntegTests
 
             // When
             string request = "https://localhost:7244/api/Patient";
-            var pDto = new CreatePatientDto();
-            pDto.UserDetails = new CreateUserDto
-            {
-                Email = "troller@gmail.com",
-                FirstName = "Test",
-                LastName = "Test",
-                Password = "Test1234",
-            };
-            pDto.Age = 150;
+            var pDto = new CreatePatientDto(new CreateUserDto ("troller@gmail.com", "Test", "Test", "Test1234"), 150);
+
 
             var content = new StringContent(JsonConvert.SerializeObject(pDto), Encoding.UTF8, "application/json");
             var res = await _client.PostAsync(request, content);
@@ -127,15 +108,8 @@ namespace MyDoctor.Tests.IntegTests
 
             // When
             string request = "https://localhost:7244/api/Patient";
-            var pDto = new CreatePatientDto();
-            pDto.UserDetails = new CreateUserDto
-            {
-                Email = "adresa",
-                FirstName = "Test",
-                LastName = "Test",
-                Password = "Test1234",
-            };
-            pDto.Age = 15;
+            var pDto = new CreatePatientDto(new CreateUserDto("adresa", "Test", "Test", "Test1234"), 15);
+
 
             var content = new StringContent(JsonConvert.SerializeObject(pDto), Encoding.UTF8, "application/json");
             var res = await _client.PostAsync(request, content);

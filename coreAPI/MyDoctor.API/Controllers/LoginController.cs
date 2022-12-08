@@ -27,13 +27,10 @@ namespace MyDoctor.API.Controllers
             User? user = patientsRepository.Find(p => p.Email == dto.Email).FirstOrDefault();
             user ??= doctorsRepository.Find(d => d.Email == dto.Email).FirstOrDefault();
 
-            if (user != null)
+            if (user != null && AccountInfoManager.ValidatePassword(user.Password, dto.Password))
             {
-                if (AccountInfoManager.ValidatePassword(user.Password, dto.Password))
-                {
                     string jwtToken = JwtManager.GenerateToken(user);
                     return Ok(new DisplayLoginDto(user, jwtToken));
-                }
             }
 
             return BadRequest(InvalidCredentialsError);

@@ -2,8 +2,11 @@
 {
     public class ScheduleInterval : Interval
     {
-        public ScheduleInterval(DateOnly date, TimeOnly startTime, TimeOnly endTime) : base(date, startTime, endTime) {}
-        public Doctor Doctor { get; private set; }
+        public ScheduleInterval(DateOnly date, TimeOnly startTime, TimeOnly endTime, uint appointmentDuration) : base(date, startTime, endTime) 
+        {
+            this.AppointmentDuration = appointmentDuration;
+        }
+        public virtual Doctor Doctor { get; private set; }
         public uint AppointmentDuration { get; private set; }
         public Guid DoctorId { get; private set; }
 

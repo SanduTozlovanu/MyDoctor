@@ -36,8 +36,7 @@ namespace MyDoctor.Tests.IntegTests
             string request = "https://localhost:7244/api/MedicalRoom";
             string request1 = "https://localhost:7244/api/DrugStock";
             string request3 = "https://localhost:7244/api/Drug/{0}";
-            CreateMedicalRoomDto mdDto1 = new CreateMedicalRoomDto();
-            mdDto1.Adress = "Strada Farmaciei 8";
+            CreateMedicalRoomDto mdDto1 = new CreateMedicalRoomDto("Strada Farmaciei 8");
 
             var content1 = new StringContent(JsonConvert.SerializeObject(mdDto1), Encoding.UTF8, "application/json");
             var res1 = await _client.PostAsync(request, content1);
@@ -56,17 +55,9 @@ namespace MyDoctor.Tests.IntegTests
             cont.ForEach(dto => Assert.True(dto.MedicalRoomId == medRoom1.Id));
             DisplayDrugStockDto drugStock = cont.First();
 
-            CreateDrugDto drugDto1 = new CreateDrugDto();
-            drugDto1.Description = "Peniciline is bad";
-            drugDto1.Name = "Not Peniciline";
-            drugDto1.Price = 35.64;
-            drugDto1.Quantity = 5;
+            CreateDrugDto drugDto1 = new CreateDrugDto("Peniciline is bad", "Not Peniciline", 35.64, 5);
 
-            CreateDrugDto drugDto2 = new CreateDrugDto();
-            drugDto2.Description = "Peniciline is good";
-            drugDto2.Name = "Peniciline";
-            drugDto2.Price = 25.48;
-            drugDto2.Quantity = 2;
+            CreateDrugDto drugDto2 = new CreateDrugDto("Peniciline is good", "Peniciline", 25.48, 2);
 
             List<CreateDrugDto> dtos = new List<CreateDrugDto>();
             dtos.Add(drugDto1);
@@ -88,17 +79,9 @@ namespace MyDoctor.Tests.IntegTests
         {
             string request3 = "https://localhost:7244/api/Drug/{0}";
 
-            CreateDrugDto drugDto1 = new CreateDrugDto();
-            drugDto1.Description = "Peniciline is bad";
-            drugDto1.Name = "Not Peniciline";
-            drugDto1.Price = 35.64;
-            drugDto1.Quantity = 5;
+            CreateDrugDto drugDto1 = new CreateDrugDto("Peniciline is bad", "Not Peniciline", 35.64, 5);
 
-            CreateDrugDto drugDto2 = new CreateDrugDto();
-            drugDto2.Description = "Peniciline is good";
-            drugDto2.Name = "Peniciline";
-            drugDto2.Price = 25.48;
-            drugDto2.Quantity = 2;
+            CreateDrugDto drugDto2 = new CreateDrugDto("Peniciline is good", "Peniciline", 25.48, 2);
 
             List<CreateDrugDto> dtos = new List<CreateDrugDto>();
             dtos.Add(drugDto1);

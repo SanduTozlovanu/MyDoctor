@@ -15,10 +15,10 @@ namespace MyDoctor.Domain.Models
         public Guid PatientId { get; private set; }
         public virtual Doctor Doctor { get; private set; }
         public Guid DoctorId { get; private set; }
-        public AppointmentInterval AppointmentInterval { get; private set; }
+        public virtual AppointmentInterval AppointmentInterval { get; private set; }
         public double Price { get; private set; }
-        public Prescription Prescription { get; private set; }
-        public Bill Bill { get; private set; }
+        public virtual Prescription Prescription { get; private set; }
+        public virtual Bill Bill { get; private set; }
 
         public void AttachToPatient(Patient patient) {
             this.PatientId = patient.Id;

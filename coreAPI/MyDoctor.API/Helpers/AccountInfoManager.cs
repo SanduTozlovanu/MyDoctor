@@ -4,7 +4,7 @@ using System.Text;
 
 namespace MyDoctor.API.Helpers
 {
-    public class AccountInfoManager
+    public static class AccountInfoManager
     {
         public static string HashPassword(string password)
         {

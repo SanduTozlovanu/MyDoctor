@@ -2,6 +2,14 @@
 {
     public class CreatePrescriptionDto
     {
+        public CreatePrescriptionDto(string description, string name, List<GetDrugDto> drugs, List<CreateProcedureDto> procedures)
+        {
+            this.Description = description;
+            this.Name = name;
+            this.drugs = drugs;
+            this.procedures = procedures;
+        }
+
         public string Description { get; set; }
         public string Name { get; set; }
         public List<GetDrugDto> drugs { get; set; } = new List<GetDrugDto>();

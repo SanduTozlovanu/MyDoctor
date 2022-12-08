@@ -9,7 +9,7 @@ namespace MyDoctor.Domain.Models
             this.Id = Guid.NewGuid();
         }
         public Guid Id { get; private set; }
-        public Patient Patient { get; private set; }
+        public virtual Patient Patient { get; private set; }
         public Guid PatientId { get; private set; }
 
         public List<Prescription> Prescriptions { get; private set; } = new List<Prescription>();

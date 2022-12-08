@@ -2,12 +2,14 @@
 {
     public class Bill
     {
+        private const string NullDrugException = "Drug null exception";
+
         public Bill() 
         {
             this.Id = Guid.NewGuid();
         }
         public Guid Id { get; private set; }
-        public Appointment Appointment { get; private set; }
+        public virtual Appointment Appointment { get; private set; }
         public Guid AppointmentId { get; private set; }
         public double BillPrice { get; private set; }
 
@@ -27,7 +29,11 @@
                 {
                     foreach (PrescriptedDrug prescriptedDrug in appointment.Prescription.PrescriptedDrugs)
                     {
-                        totalPrice += (prescriptedDrug.Drug.Price * prescriptedDrug.Quantity);
+                        if( prescriptedDrug.Drug == null)
+                        {
+                            throw new Exception(NullDrugException);
+                        }
+                        totalPrice += prescriptedDrug.Drug.Price * prescriptedDrug.Quantity;
                     }
                 }
                 if (appointment.Prescription.Procedures!= null)       

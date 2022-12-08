@@ -5,18 +5,13 @@ namespace MyDoctor.Tests.Helpers
     {
         public DatabaseFixture()
         {
-            CreateDbContext();
-        }
-
-        public DatabaseContext DatabaseContext { get; private set; }
-
-        public void CreateDbContext()
-        {
             DatabaseContext = new DatabaseContext();
             DatabaseContext.DatabaseName = "Tests.db";
             DatabaseContext.Database.EnsureCreated();
             Dispose();
         }
+
+        public DatabaseContext DatabaseContext { get; private set; }
 
         public void Dispose()
         {

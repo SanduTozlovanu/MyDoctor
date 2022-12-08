@@ -3,7 +3,6 @@ using MyDoctor.API.DTOs;
 using MyDoctor.API.Helpers;
 using MyDoctor.Domain.Models;
 using MyDoctorApp.Infrastructure.Generics;
-using MyDoctorApp.Infrastructure.Generics.GenericRepositories;
 
 namespace MyDoctor.API.Controllers
 {
@@ -15,6 +14,7 @@ namespace MyDoctor.API.Controllers
         public const string MedicalRoomNotFoundError = "Could not find a medicalRoom with this Id.";
         public const string UsedEmailError = "The email is already used!";
         public const string InvalidEmailError = "The email is invalid!";
+        private const string CouldNotCreateDoctorError = "Could not create a doctor from the dto.";
         private readonly IRepository<Doctor> doctorsRepository;
         private readonly IRepository<MedicalRoom> medicalRoomRepository;
         private readonly IRepository<Patient> patientsRepository;
@@ -55,21 +55,15 @@ namespace MyDoctor.API.Controllers
                 return NotFound(MedicalRoomNotFoundError);
             }
 
-            var oldPatient = patientsRepository.Find(p => p.Email == dto.UserDetails.Email).FirstOrDefault();
-            var oldDoctor = doctorsRepository.Find(d => d.Email == dto.UserDetails.Email).FirstOrDefault();
-            if (oldPatient != null || oldDoctor != null)
-            {
-                return BadRequest(UsedEmailError);
-            }
+            var ActionResultDoctorTuple = CreateDoctorFromDto(dto);
 
-            if (!AccountInfoManager.ValidateEmail(dto.UserDetails.Email))
-            {
-                return BadRequest(InvalidEmailError);
-            }
+            if (ActionResultDoctorTuple.Item2.GetType() != typeof(OkResult))
+                return ActionResultDoctorTuple.Item2;
 
+            if (ActionResultDoctorTuple.Item1 == null)
+                return BadRequest(ActionResultDoctorTuple);
 
-            string hashedPassword = AccountInfoManager.HashPassword(dto.UserDetails.Password);
-            var doctor = new Doctor(dto.UserDetails.Email, hashedPassword, dto.UserDetails.FirstName, dto.UserDetails.LastName, dto.Speciality);
+            Doctor doctor = ActionResultDoctorTuple.Item1;
             medicalRoom.RegisterDoctors(new List<Doctor> { doctor });
 
             //if (dto.ProfilePhoto == null)
@@ -113,22 +107,15 @@ namespace MyDoctor.API.Controllers
                 return NotFound();
             }
 
-            var oldPatient = patientsRepository.Find(p => p.Email == dto.UserDetails.Email).FirstOrDefault();
-            var oldDoctor = doctorsRepository.Find(d => d.Email == dto.UserDetails.Email).FirstOrDefault();
-            if (oldPatient != null || oldDoctor != null)
-            {
-                return BadRequest(UsedEmailError);
-            }
+            var ActionResultDoctorTuple = CreateDoctorFromDto(dto);
 
-            if (!AccountInfoManager.ValidateEmail(dto.UserDetails.Email))
-            {
-                return BadRequest(InvalidEmailError);
-            }
+            if (ActionResultDoctorTuple.Item2.GetType() != typeof(OkResult))
+                return ActionResultDoctorTuple.Item2;
 
-            string hashedPassword = AccountInfoManager.HashPassword(dto.UserDetails.Password);
-            var newDoctor = new Doctor(dto.UserDetails.Email, hashedPassword, dto.UserDetails.FirstName, dto.UserDetails.LastName, dto.Speciality);
+            if (ActionResultDoctorTuple.Item1 == null)
+                return BadRequest(ActionResultDoctorTuple);
 
-            doctor.Update(newDoctor);
+            doctor.Update(ActionResultDoctorTuple.Item1);
 
             doctorsRepository.Update(doctor);
 
@@ -150,6 +137,26 @@ namespace MyDoctor.API.Controllers
 
             doctorsRepository.SaveChanges();
             return Ok();
+        }
+
+        private (Doctor?, IActionResult) CreateDoctorFromDto(CreateDoctorDto dto)
+        {
+            var oldPatient = patientsRepository.Find(p => p.Email == dto.UserDetails.Email).FirstOrDefault();
+            var oldDoctor = doctorsRepository.Find(d => d.Email == dto.UserDetails.Email).FirstOrDefault();
+            if (oldPatient != null || oldDoctor != null)
+            {
+                return (null,BadRequest(UsedEmailError));
+            }
+
+            if (!AccountInfoManager.ValidateEmail(dto.UserDetails.Email))
+            {
+                return (null, BadRequest(InvalidEmailError));
+            }
+
+            string hashedPassword = AccountInfoManager.HashPassword(dto.UserDetails.Password);
+            var newDoctor = new Doctor(dto.UserDetails.Email, hashedPassword, dto.UserDetails.FirstName, dto.UserDetails.LastName, dto.Speciality);
+
+            return (newDoctor, Ok());
         }
     }
 }

@@ -23,7 +23,7 @@ namespace MyDoctor.API.Controllers
         private readonly IRepository<Procedure> procedureRepository;
         private readonly IRepository<Bill> billRepository;
         private readonly IRepository<PrescriptedDrug> prescriptedDrugRepository;
-
+        //NOSONAR
         public PrescriptionController(IRepository<Prescription> prescriptonRepository,
             IRepository<Appointment> appointmentRepository,
             IRepository<DrugStock> drugStockRepository,
@@ -75,64 +75,11 @@ namespace MyDoctor.API.Controllers
             }
             if (dto.drugs.Any())
             {
-                Doctor doctor = doctorRepository.Get(appointment.DoctorId);
-                if (doctor == null)
+                var result = AttachPrescriptedDrugsToPrescription(appointment, prescription, dto.drugs);
+                if (result.GetType() != typeof(OkResult))
                 {
-                    return NotFound(DoctorNotFoundError);
+                    return result;
                 }
-                DrugStock? drugStock = drugStockRepository.Find(ds => ds.MedicalRoomId == doctor.MedicalRoomId).FirstOrDefault();
-                if (drugStock == null) 
-                {
-                    return NotFound(DrugStockNotFoundError);
-                }
-                bool drugNotFound = false;
-                List<Tuple<Guid, uint>> getDrugTuples = dto.drugs.Select(dto => Tuple.Create(dto.drugId, dto.Quantity)).ToList();
-                List<Tuple<Drug, uint>> drugTuples = new List<Tuple<Drug, uint>>();
-
-                foreach (var tuple in getDrugTuples)
-                {
-                    var drugId = tuple.Item1;
-                    var quantityToTake = tuple.Item2;
-                    var drug = drugRepository.Get(drugId);
-                    if (drug == null)
-                    {
-                        drugNotFound = true;
-                        break;
-                    }
-                    else
-                    {
-                        drugTuples.Add(Tuple.Create(drug, quantityToTake));
-                    }
-                }
-                if (drugNotFound == true)
-                {
-                    return NotFound(DrugCreateError);
-                }
-
-                List<Drug> drugs = new List<Drug>();
-                foreach (var tuple in drugTuples)
-                {
-                    Drug drug = tuple.Item1;
-                    var quantityToTake = tuple.Item2;
-
-                    if (drug.GetDrugs(quantityToTake).IsFailure)
-                    {
-                        return BadRequest(TooManyDrugsTakenError);
-                    }
-                    drugRepository.Update(drug);
-
-                    drugs.Add(drug);
-                }
-                List<PrescriptedDrug> prescriptedDrugs= new List<PrescriptedDrug>();
-                drugTuples.ForEach(drugTuple => 
-                {
-                    PrescriptedDrug prescriptedDrug = new PrescriptedDrug(drugTuple.Item2);
-                    prescriptedDrug.AttachDrug(drugTuple.Item1);
-                    prescriptedDrugs.Add(prescriptedDrug);
-                });
-
-                prescription.RegisterPrescriptedDrugs(prescriptedDrugs);
-                prescriptedDrugs.ForEach(prescriptedDrug => prescriptedDrugRepository.Add(prescriptedDrug));
             }
             // Register prescription after done with it, because it needs to already have all the drugs to make the billing before registration.
             appointment.RegisterPrescription(prescription);
@@ -154,5 +101,62 @@ namespace MyDoctor.API.Controllers
 
             return Ok(new DisplayPrescriptionDto(prescription.Id, prescription.AppointmentId, prescription.Description, prescription.Name));
         }
-    }
+
+        private IActionResult AttachPrescriptedDrugsToPrescription(Appointment appointment, Prescription prescription, List<GetDrugDto> dtos)
+        {
+            Doctor doctor = doctorRepository.Get(appointment.DoctorId);
+            if (doctor == null)
+            {
+                return NotFound(DoctorNotFoundError);
+            }
+            DrugStock? drugStock = drugStockRepository.Find(ds => ds.MedicalRoomId == doctor.MedicalRoomId).FirstOrDefault();
+            if (drugStock == null)
+            {
+                return NotFound(DrugStockNotFoundError);
+            }
+            bool drugNotFound = false;
+            List<Tuple<Guid, uint>> getDrugTuples = dtos.Select(dto => Tuple.Create(dto.drugId, dto.Quantity)).ToList();
+            List<Tuple<Drug, uint>> drugTuples = new List<Tuple<Drug, uint>>();
+
+            foreach (var tuple in getDrugTuples)
+            {
+                var drugId = tuple.Item1;
+                var quantityToTake = tuple.Item2;
+                var drug = drugRepository.Get(drugId);
+                if (drug == null)
+                {
+                    drugNotFound = true;
+                    break;
+                }
+                drugTuples.Add(Tuple.Create(drug, quantityToTake));
+            }
+            if (drugNotFound)
+            {
+                return NotFound(DrugCreateError);
+            }
+
+            foreach (var tuple in drugTuples)
+            {
+                Drug drug = tuple.Item1;
+                var quantityToTake = tuple.Item2;
+
+                if (drug.GetDrugs(quantityToTake).IsFailure)
+                {
+                    return BadRequest(TooManyDrugsTakenError);
+                }
+                drugRepository.Update(drug);
+            }
+            List<PrescriptedDrug> prescriptedDrugs = new List<PrescriptedDrug>();
+            drugTuples.ForEach(drugTuple =>
+            {
+                PrescriptedDrug prescriptedDrug = new PrescriptedDrug(drugTuple.Item2);
+                prescriptedDrug.AttachDrug(drugTuple.Item1);
+                prescriptedDrugs.Add(prescriptedDrug);
+            });
+
+            prescription.RegisterPrescriptedDrugs(prescriptedDrugs);
+            prescriptedDrugs.ForEach(prescriptedDrug => prescriptedDrugRepository.Add(prescriptedDrug));
+            return Ok();
+        }
+    }   
 }

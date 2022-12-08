@@ -2,6 +2,14 @@
 {
     public class CreateDrugDto
     {
+        public CreateDrugDto(string name, string description, double price, uint quantity)
+        {
+            Name = name;
+            Description = description;
+            Price = price;
+            Quantity = quantity;
+        }
+
         public string Name { get; set; }
         public string Description { get; set; }
         public double Price { get; set; }
@@ -43,6 +51,11 @@
                 DisplayDrugDto dto = (DisplayDrugDto)obj;
                 return (this.Id == dto.Id) && (this.Name == dto.Name) && (this.Price == dto.Price) && (this.Description == dto.Description) && (this.Quantity == dto.Quantity);
             }
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(this.Id, this.DrugStockId, this.Name, this.Description, this.Price, this.Quantity);
         }
     }
 }

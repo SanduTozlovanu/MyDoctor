@@ -2,6 +2,11 @@
 {
     public class CreateMedicalRoomDto
     {
+        public CreateMedicalRoomDto(string adress)
+        {
+            Adress = adress;
+        }
+
         public string Adress { get; set; }
     }
 

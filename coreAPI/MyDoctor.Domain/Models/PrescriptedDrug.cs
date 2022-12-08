@@ -9,10 +9,10 @@
         }
 
         public Guid Id { get; private set; }
-        public Prescription Prescription { get; private set; }
+        public virtual Prescription Prescription { get; private set; }
         public Guid PrescriptionId { get; private set; }
         public Guid DrugId { get; private set; }
-        public Drug Drug { get; private set; }
+        public virtual Drug Drug { get; private set; }
         public uint Quantity { get; private set; }
 
         public void AttachPrescription(Prescription prescription)

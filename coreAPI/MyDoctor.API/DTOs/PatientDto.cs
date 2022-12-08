@@ -2,6 +2,11 @@
 {
     public class CreatePatientDto
     {
+        public CreatePatientDto(CreateUserDto userDetails, uint age)
+        {
+            this.UserDetails = userDetails;
+            this.Age = age;
+        }
         public CreateUserDto UserDetails { get; set; }
         public uint Age { get; set; }
     }

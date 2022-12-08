@@ -23,14 +23,14 @@ namespace MyDoctor.Tests.UnitTests.DomainTests
         public void Create()
         {
             // When
-            var si = new ScheduleInterval(Date, StartTime, EndTime);
+            var si = new ScheduleInterval(Date, StartTime, EndTime, 10);
 
             // Then
             Assert.NotEqual(Guid.Empty, si.Id);
             Assert.Equal(Date, si.Date);
             Assert.Equal(StartTime, si.StartTime);
             Assert.Equal(EndTime, si.EndTime);
-            Assert.Equal(0, (int)si.AppointmentDuration);
+            Assert.Equal(10, (int)si.AppointmentDuration);
 
             Assert.Null(si.Doctor);
             Assert.Equal(Guid.Empty, si.DoctorId);
@@ -40,7 +40,7 @@ namespace MyDoctor.Tests.UnitTests.DomainTests
         public void AttachToDoctor()
         {
             // Given
-            var si = new ScheduleInterval(Date, StartTime, EndTime);
+            var si = new ScheduleInterval(Date, StartTime, EndTime, 15);
             var d = DoctorTest.CreateDefaultDoctor();
 
             // When

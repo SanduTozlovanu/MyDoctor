@@ -15,8 +15,8 @@ namespace MyDoctor.Tests.IntegTests
     {
         private readonly HttpClient _client;
         private DatabaseFixture databaseFixture;
-        private string Address1 = "Ion Putulai 5";
-        private string Address2 = "Ana Anastasie 32154";
+        private readonly string Address1 = "Ion Putulai 5";
+        private readonly string Address2 = "Ana Anastasie 32154";
 
         public MedicalRoomControllerTest(DatabaseFixture databaseFixture)
         {
@@ -41,10 +41,8 @@ namespace MyDoctor.Tests.IntegTests
 
             // When
             string request = "https://localhost:7244/api/MedicalRoom";
-            CreateMedicalRoomDto mdDto = new CreateMedicalRoomDto();
-            mdDto.Adress = Address1;
-            CreateMedicalRoomDto mdDto2 = new CreateMedicalRoomDto();
-            mdDto2.Adress = Address2;
+            CreateMedicalRoomDto mdDto = new(Address1);
+            CreateMedicalRoomDto mdDto2 = new (Address2);
 
             var content = new StringContent(JsonConvert.SerializeObject(mdDto), Encoding.UTF8, "application/json");
             var content2 = new StringContent(JsonConvert.SerializeObject(mdDto2), Encoding.UTF8, "application/json");
@@ -56,8 +54,8 @@ namespace MyDoctor.Tests.IntegTests
             var jsonString2 = await res2.Content.ReadAsStringAsync();
             var cont = JsonConvert.DeserializeObject<DisplayMedicalRoomDto>(jsonString);
             var cont2 = JsonConvert.DeserializeObject<DisplayMedicalRoomDto>(jsonString2);
-            DisplayMedicalRoomDto expectedObject = new DisplayMedicalRoomDto(cont.Id, mdDto.Adress);
-            DisplayMedicalRoomDto expectedObject2 = new DisplayMedicalRoomDto(cont2.Id, mdDto2.Adress);
+            DisplayMedicalRoomDto expectedObject = new(cont.Id, mdDto.Adress);
+            DisplayMedicalRoomDto expectedObject2 = new(cont2.Id, mdDto2.Adress);
             Assert.True(expectedObject.Equals(cont));
             Assert.True(expectedObject2.Equals(cont2));
             MedicalRoom medicalRoom1 = databaseFixture.DatabaseContext.MedicalRooms.Find(cont.Id);
