@@ -67,15 +67,15 @@ namespace MyDoctor.API.Controllers
             {
                 return NotFound(AppointmentNotFoundError);
             }
-            if (dto.procedures.Any())
+            if (dto.Procedures.Any())
             {
-                List<Procedure> procedures = dto.procedures.Select(dto => new Procedure(dto.Name, dto.Description, dto.Price)).ToList();
+                List<Procedure> procedures = dto.Procedures.Select(dto => new Procedure(dto.Name, dto.Description, dto.Price)).ToList();
                 prescription.RegisterProcedures(procedures);
                 procedures.ForEach(p => procedureRepository.Add(p));
             }
-            if (dto.drugs.Any())
+            if (dto.Drugs.Any())
             {
-                var result = AttachPrescriptedDrugsToPrescription(appointment, prescription, dto.drugs);
+                var result = AttachPrescriptedDrugsToPrescription(appointment, prescription, dto.Drugs);
                 if (result.GetType() != typeof(OkResult))
                 {
                     return result;
