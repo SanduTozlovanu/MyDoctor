@@ -62,6 +62,7 @@ namespace MyDoctor.Tests.IntegTests
             var res = await _client.PostAsync(request, content);
             var jsonString = await res.Content.ReadAsStringAsync();
             var dto = JsonConvert.DeserializeObject<DisplayDoctorDto>(jsonString);
+            Assert.NotNull(dto);
             Assert.True(dto.FirstName == pDto.UserDetails.FirstName);
             Assert.True(dto.Email == pDto.UserDetails.Email);
             Assert.True(dto.LastName == pDto.UserDetails.LastName);

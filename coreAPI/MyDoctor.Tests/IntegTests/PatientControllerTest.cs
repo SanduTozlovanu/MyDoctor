@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Testing;
 using MyDoctor.API.Controllers;
 using MyDoctor.API.DTOs;
+using MyDoctor.Domain.Models;
 using MyDoctor.Tests.Helpers;
 using MyDoctor.Tests.Orderers;
 using Newtonsoft.Json;
@@ -45,6 +46,7 @@ namespace MyDoctor.Tests.IntegTests
             var res = await _client.PostAsync(request, content);
             var jsonString = await res.Content.ReadAsStringAsync();
             var dto = JsonConvert.DeserializeObject<DisplayPatientDto>(jsonString);
+            Assert.NotNull(dto);
             Assert.True(dto.FirstName == pDto.UserDetails.FirstName);
             Assert.True(dto.Email == pDto.UserDetails.Email);
             Assert.True(dto.LastName == pDto.UserDetails.LastName);

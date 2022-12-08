@@ -42,16 +42,19 @@ namespace MyDoctor.Tests.IntegTests
 
             var jsonString1 = await res1.Content.ReadAsStringAsync();
             var con1 = JsonConvert.DeserializeObject<DisplayMedicalRoomDto>(jsonString1);
+            Assert.NotNull(con1);
             DisplayMedicalRoomDto medRoom1 = new(con1.Id, mdDto1.Adress);
 
             var jsonString2 = await res2.Content.ReadAsStringAsync();
             var con2 = JsonConvert.DeserializeObject<DisplayMedicalRoomDto>(jsonString2);
+            Assert.NotNull(con2);
             DisplayMedicalRoomDto medRoom2 = new(con2.Id, mdDto2.Adress);
 
             var res = await _client.GetAsync(request2);
 
             var jsonString = await res.Content.ReadAsStringAsync();
             var cont = JsonConvert.DeserializeObject<List<DisplayDrugStockDto>>(jsonString);
+            Assert.NotNull(cont);
             Assert.True(cont.Count() == 2);
             uint foundTimes = 0;
             cont.ForEach(dto =>

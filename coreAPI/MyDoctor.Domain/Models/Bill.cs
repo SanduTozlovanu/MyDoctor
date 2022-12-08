@@ -2,8 +2,6 @@
 {
     public class Bill
     {
-        private const string NullDrugException = "Drug null exception";
-
         public Bill() 
         {
             this.Id = Guid.NewGuid();
@@ -31,7 +29,7 @@
                     {
                         if( prescriptedDrug.Drug == null)
                         {
-                            throw new ArgumentNullException(NullDrugException);
+                            throw new ArgumentNullException("Drug");
                         }
                         totalPrice += prescriptedDrug.Drug.Price * prescriptedDrug.Quantity;
                     }

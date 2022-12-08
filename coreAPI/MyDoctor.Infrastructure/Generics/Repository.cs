@@ -7,7 +7,7 @@ namespace MyDoctorApp.Infrastructure.Generics
     {
         protected DatabaseContext context;
 
-        public Repository(DatabaseContext context)
+        protected Repository(DatabaseContext context)
         {
             this.context = context;
         }
@@ -26,7 +26,7 @@ namespace MyDoctorApp.Infrastructure.Generics
                 .Where(predicate).ToList();
         }
 
-        public virtual T Get(Guid id)
+        public virtual T? Get(Guid id)
         {
             return context.Find<T>(id);
         }

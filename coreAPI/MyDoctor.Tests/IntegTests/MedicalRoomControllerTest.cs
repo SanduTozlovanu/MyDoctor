@@ -54,12 +54,16 @@ namespace MyDoctor.Tests.IntegTests
             var jsonString2 = await res2.Content.ReadAsStringAsync();
             var cont = JsonConvert.DeserializeObject<DisplayMedicalRoomDto>(jsonString);
             var cont2 = JsonConvert.DeserializeObject<DisplayMedicalRoomDto>(jsonString2);
+            Assert.NotNull(cont);
+            Assert.NotNull(cont2);
             DisplayMedicalRoomDto expectedObject = new(cont.Id, mdDto.Adress);
             DisplayMedicalRoomDto expectedObject2 = new(cont2.Id, mdDto2.Adress);
             Assert.True(expectedObject.Equals(cont));
             Assert.True(expectedObject2.Equals(cont2));
-            MedicalRoom medicalRoom1 = databaseFixture.DatabaseContext.MedicalRooms.Find(cont.Id);
-            MedicalRoom medicalRoom2 = databaseFixture.DatabaseContext.MedicalRooms.Find(cont2.Id);
+            MedicalRoom? medicalRoom1 = databaseFixture.DatabaseContext.MedicalRooms.Find(cont.Id);
+            MedicalRoom? medicalRoom2 = databaseFixture.DatabaseContext.MedicalRooms.Find(cont2.Id);
+            Assert.NotNull(medicalRoom1);
+            Assert.NotNull(medicalRoom2);
             Assert.Equal(medicalRoom1.Adress, mdDto.Adress);
             Assert.Equal(medicalRoom1.Id, cont.Id);
             Assert.Equal(medicalRoom2.Adress, mdDto2.Adress);
@@ -75,6 +79,7 @@ namespace MyDoctor.Tests.IntegTests
 
             var jsonString = await res.Content.ReadAsStringAsync();
             var cont = JsonConvert.DeserializeObject<List<DisplayMedicalRoomDto>>(jsonString);
+            Assert.NotNull(cont);
             Assert.True(cont.Count() >= 2);
             cont.ForEach(dto => Assert.True(dto.Adress == Address2 || dto.Adress == Address1));
         }

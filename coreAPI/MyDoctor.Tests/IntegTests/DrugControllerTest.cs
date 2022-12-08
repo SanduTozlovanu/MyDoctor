@@ -45,12 +45,14 @@ namespace MyDoctor.Tests.IntegTests
 
             var jsonString1 = await res1.Content.ReadAsStringAsync();
             var con1 = JsonConvert.DeserializeObject<DisplayMedicalRoomDto>(jsonString1);
+            Assert.NotNull(cont1);
             DisplayMedicalRoomDto medRoom1 = new DisplayMedicalRoomDto(con1.Id, mdDto1.Adress);
 
             var res = await _client.GetAsync(request1);
 
             var jsonString = await res.Content.ReadAsStringAsync();
             var cont = JsonConvert.DeserializeObject<List<DisplayDrugStockDto>>(jsonString);
+            Assert.NotNull(cont);
             Assert.True(cont.Count() == 1);
             cont.ForEach(dto => Assert.True(dto.MedicalRoomId == medRoom1.Id));
             DisplayDrugStockDto drugStock = cont.First();
@@ -67,7 +69,8 @@ namespace MyDoctor.Tests.IntegTests
             var result = await _client.PostAsync(string.Format(request3, drugStock.Id.ToString()), content);
             var jsonString2 = await result.Content.ReadAsStringAsync();
             var displayDtos = JsonConvert.DeserializeObject<List<DisplayDrugDto>>(jsonString2);
-            Assert.Equal(displayDtos.Count, 2);
+            Assert.NotNull(displayDtos);
+            Assert.Equal(2, displayDtos.Count);
             displayDtos.ForEach(dto => Assert.True(dto.Equals(new DisplayDrugDto
                 (dto.Id, drugStock.Id, drugDto1.Name, drugDto1.Description, drugDto1.Price, drugDto1.Quantity))
                  || dto.Equals(new DisplayDrugDto
