@@ -31,7 +31,7 @@
                     {
                         if( prescriptedDrug.Drug == null)
                         {
-                            throw new Exception(NullDrugException);
+                            throw new ArgumentNullException(NullDrugException);
                         }
                         totalPrice += prescriptedDrug.Drug.Price * prescriptedDrug.Quantity;
                     }

@@ -20,18 +20,16 @@
         public Guid Id { get; set; }
         public string Adress { get; set; }
 
-        public override bool Equals(Object obj)
+        public override bool Equals(object? obj)
         {
-            //Check for null and compare run-time types.
-            if ((obj == null) || !this.GetType().Equals(obj.GetType()))
-            {
-                return false;
-            }
-            else
-            {
-                DisplayMedicalRoomDto dto = (DisplayMedicalRoomDto)obj;
-                return (this.Id == dto.Id) && (this.Adress == dto.Adress);
-            }
+            return obj is DisplayMedicalRoomDto dto &&
+                   Id.Equals(dto.Id) &&
+                   Adress == dto.Adress;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id, Adress);
         }
     }
 }

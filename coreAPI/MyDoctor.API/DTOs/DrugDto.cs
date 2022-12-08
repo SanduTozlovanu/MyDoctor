@@ -39,23 +39,20 @@
         public double Price { get; set; }
         public uint Quantity { get; set; }
 
-        public override bool Equals(Object obj)
+        public override bool Equals(object? obj)
         {
-            //Check for null and compare run-time types.
-            if ((obj == null) || !this.GetType().Equals(obj.GetType()))
-            {
-                return false;
-            }
-            else
-            {
-                DisplayDrugDto dto = (DisplayDrugDto)obj;
-                return (this.Id == dto.Id) && (this.Name == dto.Name) && (this.Price == dto.Price) && (this.Description == dto.Description) && (this.Quantity == dto.Quantity);
-            }
+            return obj is DisplayDrugDto dto &&
+                   Id.Equals(dto.Id) &&
+                   DrugStockId.Equals(dto.DrugStockId) &&
+                   Name == dto.Name &&
+                   Description == dto.Description &&
+                   Price == dto.Price &&
+                   Quantity == dto.Quantity;
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(this.Id, this.DrugStockId, this.Name, this.Description, this.Price, this.Quantity);
+            return HashCode.Combine(Id, DrugStockId, Name, Description, Price, Quantity);
         }
     }
 }

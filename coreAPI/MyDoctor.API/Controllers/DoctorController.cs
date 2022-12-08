@@ -14,7 +14,7 @@ namespace MyDoctor.API.Controllers
         public const string MedicalRoomNotFoundError = "Could not find a medicalRoom with this Id.";
         public const string UsedEmailError = "The email is already used!";
         public const string InvalidEmailError = "The email is invalid!";
-        private const string CouldNotCreateDoctorError = "Could not create a doctor from the dto.";
+        public const string CouldNotCreateDoctorError = "Could not create a doctor from the dto.";
         private readonly IRepository<Doctor> doctorsRepository;
         private readonly IRepository<MedicalRoom> medicalRoomRepository;
         private readonly IRepository<Patient> patientsRepository;

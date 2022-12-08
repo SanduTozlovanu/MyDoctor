@@ -6,14 +6,14 @@
         {
             this.Description = description;
             this.Name = name;
-            this.drugs = drugs;
-            this.procedures = procedures;
+            this.Drugs = drugs;
+            this.Procedures = procedures;
         }
 
         public string Description { get; set; }
         public string Name { get; set; }
-        public List<GetDrugDto> drugs { get; set; } = new List<GetDrugDto>();
-        public List<CreateProcedureDto> procedures { get; set; } = new List<CreateProcedureDto>();
+        public List<GetDrugDto> Drugs { get; set; }
+        public List<CreateProcedureDto> Procedures { get; set; }
 
     }
     public class DisplayPrescriptionDto
