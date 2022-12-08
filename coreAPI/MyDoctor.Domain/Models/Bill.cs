@@ -1,4 +1,6 @@
-﻿namespace MyDoctor.Domain.Models
+﻿using MyDoctorApp.Domain.Helpers;
+
+namespace MyDoctor.Domain.Models
 {
     public class Bill
     {
@@ -16,7 +18,7 @@
             this.Appointment = appointment;
         }
 
-        public void CalculateBillPrice(Appointment appointment)
+        public Result CalculateBillPrice(Appointment appointment)
         {
             double totalPrice = 0;
             totalPrice += appointment.Price;
@@ -29,7 +31,7 @@
                     {
                         if( prescriptedDrug.Drug == null)
                         {
-                            throw new ArgumentNullException("Drug");
+                            return Result.Failure("Drug from prescriptedDrug is Null");
                         }
                         totalPrice += prescriptedDrug.Drug.Price * prescriptedDrug.Quantity;
                     }
@@ -45,6 +47,7 @@
 
 
             this.BillPrice = totalPrice;
+            return Result.Success();
         }
     }
 }

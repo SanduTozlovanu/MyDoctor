@@ -23,15 +23,14 @@ namespace MyDoctor.API.Controllers
         private readonly IRepository<Procedure> procedureRepository;
         private readonly IRepository<Bill> billRepository;
         private readonly IRepository<PrescriptedDrug> prescriptedDrugRepository;
-        //NOSONAR
-        public PrescriptionController(IRepository<Prescription> prescriptonRepository,
-            IRepository<Appointment> appointmentRepository,
-            IRepository<DrugStock> drugStockRepository,
-            IRepository<Drug> drugRepository,
-            IRepository<Doctor> doctorRepository,
-            IRepository<Procedure> procedureRepository,
-            IRepository<Bill> billRepository,
-            IRepository<PrescriptedDrug> prescriptedDrugRepository)
+        public PrescriptionController(IRepository<Prescription> prescriptonRepository,  //NOSONAR
+                                      IRepository<Appointment> appointmentRepository,
+                                      IRepository<DrugStock> drugStockRepository,
+                                      IRepository<Drug> drugRepository,
+                                      IRepository<Doctor> doctorRepository,
+                                      IRepository<Procedure> procedureRepository,
+                                      IRepository<Bill> billRepository,
+                                      IRepository<PrescriptedDrug> prescriptedDrugRepository)
         {
             this.prescriptonRepository = prescriptonRepository;
             this.appointmentRepository = appointmentRepository;
@@ -62,7 +61,7 @@ namespace MyDoctor.API.Controllers
         public IActionResult Create(Guid appointmentId, [FromBody] CreatePrescriptionDto dto)
         {
             Prescription prescription = new Prescription(dto.Description, dto.Name);
-            Appointment appointment = appointmentRepository.Get(appointmentId);
+            Appointment? appointment = appointmentRepository.Get(appointmentId);
             if (appointment == null)
             {
                 return NotFound(AppointmentNotFoundError);
@@ -104,7 +103,7 @@ namespace MyDoctor.API.Controllers
 
         private IActionResult AttachPrescriptedDrugsToPrescription(Appointment appointment, Prescription prescription, List<GetDrugDto> dtos)
         {
-            Doctor doctor = doctorRepository.Get(appointment.DoctorId);
+            Doctor? doctor = doctorRepository.Get(appointment.DoctorId);
             if (doctor == null)
             {
                 return NotFound(DoctorNotFoundError);

@@ -44,9 +44,9 @@ namespace MyDoctor.Tests.IntegTests
             Assert.Equal(HttpStatusCode.OK, res1.StatusCode);
 
             var jsonString1 = await res1.Content.ReadAsStringAsync();
-            var con1 = JsonConvert.DeserializeObject<DisplayMedicalRoomDto>(jsonString1);
+            var cont1 = JsonConvert.DeserializeObject<DisplayMedicalRoomDto>(jsonString1);
             Assert.NotNull(cont1);
-            DisplayMedicalRoomDto medRoom1 = new DisplayMedicalRoomDto(con1.Id, mdDto1.Adress);
+            DisplayMedicalRoomDto medRoom1 = new DisplayMedicalRoomDto(cont1.Id, mdDto1.Adress);
 
             var res = await _client.GetAsync(request1);
 
