@@ -47,6 +47,7 @@ jobs:
           dotnet build coreApi
           npm install react-scripts --prefix website
           npm run build-win --prefix website
-          dotnet test --collect "Code Coverage"
+          dotnet tool install --global dotnet-coverage
+          dotnet-coverage collect 'dotnet test' -f xml -o 'coverage.xml'
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
           
