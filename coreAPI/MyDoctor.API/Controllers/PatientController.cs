@@ -52,8 +52,8 @@ namespace MyDoctor.API.Controllers
             await medicalHistoryRepository.AddAsync(medicalHistory);
             await patientRepository.AddAsync(patient);
 
-            medicalHistoryRepository.SaveChangesAsync();
-            patientRepository.SaveChangesAsync();
+            await medicalHistoryRepository.SaveChangesAsync();
+            await patientRepository.SaveChangesAsync();
             return Ok(patientRepository.GetMapper().Map<DisplayPatientDto>(patient));
         }
 
