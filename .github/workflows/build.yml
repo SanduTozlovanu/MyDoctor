@@ -43,7 +43,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"SanduTozlovanu_MyDoctor" /o:"sandutozlovanu" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths=coverage.xml /d:sonar.exclusions="coreAPI\MyDoctor.Infrastructure\Migrations"
+          .\.sonar\scanner\dotnet-sonarscanner begin /k:"SanduTozlovanu_MyDoctor" /o:"sandutozlovanu" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths=coverage.xml /d:sonar.exclusions=**\Migrations\*
           dotnet tool install --global coverlet.console
           dotnet build --no-incremental coreApi/MyDoctor.sln
           coverlet .\coreAPI\MyDoctor.Tests\bin\Debug\net7.0\MyDoctor.Tests.dll --target "dotnet"  --targetargs "test coreAPI/MyDoctor.sln --no-build" -f=opencover -o="coverage.xml"
