@@ -12,8 +12,8 @@
 
     public class DisplayMedicalRoomDto
     {
-        public DisplayMedicalRoomDto( Guid id, string adress) 
-        { 
+        public DisplayMedicalRoomDto(Guid id, string adress)
+        {
             this.Id = id;
             this.Adress = adress;
         }

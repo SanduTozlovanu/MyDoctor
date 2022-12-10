@@ -1,16 +1,16 @@
 ﻿using MyDoctorApp.Domain.Helpers;
 
-namespace MyDoctor.Domain.Models
+namespace MyDoctorApp.Domain.Models
 {
     public class Drug
     {
-        public Drug(string name, string description, double price, uint quantity) 
+        public Drug(string name, string description, double price, uint quantity)
         {
-            this.Id = Guid.NewGuid();
-            this.Name = name;
-            this.Description = description;
-            this.Price = price;
-            this.Quantity = quantity;
+            Id = Guid.NewGuid();
+            Name = name;
+            Description = description;
+            Price = price;
+            Quantity = quantity;
         }
         public Guid Id { get; private set; }
         public DrugStock DrugStock { get; private set; }
@@ -22,17 +22,17 @@ namespace MyDoctor.Domain.Models
 
         public void AttachToDrugStock(DrugStock drugStock)
         {
-            this.DrugStockId = drugStock.Id;
-            this.DrugStock = drugStock;
+            DrugStockId = drugStock.Id;
+            DrugStock = drugStock;
         }
 
         public Result GetDrugs(uint quantity)
         {
-            if (this.Quantity < quantity )       
+            if (Quantity < quantity)
             {
                 return Result.Failure("You cannot consume more drugs that the stock has.");
             }
-            this.Quantity -= quantity;
+            Quantity -= quantity;
             return Result.Success();
         }
 

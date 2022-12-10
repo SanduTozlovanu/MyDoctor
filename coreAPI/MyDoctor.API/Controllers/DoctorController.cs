@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyDoctor.API.DTOs;
 using MyDoctor.API.Helpers;
-using MyDoctor.Domain.Models;
+using MyDoctorApp.Domain.Models;
 using MyDoctorApp.Infrastructure.Generics;
 
 namespace MyDoctor.API.Controllers
@@ -15,23 +15,23 @@ namespace MyDoctor.API.Controllers
         public const string UsedEmailError = "The email is already used!";
         public const string InvalidEmailError = "The email is invalid!";
         public const string CouldNotCreateDoctorError = "Could not create a doctor from the dto.";
-        private readonly IRepository<Doctor> doctorsRepository;
+        private readonly IRepository<Doctor> doctorRepository;
         private readonly IRepository<MedicalRoom> medicalRoomRepository;
-        private readonly IRepository<Patient> patientsRepository;
+        private readonly IRepository<Patient> patientRepository;
 
-        public DoctorController(IRepository<Doctor> doctorsRepository,
+        public DoctorController(IRepository<Doctor> doctorRepository,
             IRepository<MedicalRoom> medicalRoomRepository,
-            IRepository<Patient> patientsRepository)
+            IRepository<Patient> patientRepository)
         {
-            this.doctorsRepository = doctorsRepository;
+            this.doctorRepository = doctorRepository;
             this.medicalRoomRepository = medicalRoomRepository;
-            this.patientsRepository = patientsRepository;
+            this.patientRepository = patientRepository;
         }
 
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(doctorsRepository.All().Select(d => new DisplayDoctorDto(d.Id, d.MedicalRoomId, d.Email, d.Speciality, d.FirstName, d.LastName)));
+            return Ok(doctorRepository.All().Select(d => doctorRepository.GetMapper().Map<DisplayDoctorDto>(d)));
         }
         [HttpPost]
         public IActionResult Create([FromBody] CreateDoctorDto dto)
@@ -40,8 +40,8 @@ namespace MyDoctor.API.Controllers
             (MedicalRoom?, int) medicalRoomWithFewestDoctors = new(null, int.MaxValue);
             medicalRooms.ForEach(mr =>
             {
-                int doctorNumber = doctorsRepository.Find(d => mr.Id == d.MedicalRoomId).Count();
-                if(doctorNumber < medicalRoomWithFewestDoctors.Item2)
+                int doctorNumber = doctorRepository.Find(d => mr.Id == d.MedicalRoomId).Count();
+                if (doctorNumber < medicalRoomWithFewestDoctors.Item2)
                     medicalRoomWithFewestDoctors = (mr, doctorNumber);
 
             });
@@ -89,11 +89,11 @@ namespace MyDoctor.API.Controllers
             //    return BadRequest($"An error occured during processing the images - {ex}.");
             //}
 
-            doctorsRepository.Add(doctor);
-            doctorsRepository.SaveChanges();
+            doctorRepository.Add(doctor);
+            doctorRepository.SaveChanges();
             medicalRoomRepository.SaveChanges();
 
-            return Ok(new DisplayDoctorDto(doctor.Id, doctor.MedicalRoomId, doctor.Email, doctor.Speciality, doctor.FirstName, doctor.LastName));
+            return Ok(doctorRepository.GetMapper().Map<DisplayDoctorDto>(doctor));
         }
 
 
@@ -101,7 +101,7 @@ namespace MyDoctor.API.Controllers
         [HttpPut("{doctorId:guid}")]
         public IActionResult Update(Guid doctorId, [FromBody] CreateDoctorDto dto)
         {
-            var doctor = doctorsRepository.Get(doctorId);
+            var doctor = doctorRepository.Get(doctorId);
             if (doctor == null)
             {
                 return NotFound();
@@ -117,9 +117,9 @@ namespace MyDoctor.API.Controllers
 
             doctor.Update(ActionResultDoctorTuple.Item1);
 
-            doctorsRepository.Update(doctor);
+            doctorRepository.Update(doctor);
 
-            doctorsRepository.SaveChanges();
+            doctorRepository.SaveChanges();
             return Ok();
         }
 
@@ -127,25 +127,25 @@ namespace MyDoctor.API.Controllers
         [HttpDelete("{doctorId:guid}")]
         public IActionResult Delete(Guid doctorId)
         {
-            var doctor = doctorsRepository.Get(doctorId);
+            var doctor = doctorRepository.Get(doctorId);
             if (doctor == null)
             {
                 return NotFound();
             }
 
-            doctorsRepository.Delete(doctor);
+            doctorRepository.Delete(doctor);
 
-            doctorsRepository.SaveChanges();
+            doctorRepository.SaveChanges();
             return Ok();
         }
 
         private (Doctor?, IActionResult) CreateDoctorFromDto(CreateDoctorDto dto)
         {
-            var oldPatient = patientsRepository.Find(p => p.Email == dto.UserDetails.Email).FirstOrDefault();
-            var oldDoctor = doctorsRepository.Find(d => d.Email == dto.UserDetails.Email).FirstOrDefault();
+            var oldPatient = patientRepository.Find(p => p.Email == dto.UserDetails.Email).FirstOrDefault();
+            var oldDoctor = doctorRepository.Find(d => d.Email == dto.UserDetails.Email).FirstOrDefault();
             if (oldPatient != null || oldDoctor != null)
             {
-                return (null,BadRequest(UsedEmailError));
+                return (null, BadRequest(UsedEmailError));
             }
 
             if (!AccountInfoManager.ValidateEmail(dto.UserDetails.Email))

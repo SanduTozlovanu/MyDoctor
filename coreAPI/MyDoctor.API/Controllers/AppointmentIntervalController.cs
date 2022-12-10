@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MyDoctor.Domain.Models;
+using MyDoctorApp.Domain.Models;
 using MyDoctorApp.Infrastructure.Generics;
 
 namespace MyDoctor.API.Controllers

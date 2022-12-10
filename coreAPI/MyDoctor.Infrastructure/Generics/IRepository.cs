@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using AutoMapper;
+using System.Linq.Expressions;
 
 namespace MyDoctorApp.Infrastructure.Generics
 {
@@ -11,5 +12,6 @@ namespace MyDoctorApp.Infrastructure.Generics
         IEnumerable<T> All();
         IEnumerable<T> Find(Expression<Func<T, bool>> predicate);
         void SaveChanges();
+        IMapper GetMapper();
     }
 }

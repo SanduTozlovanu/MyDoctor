@@ -26,7 +26,7 @@
         public DisplayDrugDto(Guid id, Guid drugStockId, string name, string description, double price, uint quantity)
         {
             this.Id = id;
-            this.Description= description;
+            this.Description = description;
             this.DrugStockId = drugStockId;
             this.Name = name;
             this.Price = price;

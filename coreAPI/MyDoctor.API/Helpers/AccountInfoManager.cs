@@ -24,7 +24,8 @@ namespace MyDoctor.API.Helpers
 
         public static bool ValidateEmail(string email)
         {
-            if (new EmailAddressAttribute().IsValid(email) && !string.IsNullOrEmpty(email)){
+            if (new EmailAddressAttribute().IsValid(email) && !string.IsNullOrEmpty(email))
+            {
                 return true;
             }
 

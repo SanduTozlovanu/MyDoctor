@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyDoctor.API.DTOs;
 using MyDoctor.API.Helpers;
-using MyDoctor.Domain.Models;
+using MyDoctorApp.Domain.Models;
 using MyDoctorApp.Infrastructure.Generics;
 
 namespace MyDoctor.API.Controllers
@@ -29,8 +29,8 @@ namespace MyDoctor.API.Controllers
 
             if (user != null && AccountInfoManager.ValidatePassword(user.Password, dto.Password))
             {
-                    string jwtToken = JwtManager.GenerateToken(user);
-                    return Ok(new DisplayLoginDto(user, jwtToken));
+                string jwtToken = JwtManager.GenerateToken(user);
+                return Ok(new DisplayLoginDto(user, jwtToken));
             }
 
             return BadRequest(InvalidCredentialsError);

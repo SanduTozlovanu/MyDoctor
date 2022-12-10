@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc.Testing;
-using MyDoctor.API.DTOs;
 using MyDoctor.API.Controllers;
+using MyDoctor.API.DTOs;
 using MyDoctor.Tests.Helpers;
 using MyDoctor.Tests.Orderers;
+using MyDoctorApp.Domain.Models;
 using Newtonsoft.Json;
-using System.Text;
 using System.Net;
-using MyDoctor.Domain.Models;
+using System.Text;
 
 namespace MyDoctor.Tests.IntegTests
 {
@@ -27,22 +27,22 @@ namespace MyDoctor.Tests.IntegTests
         }
 
 
-        private void Init()
+        private async void Init()
         {
+            string request = "https://localhost:7244/api/MedicalRoom";
+            CreateMedicalRoomDto mdDto = new(Address1);
 
+            var content = new StringContent(JsonConvert.SerializeObject(mdDto), Encoding.UTF8, "application/json");
+            var res = await _client.PostAsync(request, content);
+            Assert.Equal(HttpStatusCode.OK, res.StatusCode);
         }
 
         [Fact, TestPriority(0)]
         public async Task TestCreateMedicalRoom()
         {
-
-            // Given
-            Init();
-
-            // When
             string request = "https://localhost:7244/api/MedicalRoom";
             CreateMedicalRoomDto mdDto = new(Address1);
-            CreateMedicalRoomDto mdDto2 = new (Address2);
+            CreateMedicalRoomDto mdDto2 = new(Address2);
 
             var content = new StringContent(JsonConvert.SerializeObject(mdDto), Encoding.UTF8, "application/json");
             var content2 = new StringContent(JsonConvert.SerializeObject(mdDto2), Encoding.UTF8, "application/json");
@@ -74,14 +74,31 @@ namespace MyDoctor.Tests.IntegTests
         [Fact, TestPriority(1)]
         public async Task TestGetMedicalRooms()
         {
+            Init();
             string request = "https://localhost:7244/api/MedicalRoom";
-            var res = await _client.GetAsync(request);
+            CreateMedicalRoomDto mdDto = new(Address1);
+            CreateMedicalRoomDto mdDto2 = new(Address2);
+
+            var content = new StringContent(JsonConvert.SerializeObject(mdDto), Encoding.UTF8, "application/json");
+            var content2 = new StringContent(JsonConvert.SerializeObject(mdDto2), Encoding.UTF8, "application/json");
+            var res = await _client.PostAsync(request, content);
+            var res2 = await _client.PostAsync(request, content2);
+            Assert.Equal(HttpStatusCode.OK, res.StatusCode);
+            Assert.Equal(HttpStatusCode.OK, res2.StatusCode);
+            request = "https://localhost:7244/api/MedicalRoom";
+            res = await _client.GetAsync(request);
 
             var jsonString = await res.Content.ReadAsStringAsync();
             var cont = JsonConvert.DeserializeObject<List<DisplayMedicalRoomDto>>(jsonString);
             Assert.NotNull(cont);
             Assert.True(cont.Count() >= 2);
-            cont.ForEach(dto => Assert.True(dto.Adress == Address2 || dto.Adress == Address1));
+            bool foundObject = false;
+            cont.ForEach(dto =>
+            {
+                if (dto.Adress == Address1)
+                    foundObject = true;
+            });
+            Assert.True(foundObject);
         }
     }
 }

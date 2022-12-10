@@ -3,7 +3,7 @@
     public class DisplayMedicalHistoryDto
     {
         public DisplayMedicalHistoryDto(Guid id, Guid patientId)
-        { 
+        {
             this.Id = id;
             this.PatientId = patientId;
         }

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyDoctor.API.DTOs;
-using MyDoctor.Domain.Models;
+using MyDoctorApp.Domain.Models;
 using MyDoctorApp.Infrastructure.Generics;
 
 namespace MyDoctor.API.Controllers
@@ -45,7 +45,7 @@ namespace MyDoctor.API.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(prescriptonRepository.All().Select(p => new DisplayPrescriptionDto(p.Id, p.AppointmentId, p.Description, p.Name)));
+            return Ok(prescriptonRepository.All().Select(p => prescriptonRepository.GetMapper().Map<DisplayPrescriptionDto>(p)));
         }
 
         /// <summary>
@@ -66,13 +66,13 @@ namespace MyDoctor.API.Controllers
             {
                 return NotFound(AppointmentNotFoundError);
             }
-            if (dto.Procedures.Any())
+            if (dto.Procedures != null && dto.Procedures.Any())
             {
-                List<Procedure> procedures = dto.Procedures.Select(dto => new Procedure(dto.Name, dto.Description, dto.Price)).ToList();
+                List<Procedure> procedures = dto.Procedures.Select(procDto => procedureRepository.GetMapper().Map<Procedure>(procDto)).ToList();
                 prescription.RegisterProcedures(procedures);
                 procedures.ForEach(p => procedureRepository.Add(p));
             }
-            if (dto.Drugs.Any())
+            if (dto.Drugs != null && dto.Drugs.Any())
             {
                 var result = AttachPrescriptedDrugsToPrescription(appointment, prescription, dto.Drugs);
                 if (result.GetType() != typeof(OkResult))
@@ -98,7 +98,7 @@ namespace MyDoctor.API.Controllers
             drugRepository.SaveChanges();
             prescriptonRepository.SaveChanges();
 
-            return Ok(new DisplayPrescriptionDto(prescription.Id, prescription.AppointmentId, prescription.Description, prescription.Name));
+            return Ok(prescriptonRepository.GetMapper().Map<DisplayPrescriptionDto>(prescription));
         }
 
         private IActionResult AttachPrescriptedDrugsToPrescription(Appointment appointment, Prescription prescription, List<GetDrugDto> dtos)
@@ -157,5 +157,5 @@ namespace MyDoctor.API.Controllers
             prescriptedDrugs.ForEach(prescriptedDrug => prescriptedDrugRepository.Add(prescriptedDrug));
             return Ok();
         }
-    }   
+    }
 }

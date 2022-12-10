@@ -1,6 +1,5 @@
-﻿using MyDoctor.Domain.Models;
-using MyDoctor.Tests.Orderers;
-using MyDoctorApp.Domain.Helpers;
+﻿using MyDoctorApp.Domain.Helpers;
+using MyDoctorApp.Domain.Models;
 
 namespace MyDoctor.Tests.UnitTests.DomainTests
 {
@@ -35,7 +34,7 @@ namespace MyDoctor.Tests.UnitTests.DomainTests
             Assert.Equal(PASSWORD, u.Password);
             Assert.Equal(FIRST_NAME, u.FirstName);
             Assert.Equal(LAST_NAME, u.LastName);
-            Assert.Contains(u.AccountType, new List<String>(){AccountTypes.Admin, AccountTypes.Patient, AccountTypes.Doctor});
+            Assert.Contains(u.AccountType, new List<String>() { AccountTypes.Admin, AccountTypes.Patient, AccountTypes.Doctor });
         }
 
         [Fact]

@@ -1,15 +1,15 @@
 ﻿using MyDoctorApp.Domain.Helpers;
 
-namespace MyDoctor.Domain.Models
+namespace MyDoctorApp.Domain.Models
 {
     public class Appointment
     {
-        public Appointment(double price) 
+        public Appointment(double price)
         {
-            this.Id = Guid.NewGuid();
-            this.Price = price;
+            Id = Guid.NewGuid();
+            Price = price;
         }
-        public Guid Id { get; private set; } 
+        public Guid Id { get; private set; }
 
         public virtual Patient Patient { get; private set; }
         public Guid PatientId { get; private set; }
@@ -20,40 +20,42 @@ namespace MyDoctor.Domain.Models
         public virtual Prescription Prescription { get; private set; }
         public virtual Bill Bill { get; private set; }
 
-        public void AttachToPatient(Patient patient) {
-            this.PatientId = patient.Id;
-            this.Patient = patient;
+        public void AttachToPatient(Patient patient)
+        {
+            PatientId = patient.Id;
+            Patient = patient;
         }
-        public void AttachToDoctor(Doctor doctor) {
-            this.DoctorId = doctor.Id;
-            this.Doctor = doctor;
+        public void AttachToDoctor(Doctor doctor)
+        {
+            DoctorId = doctor.Id;
+            Doctor = doctor;
         }
-        public void RegisterPrescription(Prescription prescription) 
+        public void RegisterPrescription(Prescription prescription)
         {
             prescription.AttachAppointment(this);
-            this.Prescription = prescription;
+            Prescription = prescription;
             CalculateBillPrice();
         }
-        public void RegisterBill(Bill bill) 
+        public void RegisterBill(Bill bill)
         {
             bill.AttachAppointment(this);
-            this.Bill = bill;
+            Bill = bill;
             CalculateBillPrice();
         }
-        public void RegisterAppointmentInterval (AppointmentInterval appointmentInterval) 
-        { 
+        public void RegisterAppointmentInterval(AppointmentInterval appointmentInterval)
+        {
             appointmentInterval.AttachToAppointment(this);
-            this.AppointmentInterval = appointmentInterval;
+            AppointmentInterval = appointmentInterval;
         }
 
         public Result CalculateBillPrice()
         {
-            if (this.Bill == null)
+            if (Bill == null)
             {
                 return Result.Failure("Not enough data to make the billing.");
             }
 
-            this.Bill.CalculateBillPrice(this);
+            Bill.CalculateBillPrice(this);
 
             return Result.Success();
         }

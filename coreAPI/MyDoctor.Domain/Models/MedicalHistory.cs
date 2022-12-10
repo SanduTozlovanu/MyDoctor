@@ -1,12 +1,12 @@
 ﻿using MyDoctorApp.Domain.Helpers;
 
-namespace MyDoctor.Domain.Models
+namespace MyDoctorApp.Domain.Models
 {
     public class MedicalHistory
     {
         public MedicalHistory()
         {
-            this.Id = Guid.NewGuid();
+            Id = Guid.NewGuid();
         }
         public Guid Id { get; private set; }
         public virtual Patient Patient { get; private set; }
@@ -24,15 +24,15 @@ namespace MyDoctor.Domain.Models
 
             foreach (Prescription prescription in prescriptions)
             {
-                this.Prescriptions.Add(prescription);
+                Prescriptions.Add(prescription);
             }
 
             return Result.Success();
         }
         public void AttachToPatient(Patient patient)
         {
-            this.PatientId = patient.Id;
-            this.Patient = patient;
+            PatientId = patient.Id;
+            Patient = patient;
         }
     }
 }

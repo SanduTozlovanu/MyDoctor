@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyDoctor.API.DTOs;
-using MyDoctor.Domain.Models;
+using MyDoctorApp.Domain.Models;
 using MyDoctorApp.Infrastructure.Generics;
 
 namespace MyDoctor.API.Controllers
@@ -23,7 +23,7 @@ namespace MyDoctor.API.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(drugRepository.All().Select(d => new DisplayDrugDto(d.Id, d.DrugStockId, d.Name, d.Description, d.Price, d.Quantity)));
+            return Ok(drugRepository.All().Select(d => drugRepository.GetMapper().Map<DisplayDrugDto>(d)));
         }
         /// <remarks>
         /// Parameters remarks
@@ -40,7 +40,7 @@ namespace MyDoctor.API.Controllers
                 return NotFound(DrugStockNotFoundError);
             }
 
-            List<Drug> drugs = dtos.Select(dto => new Drug(dto.Name, dto.Description, dto.Price, dto.Quantity)).ToList();
+            List<Drug> drugs = dtos.Select(dto => drugRepository.GetMapper().Map<Drug>(dto)).ToList();
             List<Guid> drugsIds = new List<Guid>();
             drugs.ForEach(drug => drugsIds.Add(drug.Id));
             drugStock.RegisterDrugsToDrugStock(drugs);
@@ -49,7 +49,7 @@ namespace MyDoctor.API.Controllers
             drugRepository.SaveChanges();
             drugStockRepository.SaveChanges();
             List<DisplayDrugDto> drugDtos = new List<DisplayDrugDto>();
-            drugs.ForEach(drug => drugDtos.Add(new DisplayDrugDto(drug.Id, drug.DrugStockId, drug.Name, drug.Description, drug.Price, drug.Quantity)));
+            drugs.ForEach(drug => drugDtos.Add(drugRepository.GetMapper().Map<DisplayDrugDto>(drug)));
             return Ok(drugDtos);
         }
 

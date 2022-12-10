@@ -1,9 +1,10 @@
-﻿using MyDoctor.Domain.Models;
+﻿using AutoMapper;
+using MyDoctorApp.Domain.Models;
 
 namespace MyDoctorApp.Infrastructure.Generics.GenericRepositories
 {
     public class MedicalRoomRepository : Repository<MedicalRoom>
     {
-        public MedicalRoomRepository(DatabaseContext context) : base(context) { }
+        public MedicalRoomRepository(DatabaseContext context, IMapper mapper) : base(context, mapper) { }
     }
 }

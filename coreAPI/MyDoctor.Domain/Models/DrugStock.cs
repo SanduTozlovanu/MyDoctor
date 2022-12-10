@@ -1,12 +1,12 @@
 ﻿using MyDoctorApp.Domain.Helpers;
 
-namespace MyDoctor.Domain.Models
+namespace MyDoctorApp.Domain.Models
 {
     public class DrugStock
     {
         public DrugStock()
         {
-            this.Id = Guid.NewGuid();
+            Id = Guid.NewGuid();
         }
         public Guid Id { get; private set; }
         public List<Drug> Drugs { get; private set; } = new List<Drug>();
@@ -30,10 +30,10 @@ namespace MyDoctor.Domain.Models
             return Result.Success();
         }
 
-        public void AttachToMedicalRoom(MedicalRoom medicalRoom) 
+        public void AttachToMedicalRoom(MedicalRoom medicalRoom)
         {
-            this.MedicalRoomId = medicalRoom.Id;
-            this.MedicalRoom = medicalRoom;
+            MedicalRoomId = medicalRoom.Id;
+            MedicalRoom = medicalRoom;
         }
 
     }

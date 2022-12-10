@@ -2,11 +2,11 @@
 {
     public class DisplayPrescriptedDrugDto
     {
-        public DisplayPrescriptedDrugDto(Guid id, Guid drugId, Guid prescriptionId, uint quantity) 
+        public DisplayPrescriptedDrugDto(Guid id, Guid drugId, Guid prescriptionId, uint quantity)
         {
             this.Id = id;
             this.DrugId = drugId;
-            this.PrescriptionId= prescriptionId;
+            this.PrescriptionId = prescriptionId;
             this.Quantity = quantity;
         }
         public Guid Id { get; set; }

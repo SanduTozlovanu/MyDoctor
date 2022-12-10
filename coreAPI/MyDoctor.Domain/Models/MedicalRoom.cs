@@ -1,20 +1,20 @@
 ﻿using MyDoctorApp.Domain.Helpers;
 
-namespace MyDoctor.Domain.Models
+namespace MyDoctorApp.Domain.Models
 {
     public class MedicalRoom
     {
-        public MedicalRoom(string adress) 
+        public MedicalRoom(string adress)
         {
-            this.Id = Guid.NewGuid(); 
-            this.Adress = adress;
+            Id = Guid.NewGuid();
+            Adress = adress;
         }
         public Guid Id { get; private set; }
         public string Adress { get; private set; }
         public List<Doctor> Doctors { get; private set; } = new List<Doctor>();
         public virtual DrugStock DrugStock { get; private set; }
 
-        public Result RegisterDoctors(List<Doctor> doctors) 
+        public Result RegisterDoctors(List<Doctor> doctors)
         {
             if (!doctors.Any())
             {
@@ -24,17 +24,17 @@ namespace MyDoctor.Domain.Models
             foreach (Doctor doctor in doctors)
             {
                 doctor.AttachToMedicalRoom(this);
-                this.Doctors.Add(doctor);
+                Doctors.Add(doctor);
             }
 
             return Result.Success();
         }
-        
-        public void RegisterDrugStock(DrugStock drugStock) 
+
+        public void RegisterDrugStock(DrugStock drugStock)
         {
             drugStock.AttachToMedicalRoom(this);
-            this.DrugStock = drugStock;
-            
+            DrugStock = drugStock;
+
         }
     }
 }

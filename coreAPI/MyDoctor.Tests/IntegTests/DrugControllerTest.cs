@@ -53,8 +53,14 @@ namespace MyDoctor.Tests.IntegTests
             var jsonString = await res.Content.ReadAsStringAsync();
             var cont = JsonConvert.DeserializeObject<List<DisplayDrugStockDto>>(jsonString);
             Assert.NotNull(cont);
-            Assert.True(cont.Count() == 1);
-            cont.ForEach(dto => Assert.True(dto.MedicalRoomId == medRoom1.Id));
+            Assert.True(cont.Count() >= 1);
+            bool medicalRoomFound = false;
+            cont.ForEach(dto =>
+            {
+                if (dto.MedicalRoomId == medRoom1.Id)
+                    medicalRoomFound = true;
+            });
+            Assert.True(medicalRoomFound);
             DisplayDrugStockDto drugStock = cont.First();
 
             CreateDrugDto drugDto1 = new CreateDrugDto("Peniciline is bad", "Not Peniciline", 35.64, 5);

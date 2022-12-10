@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using AutoMapper;
+using System.Linq.Expressions;
 
 namespace MyDoctorApp.Infrastructure.Generics
 {
@@ -6,10 +7,12 @@ namespace MyDoctorApp.Infrastructure.Generics
         : IRepository<T> where T : class
     {
         protected DatabaseContext context;
+        public IMapper mapper;
 
-        protected Repository(DatabaseContext context)
+        protected Repository(DatabaseContext context, IMapper mapper)
         {
             this.context = context;
+            this.mapper = mapper;
         }
 
         public virtual T Add(T entity)
@@ -52,6 +55,11 @@ namespace MyDoctorApp.Infrastructure.Generics
         public void SaveChanges()
         {
             context.SaveChanges();
+        }
+
+        public IMapper GetMapper()
+        {
+            return mapper;
         }
     }
 }

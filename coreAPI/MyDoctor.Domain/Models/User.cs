@@ -1,16 +1,16 @@
-﻿namespace MyDoctor
+﻿namespace MyDoctorApp.Domain.Models
 {
     public class User
     {
         public User(string accountType, string email, string password, string firstName, string lastName)
         {
-            this.Id = Guid.NewGuid();
-            this.AccountType = accountType;
-            this.Email = email;
-            this.Password = password;
-            this.FirstName = firstName;
-            this.Password = password;
-            this.LastName = lastName;
+            Id = Guid.NewGuid();
+            AccountType = accountType;
+            Email = email;
+            Password = password;
+            FirstName = firstName;
+            Password = password;
+            LastName = lastName;
         }
 
         private const string SEPARATOR = ", ";

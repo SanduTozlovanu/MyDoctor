@@ -14,14 +14,14 @@
     }
     public class DisplayDoctorDto
     {
-        public DisplayDoctorDto(Guid id, Guid medicalRoomId, string email, string speciality, string firstName, string lastName) 
+        public DisplayDoctorDto(Guid id, Guid medicalRoomId, string email, string speciality, string firstName, string lastName)
         {
             this.Id = id;
-            this.MedicalRoomId= medicalRoomId;
+            this.MedicalRoomId = medicalRoomId;
             this.Email = email;
-            this.FirstName= firstName;
-            this.LastName= lastName;
-            this.Speciality= speciality;
+            this.FirstName = firstName;
+            this.LastName = lastName;
+            this.Speciality = speciality;
         }
         public Guid Id { get; set; }
         public Guid MedicalRoomId { get; set; }

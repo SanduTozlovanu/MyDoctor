@@ -1,6 +1,6 @@
-﻿using MyDoctor.Domain.Models;
-using MyDoctor.Tests.Orderers;
-using MyDoctorApp.Domain.Helpers;
+﻿
+
+using MyDoctorApp.Domain.Models;
 
 namespace MyDoctor.Tests.UnitTests.DomainTests
 {

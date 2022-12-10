@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MyDoctor.Domain.Models;
+using MyDoctorApp.Domain.Models;
 
 namespace MyDoctorApp.Infrastructure
 {

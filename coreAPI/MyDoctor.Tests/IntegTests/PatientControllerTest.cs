@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Testing;
 using MyDoctor.API.Controllers;
 using MyDoctor.API.DTOs;
-using MyDoctor.Domain.Models;
 using MyDoctor.Tests.Helpers;
 using MyDoctor.Tests.Orderers;
 using Newtonsoft.Json;
@@ -89,7 +88,7 @@ namespace MyDoctor.Tests.IntegTests
 
             // When
             string request = "https://localhost:7244/api/Patient";
-            var pDto = new CreatePatientDto(new CreateUserDto ("troller@gmail.com", "Test", "Test", "Test1234"), 150);
+            var pDto = new CreatePatientDto(new CreateUserDto("troller@gmail.com", "Test", "Test", "Test1234"), 150);
 
 
             var content = new StringContent(JsonConvert.SerializeObject(pDto), Encoding.UTF8, "application/json");

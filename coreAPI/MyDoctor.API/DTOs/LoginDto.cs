@@ -1,4 +1,6 @@
-﻿namespace MyDoctor.API.DTOs
+﻿using MyDoctorApp.Domain.Models;
+
+namespace MyDoctor.API.DTOs
 {
     public class LoginDto
     {

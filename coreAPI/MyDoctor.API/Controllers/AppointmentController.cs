@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyDoctor.API.DTOs;
-using MyDoctor.Domain.Models;
+using MyDoctorApp.Domain.Models;
 using MyDoctorApp.Infrastructure.Generics;
 
 namespace MyDoctor.API.Controllers
@@ -33,7 +33,7 @@ namespace MyDoctor.API.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(appointmentRepository.All().Select(a => new DisplayAppointmentDto(a.Id, a.PatientId, a.DoctorId, a.Price)));
+            return Ok(appointmentRepository.All().Select(a => appointmentRepository.GetMapper().Map<DisplayAppointmentDto>(a)));
         }
 
         [HttpPost("{patientId:guid}_{doctorId:guid}/create_appointment")]
@@ -72,7 +72,7 @@ namespace MyDoctor.API.Controllers
             doctorRepository.SaveChanges();
             appointmentRepository.SaveChanges();
 
-            return Ok(new DisplayAppointmentDto(appointment.Id, appointment.PatientId, appointment.DoctorId, appointment.Price));
+            return Ok(appointmentRepository.GetMapper().Map<DisplayAppointmentDto>(appointment));
         }
     }
 

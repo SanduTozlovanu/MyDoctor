@@ -1,14 +1,14 @@
 ﻿using MyDoctorApp.Domain.Helpers;
 
-namespace MyDoctor.Domain.Models
+namespace MyDoctorApp.Domain.Models
 {
     public class Prescription
     {
-        public Prescription(string name, string description) 
+        public Prescription(string name, string description)
         {
-            this.Id = Guid.NewGuid();
-            this.Description= description;
-            this.Name= name;
+            Id = Guid.NewGuid();
+            Description = description;
+            Name = name;
         }
         public Guid Id { get; private set; }
         public string Name { get; private set; }
@@ -19,10 +19,10 @@ namespace MyDoctor.Domain.Models
         public Guid AppointmentId { get; private set; }
         public void AttachAppointment(Appointment appointment)
         {
-            this.AppointmentId = appointment.Id;
-            this.Appointment = appointment;
+            AppointmentId = appointment.Id;
+            Appointment = appointment;
         }
-        public Result RegisterProcedures(List<Procedure> procedures) 
+        public Result RegisterProcedures(List<Procedure> procedures)
         {
             if (!procedures.Any())
             {
@@ -33,7 +33,7 @@ namespace MyDoctor.Domain.Models
             foreach (Procedure procedure in procedures)
             {
                 procedure.AttachToPrescription(this);
-                this.Procedures.Add(procedure);
+                Procedures.Add(procedure);
             }
 
             return Result.Success();
@@ -49,7 +49,7 @@ namespace MyDoctor.Domain.Models
 
             foreach (PrescriptedDrug drug in prescriptedDrugs)
             {
-                this.PrescriptedDrugs.Add(drug);
+                PrescriptedDrugs.Add(drug);
                 drug.AttachPrescription(this);
             }
 

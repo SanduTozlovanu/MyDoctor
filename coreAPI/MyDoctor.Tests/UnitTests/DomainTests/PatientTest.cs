@@ -1,6 +1,5 @@
-﻿using MyDoctor.Domain.Models;
-using MyDoctor.Tests.Orderers;
-using MyDoctorApp.Domain.Helpers;
+﻿using MyDoctorApp.Domain.Helpers;
+using MyDoctorApp.Domain.Models;
 
 namespace MyDoctor.Tests.UnitTests.DomainTests
 {
@@ -84,7 +83,7 @@ namespace MyDoctor.Tests.UnitTests.DomainTests
             string lastName = "lastName";
             uint age = 10;
 
-            Patient newPatient = new Patient(email, password, firstName, lastName, age);
+            Patient newPatient = new(email, password, firstName, lastName, age);
 
             // When
             p.Update(newPatient);

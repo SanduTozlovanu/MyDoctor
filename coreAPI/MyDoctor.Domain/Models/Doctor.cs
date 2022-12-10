@@ -1,13 +1,13 @@
 ﻿using MyDoctorApp.Domain.Helpers;
 
-namespace MyDoctor.Domain.Models
+namespace MyDoctorApp.Domain.Models
 {
-    public class Doctor: User
+    public class Doctor : User
     {
-        public Doctor(string email, string password, string firstName, string lastName, string speciality):
+        public Doctor(string email, string password, string firstName, string lastName, string speciality) :
             base(AccountTypes.Doctor, email, password, firstName, lastName)
         {
-            this.Speciality = speciality;
+            Speciality = speciality;
         }
         public virtual MedicalRoom MedicalRoom { get; private set; }
         public Guid MedicalRoomId { get; private set; }
@@ -17,14 +17,14 @@ namespace MyDoctor.Domain.Models
 
         public void AttachToMedicalRoom(MedicalRoom medicalRoom)
         {
-            this.MedicalRoomId = medicalRoom.Id;
-            this.MedicalRoom = medicalRoom;
+            MedicalRoomId = medicalRoom.Id;
+            MedicalRoom = medicalRoom;
         }
 
         public void RegisterAppointment(Appointment appointment)
         {
             appointment.AttachToDoctor(this);
-            this.Appointments.Add(appointment);
+            Appointments.Add(appointment);
         }
         //public Result RegisterAppointmentIntervals(List<AppointmentInterval> appointmentIntervals)
         //{

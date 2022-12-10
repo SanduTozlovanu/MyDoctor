@@ -1,9 +1,10 @@
-﻿using MyDoctor.Domain.Models;
+﻿using AutoMapper;
+using MyDoctorApp.Domain.Models;
 
 namespace MyDoctorApp.Infrastructure.Generics.GenericRepositories
 {
     public class ScheduleIntervalRepository : Repository<ScheduleInterval>
     {
-        public ScheduleIntervalRepository(DatabaseContext context) : base(context) { }
+        public ScheduleIntervalRepository(DatabaseContext context, IMapper mapper) : base(context, mapper) { }
     }
 }

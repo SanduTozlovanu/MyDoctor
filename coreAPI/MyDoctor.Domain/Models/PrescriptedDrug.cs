@@ -1,11 +1,11 @@
-﻿namespace MyDoctor.Domain.Models
+﻿namespace MyDoctorApp.Domain.Models
 {
     public class PrescriptedDrug
     {
         public PrescriptedDrug(uint quantity)
         {
-            this.Id = Guid.NewGuid();
-            this.Quantity = quantity;
+            Id = Guid.NewGuid();
+            Quantity = quantity;
         }
 
         public Guid Id { get; private set; }
@@ -17,14 +17,14 @@
 
         public void AttachPrescription(Prescription prescription)
         {
-            this.Prescription = prescription;
-            this.PrescriptionId = prescription.Id;
+            Prescription = prescription;
+            PrescriptionId = prescription.Id;
         }
-        public void AttachDrug(Drug drug) 
+        public void AttachDrug(Drug drug)
         {
-            this.Drug = drug;
-            this.DrugId = drug.Id;
+            Drug = drug;
+            DrugId = drug.Id;
         }
-        
+
     }
 }

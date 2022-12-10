@@ -1,13 +1,13 @@
-﻿namespace MyDoctor.Domain.Models
+﻿namespace MyDoctorApp.Domain.Models
 {
     public class Interval
     {
         public Interval(DateOnly date, TimeOnly startTime, TimeOnly endTime)
         {
-            this.Id = Guid.NewGuid();
-            this.Date = date;
-            this.StartTime = startTime;
-            this.EndTime = endTime;
+            Id = Guid.NewGuid();
+            Date = date;
+            StartTime = startTime;
+            EndTime = endTime;
         }
 
         public Guid Id { get; private set; }

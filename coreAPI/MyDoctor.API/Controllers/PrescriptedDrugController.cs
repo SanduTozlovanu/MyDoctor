@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyDoctor.API.DTOs;
-using MyDoctor.Domain.Models;
+using MyDoctorApp.Domain.Models;
 using MyDoctorApp.Infrastructure.Generics;
 
 namespace MyDoctor.API.Controllers
@@ -19,7 +19,7 @@ namespace MyDoctor.API.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(prescriptedDrugRepository.All().Select(pd => new DisplayPrescriptedDrugDto(pd.Id, pd.DrugId, pd.PrescriptionId, pd.Quantity)));
+            return Ok(prescriptedDrugRepository.All().Select(pd => prescriptedDrugRepository.GetMapper().Map<DisplayPrescriptedDrugDto>(pd)));
         }
     }
 }

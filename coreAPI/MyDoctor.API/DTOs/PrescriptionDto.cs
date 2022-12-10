@@ -1,19 +1,23 @@
-﻿namespace MyDoctor.API.DTOs
+﻿using System.Runtime.InteropServices;
+
+namespace MyDoctor.API.DTOs
 {
     public class CreatePrescriptionDto
     {
-        public CreatePrescriptionDto(string description, string name, List<GetDrugDto> drugs, List<CreateProcedureDto> procedures)
+        public CreatePrescriptionDto(string description, string name, [Optional, DefaultParameterValue(null)] List<GetDrugDto>? drugs, [Optional, DefaultParameterValue(null)] List<CreateProcedureDto>? procedures)
         {
             this.Description = description;
             this.Name = name;
-            this.Drugs = drugs;
-            this.Procedures = procedures;
+            if (drugs != null)
+                this.Drugs = drugs;
+            if (procedures != null)
+                this.Procedures = procedures;
         }
 
         public string Description { get; set; }
         public string Name { get; set; }
-        public List<GetDrugDto> Drugs { get; set; }
-        public List<CreateProcedureDto> Procedures { get; set; }
+        public List<GetDrugDto>? Drugs { get; set; }
+        public List<CreateProcedureDto>? Procedures { get; set; }
 
     }
     public class DisplayPrescriptionDto

@@ -19,10 +19,10 @@
     {
         public DisplayAppointmentDto(Guid id, Guid patientId, Guid doctorId, double price)
         {
-            this.Id= id;
-            this.PatientId= patientId;
-            this.DoctorId= doctorId;
-            this.Price= price;
+            this.Id = id;
+            this.PatientId = patientId;
+            this.DoctorId = doctorId;
+            this.Price = price;
         }
         public Guid Id { get; set; }
         public Guid PatientId { get; set; }
