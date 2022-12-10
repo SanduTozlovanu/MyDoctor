@@ -5,13 +5,13 @@ namespace MyDoctorApp.Infrastructure.Generics
 {
     public interface IRepository<T>
     {
-        T Add(T entity);
+        Task<T> AddAsync(T entity);
         T Update(T entity);
         T Delete(T entity);
-        T? Get(Guid id);
-        IEnumerable<T> All();
-        IEnumerable<T> Find(Expression<Func<T, bool>> predicate);
-        void SaveChanges();
+        Task<T?> GetAsync(Guid id);
+        Task<IEnumerable<T>> AllAsync();
+        Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate);
+        Task SaveChangesAsync();
         IMapper GetMapper();
     }
 }

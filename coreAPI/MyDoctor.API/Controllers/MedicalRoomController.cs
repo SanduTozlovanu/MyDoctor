@@ -20,23 +20,23 @@ namespace MyDoctor.API.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            return Ok(medicalRoomRepository.All().Select(mr => medicalRoomRepository.GetMapper().Map<DisplayMedicalRoomDto>(mr)));
+            return Ok((await medicalRoomRepository.AllAsync()).Select(mr => medicalRoomRepository.GetMapper().Map<DisplayMedicalRoomDto>(mr)));
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody] CreateMedicalRoomDto dto)
+        public async Task<IActionResult> Create([FromBody] CreateMedicalRoomDto dto)
         {
             var medicalRoom = new MedicalRoom(dto.Adress);
             var drugStock = new DrugStock();
             medicalRoom.RegisterDrugStock(drugStock);
 
-            medicalRoomRepository.Add(medicalRoom);
-            drugStockRepository.Add(drugStock);
+            await medicalRoomRepository.AddAsync(medicalRoom);
+            await drugStockRepository.AddAsync(drugStock);
 
-            medicalRoomRepository.SaveChanges();
-            drugStockRepository.SaveChanges();
+            await medicalRoomRepository.SaveChangesAsync();
+            await drugStockRepository.SaveChangesAsync();
 
             return Ok(medicalRoomRepository.GetMapper().Map<DisplayMedicalRoomDto>(medicalRoom));
         }

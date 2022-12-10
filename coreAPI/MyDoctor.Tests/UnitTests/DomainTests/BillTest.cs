@@ -8,7 +8,7 @@ namespace MyDoctor.Tests.UnitTests.DomainTests
         public void Create()
         {
             // When
-            Bill b = new Bill();
+            Bill b = new();
 
             // Then
             Assert.NotEqual(Guid.Empty, b.Id);
@@ -21,7 +21,7 @@ namespace MyDoctor.Tests.UnitTests.DomainTests
         public void AttachAppointment()
         {
             // Given
-            Bill b = new Bill();
+            Bill b = new();
             var ap = new Appointment(10);
 
             // When
@@ -36,7 +36,7 @@ namespace MyDoctor.Tests.UnitTests.DomainTests
         public void CalculateBillPrice_WithoutPrescription()
         {
             // Given
-            Bill b = new Bill();
+            Bill b = new();
             var apPrice = 10;
             var ap = new Appointment(apPrice);
 
@@ -53,7 +53,7 @@ namespace MyDoctor.Tests.UnitTests.DomainTests
         public void CalculateBillPrice_WithPrescriptionHavingDrugsAndProcedures()
         {
             // Given
-            Bill b = new Bill();
+            Bill b = new();
 
             // Creating Prescription
             var pre = new Prescription("", "");

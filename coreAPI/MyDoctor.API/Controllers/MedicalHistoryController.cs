@@ -17,9 +17,9 @@ namespace MyDoctor.API.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            return Ok(medicalHistoryRepository.All().Select(mh => medicalHistoryRepository.GetMapper().Map<DisplayMedicalHistoryDto>(mh)));
+            return Ok((await medicalHistoryRepository.AllAsync()).Select(mh => medicalHistoryRepository.GetMapper().Map<DisplayMedicalHistoryDto>(mh)));
         }
     }
 }

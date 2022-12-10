@@ -36,7 +36,7 @@ namespace MyDoctor.Tests.IntegTests
             string request = "https://localhost:7244/api/MedicalRoom";
             string request1 = "https://localhost:7244/api/DrugStock";
             string request3 = "https://localhost:7244/api/Drug/{0}";
-            CreateMedicalRoomDto mdDto1 = new CreateMedicalRoomDto("Strada Farmaciei 8");
+            CreateMedicalRoomDto mdDto1 = new("Strada Farmaciei 8");
 
             var content1 = new StringContent(JsonConvert.SerializeObject(mdDto1), Encoding.UTF8, "application/json");
             var res1 = await _client.PostAsync(request, content1);
@@ -46,7 +46,7 @@ namespace MyDoctor.Tests.IntegTests
             var jsonString1 = await res1.Content.ReadAsStringAsync();
             var cont1 = JsonConvert.DeserializeObject<DisplayMedicalRoomDto>(jsonString1);
             Assert.NotNull(cont1);
-            DisplayMedicalRoomDto medRoom1 = new DisplayMedicalRoomDto(cont1.Id, mdDto1.Adress);
+            DisplayMedicalRoomDto medRoom1 = new(cont1.Id, mdDto1.Adress);
 
             var res = await _client.GetAsync(request1);
 
@@ -63,11 +63,11 @@ namespace MyDoctor.Tests.IntegTests
             Assert.True(medicalRoomFound);
             DisplayDrugStockDto drugStock = cont.First();
 
-            CreateDrugDto drugDto1 = new CreateDrugDto("Peniciline is bad", "Not Peniciline", 35.64, 5);
+            CreateDrugDto drugDto1 = new("Peniciline is bad", "Not Peniciline", 35.64, 5);
 
-            CreateDrugDto drugDto2 = new CreateDrugDto("Peniciline is good", "Peniciline", 25.48, 2);
+            CreateDrugDto drugDto2 = new("Peniciline is good", "Peniciline", 25.48, 2);
 
-            List<CreateDrugDto> dtos = new List<CreateDrugDto>();
+            List<CreateDrugDto> dtos = new();
             dtos.Add(drugDto1);
             dtos.Add(drugDto2);
             var content = new StringContent(JsonConvert.SerializeObject(dtos), Encoding.UTF8, "application/json");
@@ -88,11 +88,11 @@ namespace MyDoctor.Tests.IntegTests
         {
             string request3 = "https://localhost:7244/api/Drug/{0}";
 
-            CreateDrugDto drugDto1 = new CreateDrugDto("Peniciline is bad", "Not Peniciline", 35.64, 5);
+            CreateDrugDto drugDto1 = new("Peniciline is bad", "Not Peniciline", 35.64, 5);
 
-            CreateDrugDto drugDto2 = new CreateDrugDto("Peniciline is good", "Peniciline", 25.48, 2);
+            CreateDrugDto drugDto2 = new("Peniciline is good", "Peniciline", 25.48, 2);
 
-            List<CreateDrugDto> dtos = new List<CreateDrugDto>();
+            List<CreateDrugDto> dtos = new();
             dtos.Add(drugDto1);
             dtos.Add(drugDto2);
             var content = new StringContent(JsonConvert.SerializeObject(dtos), Encoding.UTF8, "application/json");

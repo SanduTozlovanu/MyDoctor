@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
 namespace MyDoctorApp.Infrastructure.Generics
@@ -15,29 +16,27 @@ namespace MyDoctorApp.Infrastructure.Generics
             this.mapper = mapper;
         }
 
-        public virtual T Add(T entity)
+        public virtual async Task<T> AddAsync(T entity)
         {
-            return context
-                .Add(entity)
-                .Entity;
+            await context.Set<T>().AddAsync(entity);
+            return entity;
         }
 
-        public virtual IEnumerable<T> Find(Expression<Func<T, bool>> predicate)
+        public virtual async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate)
         {
-            return context.Set<T>()
+            return await context.Set<T>()
                 .AsQueryable()
-                .Where(predicate).ToList();
+                .Where(predicate).ToListAsync();
         }
 
-        public virtual T? Get(Guid id)
+        public virtual async Task<T?> GetAsync(Guid id)
         {
-            return context.Find<T>(id);
+            return await context.FindAsync<T>(id);
         }
 
-        public virtual IEnumerable<T> All()
+        public virtual async Task<IEnumerable<T>> AllAsync()
         {
-            return context.Set<T>()
-                .ToList();
+            return await context.Set<T>().ToListAsync();
         }
 
         public virtual T Update(T entity)
@@ -52,9 +51,9 @@ namespace MyDoctorApp.Infrastructure.Generics
                 .Entity;
         }
 
-        public void SaveChanges()
+        public async Task SaveChangesAsync()
         {
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
         public IMapper GetMapper()

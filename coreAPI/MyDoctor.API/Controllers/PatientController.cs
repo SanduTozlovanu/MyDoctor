@@ -28,15 +28,15 @@ namespace MyDoctor.API.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            return Ok(patientRepository.All().Select(p => patientRepository.GetMapper().Map<DisplayPatientDto>(p)));
+            return Ok((await patientRepository.AllAsync()).Select(p => patientRepository.GetMapper().Map<DisplayPatientDto>(p)));
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody] CreatePatientDto dto)
+        public async Task<IActionResult> Create([FromBody] CreatePatientDto dto)
         {
-            var ActionResultPatientTuple = CreatePatientFromDto(dto);
+            var ActionResultPatientTuple = await CreatePatientFromDto(dto);
 
             if (ActionResultPatientTuple.Item2.GetType() != typeof(OkResult))
                 return ActionResultPatientTuple.Item2;
@@ -49,26 +49,26 @@ namespace MyDoctor.API.Controllers
 
             patient.RegisterMedicalHistory(medicalHistory);
 
-            medicalHistoryRepository.Add(medicalHistory);
-            patientRepository.Add(patient);
+            await medicalHistoryRepository.AddAsync(medicalHistory);
+            await patientRepository.AddAsync(patient);
 
-            medicalHistoryRepository.SaveChanges();
-            patientRepository.SaveChanges();
+            medicalHistoryRepository.SaveChangesAsync();
+            patientRepository.SaveChangesAsync();
             return Ok(patientRepository.GetMapper().Map<DisplayPatientDto>(patient));
         }
 
 
 
         [HttpPut("{patientId:guid}")]
-        public IActionResult Update(Guid patientId, [FromBody] CreatePatientDto dto)
+        public async Task<IActionResult> Update(Guid patientId, [FromBody] CreatePatientDto dto)
         {
-            var patient = patientRepository.Get(patientId);
+            var patient = await patientRepository.GetAsync(patientId);
             if (patient == null)
             {
                 return NotFound();
             }
 
-            var ActionResultPatientTuple = CreatePatientFromDto(dto);
+            var ActionResultPatientTuple = await CreatePatientFromDto(dto);
 
             if (ActionResultPatientTuple.Item2.GetType() != typeof(OkResult))
                 return ActionResultPatientTuple.Item2;
@@ -80,14 +80,14 @@ namespace MyDoctor.API.Controllers
 
             patientRepository.Update(patient);
 
-            patientRepository.SaveChanges();
+            await patientRepository.SaveChangesAsync();
             return Ok();
         }
 
         [HttpDelete("{patientId:guid}")]
-        public IActionResult Delete(Guid patientId)
+        public async Task<IActionResult> Delete(Guid patientId)
         {
-            var patient = patientRepository.Get(patientId);
+            var patient = await patientRepository.GetAsync(patientId);
             if (patient == null)
             {
                 return NotFound();
@@ -95,16 +95,16 @@ namespace MyDoctor.API.Controllers
 
             patientRepository.Delete(patient);
 
-            patientRepository.SaveChanges();
+            await patientRepository.SaveChangesAsync();
             return Ok();
         }
 
-        private (Patient?, IActionResult) CreatePatientFromDto(CreatePatientDto dto)
+        private async Task<(Patient?, IActionResult)> CreatePatientFromDto(CreatePatientDto dto)
         {
             if (dto.Age > 120) return (null, BadRequest(BigAgeError));
 
-            var oldPatient = patientRepository.Find(p => p.Email == dto.UserDetails.Email).FirstOrDefault();
-            var oldDoctor = doctorRepository.Find(d => d.Email == dto.UserDetails.Email).FirstOrDefault();
+            var oldPatient = (await patientRepository.FindAsync(p => p.Email == dto.UserDetails.Email)).FirstOrDefault();
+            var oldDoctor = (await doctorRepository.FindAsync(d => d.Email == dto.UserDetails.Email)).FirstOrDefault();
             if (oldPatient != null || oldDoctor != null)
             {
                 return (null, BadRequest(UsedEmailError));

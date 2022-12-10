@@ -31,16 +31,16 @@ namespace MyDoctor.API.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            return Ok(appointmentRepository.All().Select(a => appointmentRepository.GetMapper().Map<DisplayAppointmentDto>(a)));
+            return Ok((await appointmentRepository.AllAsync()).Select(a => appointmentRepository.GetMapper().Map<DisplayAppointmentDto>(a)));
         }
 
         [HttpPost("{patientId:guid}_{doctorId:guid}/create_appointment")]
-        public IActionResult Create(Guid patientId, Guid doctorId, [FromBody] CreateAppointmentDto dto)
+        public async Task<IActionResult> Create(Guid patientId, Guid doctorId, [FromBody] CreateAppointmentDto dto)
         {
-            var patient = patientsRepository.Get(patientId);
-            var doctor = doctorRepository.Get(doctorId);
+            var patient = await patientsRepository.GetAsync(patientId);
+            var doctor = await doctorRepository.GetAsync(doctorId);
             if (patient == null)
             {
                 return NotFound(PatientNotFoundError);
@@ -63,14 +63,14 @@ namespace MyDoctor.API.Controllers
             appointment.RegisterAppointmentInterval(appointmentInterval);
             appointment.RegisterBill(bill);
 
-            billRepository.Add(bill);
-            appointmentRepository.Add(appointment);
-            appointmentIntervalRepository.Add(appointmentInterval);
+            await billRepository.AddAsync(bill);
+            await appointmentRepository.AddAsync(appointment);
+            await appointmentIntervalRepository.AddAsync(appointmentInterval);
 
-            billRepository.SaveChanges();
-            patientsRepository.SaveChanges();
-            doctorRepository.SaveChanges();
-            appointmentRepository.SaveChanges();
+            await billRepository.SaveChangesAsync();
+            await patientsRepository.SaveChangesAsync();
+            await doctorRepository.SaveChangesAsync();
+            await appointmentRepository.SaveChangesAsync();
 
             return Ok(appointmentRepository.GetMapper().Map<DisplayAppointmentDto>(appointment));
         }

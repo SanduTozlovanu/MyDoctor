@@ -62,7 +62,7 @@ namespace MyDoctor.Tests.UnitTests.DomainTests
             string firstName = "firstName";
             string lastName = "lastName";
 
-            User newUser = new User(accType, email, password, firstName, lastName);
+            User newUser = new(accType, email, password, firstName, lastName);
 
             // When
             u.Update(newUser);

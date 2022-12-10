@@ -17,9 +17,9 @@ namespace MyDoctor.API.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            return Ok(prescriptedDrugRepository.All().Select(pd => prescriptedDrugRepository.GetMapper().Map<DisplayPrescriptedDrugDto>(pd)));
+            return Ok((await prescriptedDrugRepository.AllAsync()).Select(pd => prescriptedDrugRepository.GetMapper().Map<DisplayPrescriptedDrugDto>(pd)));
         }
     }
 }

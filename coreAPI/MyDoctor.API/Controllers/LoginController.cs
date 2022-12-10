@@ -22,10 +22,10 @@ namespace MyDoctor.API.Controllers
         }
 
         [HttpPost]
-        public IActionResult Login([FromBody] LoginDto dto)
+        public async Task<IActionResult> Login([FromBody] LoginDto dto)
         {
-            User? user = patientsRepository.Find(p => p.Email == dto.Email).FirstOrDefault();
-            user ??= doctorsRepository.Find(d => d.Email == dto.Email).FirstOrDefault();
+            User? user = (await patientsRepository.FindAsync(p => p.Email == dto.Email)).FirstOrDefault();
+            user ??= (await doctorsRepository.FindAsync(d => d.Email == dto.Email)).FirstOrDefault();
 
             if (user != null && AccountInfoManager.ValidatePassword(user.Password, dto.Password))
             {

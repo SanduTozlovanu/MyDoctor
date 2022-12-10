@@ -30,7 +30,7 @@ namespace MyDoctor.Tests.Helpers
             DatabaseContext.Prescriptions.RemoveRange(DatabaseContext.Prescriptions.ToList());
             DatabaseContext.Procedures.RemoveRange(DatabaseContext.Procedures.ToList());
             DatabaseContext.ScheduleIntervals.RemoveRange(DatabaseContext.ScheduleIntervals.ToList());
-            DatabaseContext.SaveChanges();
+            DatabaseContext.SaveChangesAsync();
         }
     }
 }

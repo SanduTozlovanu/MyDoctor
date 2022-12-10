@@ -29,18 +29,18 @@ namespace MyDoctor.API.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            return Ok(doctorRepository.All().Select(d => doctorRepository.GetMapper().Map<DisplayDoctorDto>(d)));
+            return Ok((await doctorRepository.AllAsync()).Select(d => doctorRepository.GetMapper().Map<DisplayDoctorDto>(d)));
         }
         [HttpPost]
-        public IActionResult Create([FromBody] CreateDoctorDto dto)
+        public async Task<IActionResult> Create([FromBody] CreateDoctorDto dto)
         {
-            List<MedicalRoom> medicalRooms = medicalRoomRepository.All().ToList();
+            List<MedicalRoom> medicalRooms = (await medicalRoomRepository.AllAsync()).ToList();
             (MedicalRoom?, int) medicalRoomWithFewestDoctors = new(null, int.MaxValue);
-            medicalRooms.ForEach(mr =>
+            medicalRooms.ForEach(async mr =>
             {
-                int doctorNumber = doctorRepository.Find(d => mr.Id == d.MedicalRoomId).Count();
+                int doctorNumber = (await doctorRepository.FindAsync(d => mr.Id == d.MedicalRoomId)).Count();
                 if (doctorNumber < medicalRoomWithFewestDoctors.Item2)
                     medicalRoomWithFewestDoctors = (mr, doctorNumber);
 
@@ -55,7 +55,7 @@ namespace MyDoctor.API.Controllers
                 return NotFound(MedicalRoomNotFoundError);
             }
 
-            var ActionResultDoctorTuple = CreateDoctorFromDto(dto);
+            var ActionResultDoctorTuple = await CreateDoctorFromDto(dto);
 
             if (ActionResultDoctorTuple.Item2.GetType() != typeof(OkResult))
                 return ActionResultDoctorTuple.Item2;
@@ -89,9 +89,9 @@ namespace MyDoctor.API.Controllers
             //    return BadRequest($"An error occured during processing the images - {ex}.");
             //}
 
-            doctorRepository.Add(doctor);
-            doctorRepository.SaveChanges();
-            medicalRoomRepository.SaveChanges();
+            await doctorRepository.AddAsync(doctor);
+            await doctorRepository.SaveChangesAsync();
+            await medicalRoomRepository.SaveChangesAsync();
 
             return Ok(doctorRepository.GetMapper().Map<DisplayDoctorDto>(doctor));
         }
@@ -99,15 +99,15 @@ namespace MyDoctor.API.Controllers
 
 
         [HttpPut("{doctorId:guid}")]
-        public IActionResult Update(Guid doctorId, [FromBody] CreateDoctorDto dto)
+        public async Task<IActionResult> Update(Guid doctorId, [FromBody] CreateDoctorDto dto)
         {
-            var doctor = doctorRepository.Get(doctorId);
+            var doctor = await doctorRepository.GetAsync(doctorId);
             if (doctor == null)
             {
                 return NotFound();
             }
 
-            var ActionResultDoctorTuple = CreateDoctorFromDto(dto);
+            var ActionResultDoctorTuple = await CreateDoctorFromDto(dto);
 
             if (ActionResultDoctorTuple.Item2.GetType() != typeof(OkResult))
                 return ActionResultDoctorTuple.Item2;
@@ -119,15 +119,15 @@ namespace MyDoctor.API.Controllers
 
             doctorRepository.Update(doctor);
 
-            doctorRepository.SaveChanges();
+            doctorRepository.SaveChangesAsync();
             return Ok();
         }
 
 
         [HttpDelete("{doctorId:guid}")]
-        public IActionResult Delete(Guid doctorId)
+        public async Task<IActionResult> Delete(Guid doctorId)
         {
-            var doctor = doctorRepository.Get(doctorId);
+            var doctor = await doctorRepository.GetAsync(doctorId);
             if (doctor == null)
             {
                 return NotFound();
@@ -135,14 +135,14 @@ namespace MyDoctor.API.Controllers
 
             doctorRepository.Delete(doctor);
 
-            doctorRepository.SaveChanges();
+            doctorRepository.SaveChangesAsync();
             return Ok();
         }
 
-        private (Doctor?, IActionResult) CreateDoctorFromDto(CreateDoctorDto dto)
+        private async Task<(Doctor?, IActionResult)> CreateDoctorFromDto(CreateDoctorDto dto)
         {
-            var oldPatient = patientRepository.Find(p => p.Email == dto.UserDetails.Email).FirstOrDefault();
-            var oldDoctor = doctorRepository.Find(d => d.Email == dto.UserDetails.Email).FirstOrDefault();
+            var oldPatient = (await patientRepository.FindAsync(p => p.Email == dto.UserDetails.Email)).FirstOrDefault();
+            var oldDoctor = (await doctorRepository.FindAsync(d => d.Email == dto.UserDetails.Email)).FirstOrDefault();
             if (oldPatient != null || oldDoctor != null)
             {
                 return (null, BadRequest(UsedEmailError));

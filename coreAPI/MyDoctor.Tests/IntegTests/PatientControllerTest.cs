@@ -25,7 +25,7 @@ namespace MyDoctor.Tests.IntegTests
         }
 
 
-        private void Init()
+        private async void Init()
         {
 
         }

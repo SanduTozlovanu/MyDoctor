@@ -86,7 +86,7 @@ namespace MyDoctor.Tests.UnitTests.DomainTests
             string lastName = "lastName";
             string speciality = "speciality";
 
-            Doctor newDoctor = new Doctor(email, password, firstName, lastName, speciality);
+            Doctor newDoctor = new(email, password, firstName, lastName, speciality);
 
             // When
             d.Update(newDoctor);

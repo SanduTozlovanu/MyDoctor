@@ -43,9 +43,9 @@ namespace MyDoctor.API.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            return Ok(prescriptonRepository.All().Select(p => prescriptonRepository.GetMapper().Map<DisplayPrescriptionDto>(p)));
+            return Ok((await prescriptonRepository.AllAsync()).Select(p => prescriptonRepository.GetMapper().Map<DisplayPrescriptionDto>(p)));
         }
 
         /// <summary>
@@ -58,10 +58,10 @@ namespace MyDoctor.API.Controllers
         ///     
         /// </remarks>
         [HttpPost("{appointmentId:guid}")]
-        public IActionResult Create(Guid appointmentId, [FromBody] CreatePrescriptionDto dto)
+        public async Task<IActionResult> Create(Guid appointmentId, [FromBody] CreatePrescriptionDto dto)
         {
-            Prescription prescription = new Prescription(dto.Description, dto.Name);
-            Appointment? appointment = appointmentRepository.Get(appointmentId);
+            Prescription prescription = new(dto.Description, dto.Name);
+            Appointment? appointment = await appointmentRepository.GetAsync(appointmentId);
             if (appointment == null)
             {
                 return NotFound(AppointmentNotFoundError);
@@ -70,11 +70,11 @@ namespace MyDoctor.API.Controllers
             {
                 List<Procedure> procedures = dto.Procedures.Select(procDto => procedureRepository.GetMapper().Map<Procedure>(procDto)).ToList();
                 prescription.RegisterProcedures(procedures);
-                procedures.ForEach(p => procedureRepository.Add(p));
+                procedures.ForEach(async p => await procedureRepository.AddAsync(p));
             }
             if (dto.Drugs != null && dto.Drugs.Any())
             {
-                var result = AttachPrescriptedDrugsToPrescription(appointment, prescription, dto.Drugs);
+                var result = await AttachPrescriptedDrugsToPrescription(appointment, prescription, dto.Drugs);
                 if (result.GetType() != typeof(OkResult))
                 {
                     return result;
@@ -82,9 +82,9 @@ namespace MyDoctor.API.Controllers
             }
             // Register prescription after done with it, because it needs to already have all the drugs to make the billing before registration.
             appointment.RegisterPrescription(prescription);
-            prescriptonRepository.Add(prescription);
+            await prescriptonRepository.AddAsync(prescription);
 
-            Bill? bill = billRepository.Find(b => b.AppointmentId == appointment.Id).FirstOrDefault();
+            Bill? bill = (await billRepository.FindAsync(b => b.AppointmentId == appointment.Id)).FirstOrDefault();
             if (bill == null)
             {
                 return NotFound(BillNotFoundError);
@@ -92,36 +92,36 @@ namespace MyDoctor.API.Controllers
             appointment.RegisterBill(bill);
             billRepository.Update(bill);
 
-            prescriptedDrugRepository.SaveChanges();
-            billRepository.SaveChanges();
-            procedureRepository.SaveChanges();
-            drugRepository.SaveChanges();
-            prescriptonRepository.SaveChanges();
+            await prescriptedDrugRepository.SaveChangesAsync();
+            await billRepository.SaveChangesAsync();
+            await procedureRepository.SaveChangesAsync();
+            await drugRepository.SaveChangesAsync();
+            await prescriptonRepository.SaveChangesAsync();
 
             return Ok(prescriptonRepository.GetMapper().Map<DisplayPrescriptionDto>(prescription));
         }
 
-        private IActionResult AttachPrescriptedDrugsToPrescription(Appointment appointment, Prescription prescription, List<GetDrugDto> dtos)
+        private async Task<IActionResult> AttachPrescriptedDrugsToPrescription(Appointment appointment, Prescription prescription, List<GetDrugDto> dtos)
         {
-            Doctor? doctor = doctorRepository.Get(appointment.DoctorId);
+            Doctor? doctor = await doctorRepository.GetAsync(appointment.DoctorId);
             if (doctor == null)
             {
                 return NotFound(DoctorNotFoundError);
             }
-            DrugStock? drugStock = drugStockRepository.Find(ds => ds.MedicalRoomId == doctor.MedicalRoomId).FirstOrDefault();
+            DrugStock? drugStock = (await drugStockRepository.FindAsync(ds => ds.MedicalRoomId == doctor.MedicalRoomId)).FirstOrDefault();
             if (drugStock == null)
             {
                 return NotFound(DrugStockNotFoundError);
             }
             bool drugNotFound = false;
             List<Tuple<Guid, uint>> getDrugTuples = dtos.Select(dto => Tuple.Create(dto.drugId, dto.Quantity)).ToList();
-            List<Tuple<Drug, uint>> drugTuples = new List<Tuple<Drug, uint>>();
+            List<Tuple<Drug, uint>> drugTuples = new();
 
             foreach (var tuple in getDrugTuples)
             {
                 var drugId = tuple.Item1;
                 var quantityToTake = tuple.Item2;
-                var drug = drugRepository.Get(drugId);
+                var drug = await drugRepository.GetAsync(drugId);
                 if (drug == null)
                 {
                     drugNotFound = true;
@@ -145,16 +145,16 @@ namespace MyDoctor.API.Controllers
                 }
                 drugRepository.Update(drug);
             }
-            List<PrescriptedDrug> prescriptedDrugs = new List<PrescriptedDrug>();
+            List<PrescriptedDrug> prescriptedDrugs = new();
             drugTuples.ForEach(drugTuple =>
             {
-                PrescriptedDrug prescriptedDrug = new PrescriptedDrug(drugTuple.Item2);
+                PrescriptedDrug prescriptedDrug = new(drugTuple.Item2);
                 prescriptedDrug.AttachDrug(drugTuple.Item1);
                 prescriptedDrugs.Add(prescriptedDrug);
             });
 
             prescription.RegisterPrescriptedDrugs(prescriptedDrugs);
-            prescriptedDrugs.ForEach(prescriptedDrug => prescriptedDrugRepository.Add(prescriptedDrug));
+            prescriptedDrugs.ForEach(async prescriptedDrug => await prescriptedDrugRepository.AddAsync(prescriptedDrug));
             return Ok();
         }
     }

@@ -66,7 +66,7 @@ namespace MyDoctor.Tests.UnitTests.DomainTests
         {
             // Given
             Appointment ap = CreateDefaultAppointment();
-            Bill b = new Bill();
+            Bill b = new();
 
             // When
             ap.RegisterBill(b);
@@ -83,7 +83,7 @@ namespace MyDoctor.Tests.UnitTests.DomainTests
             // Given
             DateTime now = DateTime.Now;
             Appointment ap = CreateDefaultAppointment();
-            AppointmentInterval ai = new AppointmentInterval(
+            AppointmentInterval ai = new(
                 DateOnly.FromDateTime(now),
                 TimeOnly.FromDateTime(now),
                 TimeOnly.FromDateTime(now));
@@ -102,7 +102,7 @@ namespace MyDoctor.Tests.UnitTests.DomainTests
         {
             // Given
             Appointment ap = CreateDefaultAppointment();
-            Prescription p = new Prescription("", "");
+            Prescription p = new("", "");
 
             // When
             ap.RegisterPrescription(p);
@@ -131,7 +131,7 @@ namespace MyDoctor.Tests.UnitTests.DomainTests
         {
             // Given
             Appointment ap = CreateDefaultAppointment();
-            Bill b = new Bill();
+            Bill b = new();
             ap.RegisterBill(b);
 
             // When

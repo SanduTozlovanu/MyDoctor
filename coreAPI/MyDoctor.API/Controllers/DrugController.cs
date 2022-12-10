@@ -21,9 +21,9 @@ namespace MyDoctor.API.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            return Ok(drugRepository.All().Select(d => drugRepository.GetMapper().Map<DisplayDrugDto>(d)));
+            return Ok((await drugRepository.AllAsync()).Select(d => drugRepository.GetMapper().Map<DisplayDrugDto>(d)));
         }
         /// <remarks>
         /// Parameters remarks
@@ -32,23 +32,23 @@ namespace MyDoctor.API.Controllers
         ///         
         /// </remarks>
         [HttpPost("{drugStockId:guid}")]
-        public IActionResult Create(Guid drugStockId, [FromBody] List<CreateDrugDto> dtos)
+        public async Task<IActionResult> Create(Guid drugStockId, [FromBody] List<CreateDrugDto> dtos)
         {
-            var drugStock = drugStockRepository.Get(drugStockId);
+            var drugStock = await drugStockRepository.GetAsync(drugStockId);
             if (drugStock == null)
             {
                 return NotFound(DrugStockNotFoundError);
             }
 
             List<Drug> drugs = dtos.Select(dto => drugRepository.GetMapper().Map<Drug>(dto)).ToList();
-            List<Guid> drugsIds = new List<Guid>();
+            List<Guid> drugsIds = new();
             drugs.ForEach(drug => drugsIds.Add(drug.Id));
             drugStock.RegisterDrugsToDrugStock(drugs);
 
-            drugs.ForEach(d => drugRepository.Add(d));
-            drugRepository.SaveChanges();
-            drugStockRepository.SaveChanges();
-            List<DisplayDrugDto> drugDtos = new List<DisplayDrugDto>();
+            drugs.ForEach(async d => await drugRepository.AddAsync(d));
+            await drugRepository.SaveChangesAsync();
+            await drugStockRepository.SaveChangesAsync();
+            List<DisplayDrugDto> drugDtos = new();
             drugs.ForEach(drug => drugDtos.Add(drugRepository.GetMapper().Map<DisplayDrugDto>(drug)));
             return Ok(drugDtos);
         }

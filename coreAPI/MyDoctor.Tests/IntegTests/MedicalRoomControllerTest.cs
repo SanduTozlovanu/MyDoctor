@@ -60,8 +60,8 @@ namespace MyDoctor.Tests.IntegTests
             DisplayMedicalRoomDto expectedObject2 = new(cont2.Id, mdDto2.Adress);
             Assert.True(expectedObject.Equals(cont));
             Assert.True(expectedObject2.Equals(cont2));
-            MedicalRoom? medicalRoom1 = databaseFixture.DatabaseContext.MedicalRooms.Find(cont.Id);
-            MedicalRoom? medicalRoom2 = databaseFixture.DatabaseContext.MedicalRooms.Find(cont2.Id);
+            MedicalRoom? medicalRoom1 = await databaseFixture.DatabaseContext.MedicalRooms.FindAsync(cont.Id);
+            MedicalRoom? medicalRoom2 = await databaseFixture.DatabaseContext.MedicalRooms.FindAsync(cont2.Id);
             Assert.NotNull(medicalRoom1);
             Assert.NotNull(medicalRoom2);
             Assert.Equal(medicalRoom1.Adress, mdDto.Adress);

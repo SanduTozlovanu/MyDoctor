@@ -16,9 +16,9 @@ namespace MyDoctor.API.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            return Ok(appointmentIntervalRepository.All());
+            return Ok(await appointmentIntervalRepository.AllAsync());
         }
     }
 }
