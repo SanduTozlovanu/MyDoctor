@@ -7,8 +7,8 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
-  build:
-    name: Build and analyze
+  dotNetProject:
+    name: Build and analyze .Net
     runs-on: windows-latest
     steps:
       - name: Set up JDK 11
@@ -28,6 +28,7 @@ jobs:
         id: cache-sonar-scanner
         uses: actions/cache@v1
         with:
+          projectBaseDir: coreAPI
           path: .\.sonar\scanner
           key: ${{ runner.os }}-sonar-scanner
           restore-keys: ${{ runner.os }}-sonar-scanner
@@ -48,3 +49,18 @@ jobs:
           dotnet build --no-incremental coreApi/MyDoctor.sln
           coverlet .\coreAPI\MyDoctor.Tests\bin\Debug\net7.0\MyDoctor.Tests.dll --target "dotnet"  --targetargs "test coreAPI/MyDoctor.sln --no-build" -f=opencover -o="coverage.xml"
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+
+  reactProject:
+    name: Build and analyze React
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        with:
+          projectBaseDir: website
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
