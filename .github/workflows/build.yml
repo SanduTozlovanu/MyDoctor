@@ -2,8 +2,7 @@ name: SonarCloud
 on:
   push:
     branches:
-      - master
-      - develop
+      - "*"
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
@@ -43,11 +42,8 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"SanduTozlovanu_MyDoctor" /o:"sandutozlovanu" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml
-          dotnet build coreApi
-          npm install react-scripts --prefix website
-          npm run build-win --prefix website
-          dotnet tool install --global dotnet-coverage
-          dotnet-coverage collect 'dotnet test' -f xml -o 'coverage.xml'
+          .\.sonar\scanner\dotnet-sonarscanner begin /k:"SanduTozlovanu_MyDoctor" /o:"sandutozlovanu" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths=coverage.xml
+          dotnet tool install --global coverlet.console
+          dotnet build --no-incremental coreApi/MyDoctor.sln
+          coverlet .\coreAPI\MyDoctor.Tests\bin\Debug\net7.0\MyDoctor.Tests.dll --target "dotnet"  --targetargs "test coreAPI/MyDoctor.sln --no-build" -f=opencover -o="coverage.xml"
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
-          
