@@ -119,7 +119,7 @@ namespace MyDoctor.API.Controllers
 
             doctorRepository.Update(doctor);
 
-            doctorRepository.SaveChangesAsync();
+            await doctorRepository.SaveChangesAsync();
             return Ok();
         }
 
@@ -135,7 +135,7 @@ namespace MyDoctor.API.Controllers
 
             doctorRepository.Delete(doctor);
 
-            doctorRepository.SaveChangesAsync();
+            await doctorRepository.SaveChangesAsync();
             return Ok();
         }
 
