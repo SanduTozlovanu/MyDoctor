@@ -11,14 +11,14 @@ namespace MyDoctorApp.Domain.Models
         }
         public Guid Id { get; private set; }
 
-        public virtual Patient Patient { get; private set; }
-        public Guid PatientId { get; private set; }
-        public virtual Doctor Doctor { get; private set; }
-        public Guid DoctorId { get; private set; }
-        public virtual AppointmentInterval AppointmentInterval { get; private set; }
+        public virtual Patient? Patient { get; private set; }
+        public Guid PatientId { get; private set; } = Guid.Empty;
+        public virtual Doctor? Doctor { get; private set; }
+        public Guid DoctorId { get; private set; } = Guid.Empty;
+        public virtual AppointmentInterval? AppointmentInterval { get; private set; }
         public double Price { get; private set; }
-        public virtual Prescription Prescription { get; private set; }
-        public virtual Bill Bill { get; private set; }
+        public virtual Prescription? Prescription { get; private set; }
+        public virtual Bill? Bill { get; private set; }
 
         public void AttachToPatient(Patient patient)
         {
