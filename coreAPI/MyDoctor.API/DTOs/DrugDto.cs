@@ -17,6 +17,12 @@
     }
     public class GetDrugDto
     {
+        public GetDrugDto(Guid drugId, uint quantity)
+        {
+            this.drugId = drugId;
+            Quantity = quantity;
+        }
+
         public Guid drugId { get; set; }
         public uint Quantity { get; set; }
 
