@@ -5,7 +5,11 @@ namespace MyDoctorApp.Infrastructure
 {
     public class DatabaseContext : DbContext
     {
-        public static string DatabaseName { get; set; } = "MyDoctorApp.db";
+        public DatabaseContext(DbContextOptions<DatabaseContext> options): base(options)
+        {
+            this.Database.EnsureCreated();
+        }
+
         public DbSet<Appointment> Appointments => Set<Appointment>();
         public DbSet<AppointmentInterval> AppointmentIntervals => Set<AppointmentInterval>();
         public DbSet<ScheduleInterval> ScheduleIntervals => Set<ScheduleInterval>();
@@ -25,10 +29,10 @@ namespace MyDoctorApp.Infrastructure
             SaveChanges();
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlite($"Data Source = {DatabaseName}");
-        }
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    optionsBuilder.UseSqlite($"Data Source = {DatabaseName}");
+        //}
 
     }
 }

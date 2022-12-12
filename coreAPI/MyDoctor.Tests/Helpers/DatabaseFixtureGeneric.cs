@@ -1,12 +1,14 @@
-﻿using MyDoctorApp.Infrastructure;
+﻿using Microsoft.EntityFrameworkCore;
+using MyDoctorApp.Infrastructure;
 namespace MyDoctor.Tests.Helpers
 {
     public class DatabaseFixtureGeneric<T> : IDisposable where T : class
     {
         public DatabaseFixtureGeneric()
         {
-            DatabaseContext = new DatabaseContext();
-            DatabaseContext.DatabaseName = $"{typeof(T).Name}_Test.db";
+            var optionsBuilder = new DbContextOptionsBuilder<DatabaseContext>();
+            optionsBuilder.UseSqlite($"Data Source = {typeof(T).Name}_test.db");
+            DatabaseContext = new DatabaseContext(optionsBuilder.Options);
             DatabaseContext.Database.EnsureCreated();
             Dispose();
         }
