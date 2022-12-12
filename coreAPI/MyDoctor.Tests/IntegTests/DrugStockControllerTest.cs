@@ -8,7 +8,6 @@ using System.Text;
 
 namespace MyDoctor.Tests.IntegTests
 {
-    [TestCaseOrderer("MyDoctor.Tests.Orderers.PriorityOrderer", "MyDoctor.Tests")]
     public class DrugStockControllerTest : BaseControllerTest<DrugStockController>
     {
         [Fact, TestPriority(0)]

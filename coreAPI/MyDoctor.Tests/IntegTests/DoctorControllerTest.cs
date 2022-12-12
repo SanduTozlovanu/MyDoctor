@@ -9,7 +9,6 @@ using System.Text;
 
 namespace MyDoctor.Tests.IntegTests
 {
-    [TestCaseOrderer("MyDoctor.Tests.Orderers.PriorityOrderer", "MyDoctor.Tests")]
     public class DoctorControllerTest : BaseControllerTest<DoctorController>
     {
         private async Task Init()

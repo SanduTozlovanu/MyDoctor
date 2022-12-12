@@ -10,7 +10,6 @@ using System.Text;
 
 namespace MyDoctor.Tests.IntegTests
 {
-    [TestCaseOrderer("MyDoctor.Tests.Orderers.PriorityOrderer", "MyDoctor.Tests")]
     public class PrescriptionControllerTest : BaseControllerTest<PrescriptionController>
     {
         private Guid appointmentId;
