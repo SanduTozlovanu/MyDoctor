@@ -1,12 +1,12 @@
 ﻿using MyDoctorApp.Infrastructure;
 namespace MyDoctor.Tests.Helpers
 {
-    public class DatabaseFixture : IDisposable
+    public class DatabaseFixtureGeneric<T> : IDisposable where T : class
     {
-        public DatabaseFixture()
+        public DatabaseFixtureGeneric()
         {
             DatabaseContext = new DatabaseContext();
-            DatabaseContext.DatabaseName = "Tests.db";
+            DatabaseContext.DatabaseName = $"{typeof(T).Name}_Test.db";
             DatabaseContext.Database.EnsureCreated();
             Dispose();
         }

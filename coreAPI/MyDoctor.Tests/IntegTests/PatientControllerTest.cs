@@ -9,21 +9,8 @@ using System.Text;
 
 namespace MyDoctor.Tests.IntegTests
 {
-    [TestCaseOrderer("MyDoctor.Tests.Orderers.PriorityOrderer", "MyDoctor.Tests")]
-    public class PatientControllerTest : IClassFixture<DatabaseFixture>
+    public class PatientControllerTest : BaseControllerTest<PatientController>
     {
-        private readonly HttpClient _client;
-        private DatabaseFixture databaseFixture;
-
-        // Ctor is called for every test method
-        public PatientControllerTest(DatabaseFixture databaseFixture)
-        {
-            var app = new WebApplicationFactory<PatientController>()
-                .WithWebHostBuilder(builder => { });
-            _client = app.CreateClient();
-            this.databaseFixture = databaseFixture;
-        }
-
 
         private void Init()
         {

@@ -9,19 +9,8 @@ using System.Text;
 namespace MyDoctor.Tests.IntegTests
 {
     [TestCaseOrderer("MyDoctor.Tests.Orderers.PriorityOrderer", "MyDoctor.Tests")]
-    public class DrugStockControllerTest : IClassFixture<DatabaseFixture>
+    public class DrugStockControllerTest : BaseControllerTest<DrugStockController>
     {
-        private readonly HttpClient _client;
-        private DatabaseFixture databaseFixture;
-
-        public DrugStockControllerTest(DatabaseFixture databaseFixture)
-        {
-            var app = new WebApplicationFactory<DrugStockController>()
-                .WithWebHostBuilder(builder => { });
-            _client = app.CreateClient();
-            this.databaseFixture = databaseFixture;
-        }
-
         [Fact, TestPriority(0)]
         public async Task TestGetDrugStocks()
         {

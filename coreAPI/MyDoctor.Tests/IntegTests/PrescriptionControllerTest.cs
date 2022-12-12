@@ -11,25 +11,13 @@ using System.Text;
 namespace MyDoctor.Tests.IntegTests
 {
     [TestCaseOrderer("MyDoctor.Tests.Orderers.PriorityOrderer", "MyDoctor.Tests")]
-    public class PrescriptionControllerTest : IClassFixture<DatabaseFixture>
+    public class PrescriptionControllerTest : BaseControllerTest<PrescriptionController>
     {
-        private readonly HttpClient _client;
-        private DatabaseFixture databaseFixture;
         private Guid appointmentId;
         private Guid drug1Id;
         private Guid drug2Id;
         private Guid doctorId;
         private Guid patientId;
-
-        // Ctor is called for every test method
-        public PrescriptionControllerTest(DatabaseFixture databaseFixture)
-        {
-            var app = new WebApplicationFactory<PatientController>()
-                .WithWebHostBuilder(builder => { });
-            _client = app.CreateClient();
-            this.databaseFixture = databaseFixture;
-        }
-
 
         private async Task Init()
         {
@@ -108,10 +96,10 @@ namespace MyDoctor.Tests.IntegTests
 
             // When
             string request = "https://localhost:7244/api/Prescription/{0}";
-            var procedure1dto = new CreateProcedureDto("Taierea piciorului","Taierea piciorului drept cu cutitul", 64);
+            var procedure1dto = new CreateProcedureDto("Taierea piciorului", "Taierea piciorului drept cu cutitul", 64);
             var procedure2dto = new CreateProcedureDto("Taierea piciorului", "Taierea piciorului stang cu cutitul", 64);
             var pDto = new CreatePrescriptionDto("Amputare", "Amputare", new List<GetDrugDto>() { new GetDrugDto(drug1Id, 2), new GetDrugDto(drug2Id, 1) },
-                new List<CreateProcedureDto>() { procedure1dto , procedure2dto });
+                new List<CreateProcedureDto>() { procedure1dto, procedure2dto });
 
             var content = new StringContent(JsonConvert.SerializeObject(pDto), Encoding.UTF8, "application/json");
             var res = await _client.PostAsync(string.Format(request, appointmentId.ToString()), content);

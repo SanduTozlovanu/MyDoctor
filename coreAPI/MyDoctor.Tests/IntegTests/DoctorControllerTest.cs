@@ -10,21 +10,8 @@ using System.Text;
 namespace MyDoctor.Tests.IntegTests
 {
     [TestCaseOrderer("MyDoctor.Tests.Orderers.PriorityOrderer", "MyDoctor.Tests")]
-    public class DoctorControllerTest : IClassFixture<DatabaseFixture>
+    public class DoctorControllerTest : BaseControllerTest<DoctorController>
     {
-        private readonly HttpClient _client;
-        private DatabaseFixture databaseFixture;
-
-        // Ctor is called for every test method
-        public DoctorControllerTest(DatabaseFixture databaseFixture)
-        {
-            var app = new WebApplicationFactory<DoctorController>()
-                .WithWebHostBuilder(builder => { });
-            _client = app.CreateClient();
-            this.databaseFixture = databaseFixture;
-        }
-
-
         private async Task Init()
         {
             string request2 = "https://localhost:7244/api/MedicalRoom";

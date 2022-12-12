@@ -11,20 +11,11 @@ namespace MyDoctor.Tests.IntegTests
 {
 
     [TestCaseOrderer("MyDoctor.Tests.Orderers.PriorityOrderer", "MyDoctor.Tests")]
-    public class DrugControllerTest : IClassFixture<DatabaseFixture>
+    public class DrugControllerTest : BaseControllerTest<DrugController>
     {
-        private readonly HttpClient _client;
-        private DatabaseFixture databaseFixture;
         private void Init()
         {
 
-        }
-        public DrugControllerTest(DatabaseFixture databaseFixture)
-        {
-            var app = new WebApplicationFactory<DrugController>()
-                .WithWebHostBuilder(builder => { });
-            _client = app.CreateClient();
-            this.databaseFixture = databaseFixture;
         }
 
         [Fact, TestPriority(0)]

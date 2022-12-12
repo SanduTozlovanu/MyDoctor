@@ -11,21 +11,10 @@ using System.Text;
 namespace MyDoctor.Tests.IntegTests
 {
     [TestCaseOrderer("MyDoctor.Tests.Orderers.PriorityOrderer", "MyDoctor.Tests")]
-    public class MedicalRoomControllerTest : IClassFixture<DatabaseFixture>
+    public class MedicalRoomControllerTest : BaseControllerTest<MedicalRoomController>
     {
-        private readonly HttpClient _client;
-        private DatabaseFixture databaseFixture;
         private readonly string Address1 = "Ion Putulai 5";
         private readonly string Address2 = "Ana Anastasie 32154";
-
-        public MedicalRoomControllerTest(DatabaseFixture databaseFixture)
-        {
-            var app = new WebApplicationFactory<MedicalRoomController>()
-                .WithWebHostBuilder(builder => { });
-            _client = app.CreateClient();
-            this.databaseFixture = databaseFixture;
-        }
-
 
         private async void Init()
         {
