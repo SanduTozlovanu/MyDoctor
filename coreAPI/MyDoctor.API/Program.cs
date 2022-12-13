@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using MyDoctorApp.Domain.Models;
 using MyDoctorApp.Infrastructure;
 using MyDoctorApp.Infrastructure.Generics;
@@ -27,7 +28,7 @@ builder.Services.AddSwaggerGen(c =>
     c.IncludeXmlComments(xmlPath);
 });
 // Add services to the container.
-
+builder.Services.AddDbContext<DatabaseContext>(options => options.UseSqlite("Data Source = MyDoctorApp.db"));
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -65,3 +66,4 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+public partial class Program { }
