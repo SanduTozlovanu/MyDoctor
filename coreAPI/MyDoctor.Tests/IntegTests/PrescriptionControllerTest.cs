@@ -34,7 +34,7 @@ namespace MyDoctor.Tests.IntegTests
         private async Task Init()
         {
             string request2 = "https://localhost:7244/api/Patient";
-            var pDto = new CreatePatientDto(new CreateUserDto(User.CreateRandomEmail(), "Test", "Test", "Test1234"), 15);
+            var pDto = new CreatePatientDto(new CreateUserDto(RandomGenerators.CreateRandomEmail(), "Test", "Test", "Test1234"), 15);
 
             var content2 = new StringContent(JsonConvert.SerializeObject(pDto), Encoding.UTF8, "application/json");
             var resultPatient = await _client.PostAsync(request2, content2);
@@ -52,7 +52,7 @@ namespace MyDoctor.Tests.IntegTests
             Assert.Equal(HttpStatusCode.OK, res3.StatusCode);
 
             string request4 = "https://localhost:7244/api/Doctor";
-            var pDto2 = new CreateDoctorDto(new CreateUserDto(User.CreateRandomEmail(), "Ion", "Cutelaba", "Test1234"), "Chirurg");
+            var pDto2 = new CreateDoctorDto(new CreateUserDto(RandomGenerators.CreateRandomEmail(), "Ion", "Cutelaba", "Test1234"), "Chirurg");
 
             var content4 = new StringContent(JsonConvert.SerializeObject(pDto2), Encoding.UTF8, "application/json");
             var resultDoctor = await _client.PostAsync(request4, content4);
