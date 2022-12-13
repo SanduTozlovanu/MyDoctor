@@ -24,6 +24,7 @@ import Tables from "views/examples/Tables.js";
 import Icons from "views/examples/Icons.js";
 import Logout from "views/examples/Logout";
 import CreateAppointment from "views/dashboard/CreateAppointment";
+import DoctorSchedule from "views/dashboard/DoctorSchedule";
 
 const routes = {
   ADMIN: [],
@@ -86,6 +87,13 @@ const routes = {
       component: Logout,
       layout: "/auth",
       hide: true
+    },
+    {
+      path: "/my-schedule",
+      name: "My Schedule",
+      icon: "ni ni-circle-08 text-pink",
+      component: DoctorSchedule,
+      layout: "/admin"
     },
   ],
   PATIENT: [

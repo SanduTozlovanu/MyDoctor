@@ -1,11 +1,8 @@
 import axios from './index'
 
 class AuthApi {
-  // static async Login(data){
-  //     return await axios.post(`${}`)
-  // }
   static async RegisterPatient(data) {
-    return await axios.post('/Patients', data)
+    return await axios.post('/Patient', data)
   }
 
   static async RegisterDoctor(data) {

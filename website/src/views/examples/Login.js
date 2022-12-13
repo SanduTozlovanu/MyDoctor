@@ -46,7 +46,8 @@ const Login = () => {
     setError(null)
   }, [email, password])
 
-  const login = async () => {
+  const login = async (e) => {
+    if (e) e.preventDefault()
     if (!email || !password) {
       return setError('Please fill in your credentials.')
     }
@@ -141,7 +142,7 @@ const Login = () => {
                   onClick={login}
                   className="my-4"
                   color="primary"
-                  type="button"
+                  type="submit"
                 >
                   Sign in
                 </Button>
