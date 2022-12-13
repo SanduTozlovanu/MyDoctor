@@ -1,28 +1,18 @@
-﻿using Microsoft.AspNetCore.Mvc.Testing;
-using MyDoctor.API.Controllers;
+﻿using MyDoctor.API.Controllers;
 using MyDoctor.API.DTOs;
 using MyDoctor.Tests.Helpers;
-using MyDoctor.Tests.Orderers;
 using Newtonsoft.Json;
 using System.Text;
 
 namespace MyDoctor.Tests.IntegTests
 {
-    [TestCaseOrderer("MyDoctor.Tests.Orderers.PriorityOrderer", "MyDoctor.Tests")]
-    public class DrugStockControllerTest : IClassFixture<DatabaseFixture>
+    public class DrugStockControllerTest : BaseControllerTest<DrugStockController>
     {
-        private readonly HttpClient _client;
-        private DatabaseFixture databaseFixture;
-
-        public DrugStockControllerTest(DatabaseFixture databaseFixture)
+        public DrugStockControllerTest(CustomWebApplicationFactory<Program> factory) : base(factory)
         {
-            var app = new WebApplicationFactory<DrugStockController>()
-                .WithWebHostBuilder(builder => { });
-            _client = app.CreateClient();
-            this.databaseFixture = databaseFixture;
         }
 
-        [Fact, TestPriority(0)]
+        [Fact]
         public async Task TestGetDrugStocks()
         {
 
@@ -34,8 +24,8 @@ namespace MyDoctor.Tests.IntegTests
 
             var content1 = new StringContent(JsonConvert.SerializeObject(mdDto1), Encoding.UTF8, "application/json");
             var content2 = new StringContent(JsonConvert.SerializeObject(mdDto2), Encoding.UTF8, "application/json");
-            var res1 = await _client.PostAsync(request, content1);
-            var res2 = await _client.PostAsync(request, content2);
+            var res1 = await HttpClient.PostAsync(request, content1);
+            var res2 = await HttpClient.PostAsync(request, content2);
 
             Assert.Equal(System.Net.HttpStatusCode.OK, res1.StatusCode);
             Assert.Equal(System.Net.HttpStatusCode.OK, res2.StatusCode);
@@ -50,7 +40,7 @@ namespace MyDoctor.Tests.IntegTests
             Assert.NotNull(con2);
             DisplayMedicalRoomDto medRoom2 = new(con2.Id, mdDto2.Adress);
 
-            var res = await _client.GetAsync(request2);
+            var res = await HttpClient.GetAsync(request2);
 
             var jsonString = await res.Content.ReadAsStringAsync();
             var cont = JsonConvert.DeserializeObject<List<DisplayDrugStockDto>>(jsonString);

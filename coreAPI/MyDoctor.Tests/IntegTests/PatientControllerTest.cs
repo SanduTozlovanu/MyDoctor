@@ -1,36 +1,24 @@
-﻿using Microsoft.AspNetCore.Mvc.Testing;
-using MyDoctor.API.Controllers;
+﻿using MyDoctor.API.Controllers;
 using MyDoctor.API.DTOs;
 using MyDoctor.Tests.Helpers;
-using MyDoctor.Tests.Orderers;
 using Newtonsoft.Json;
 using System.Net;
 using System.Text;
 
 namespace MyDoctor.Tests.IntegTests
 {
-    [TestCaseOrderer("MyDoctor.Tests.Orderers.PriorityOrderer", "MyDoctor.Tests")]
-    public class PatientControllerTest : IClassFixture<DatabaseFixture>
+    public class PatientControllerTest : BaseControllerTest<PatientController>
     {
-        private readonly HttpClient _client;
-        private DatabaseFixture databaseFixture;
-
-        // Ctor is called for every test method
-        public PatientControllerTest(DatabaseFixture databaseFixture)
+        public PatientControllerTest(CustomWebApplicationFactory<Program> factory) : base(factory)
         {
-            var app = new WebApplicationFactory<PatientController>()
-                .WithWebHostBuilder(builder => { });
-            _client = app.CreateClient();
-            this.databaseFixture = databaseFixture;
         }
-
 
         private void Init()
         {
 
         }
 
-        [Fact, TestPriority(0)]
+        [Fact]
         public async Task TestCreatePacient_Valid()
         {
 
@@ -42,7 +30,7 @@ namespace MyDoctor.Tests.IntegTests
             var pDto = new CreatePatientDto(new CreateUserDto("adresa@gmail.com", "Test", "Test", "Test1234"), 15);
 
             var content = new StringContent(JsonConvert.SerializeObject(pDto), Encoding.UTF8, "application/json");
-            var res = await _client.PostAsync(request, content);
+            var res = await HttpClient.PostAsync(request, content);
             var jsonString = await res.Content.ReadAsStringAsync();
             var dto = JsonConvert.DeserializeObject<DisplayPatientDto>(jsonString);
             Assert.NotNull(dto);
@@ -55,7 +43,7 @@ namespace MyDoctor.Tests.IntegTests
             Assert.Equal(HttpStatusCode.OK, res.StatusCode);
         }
 
-        [Fact, TestPriority(1)]
+        [Fact]
         public async Task TestCreatePacient_AlreadyUsedEmail()
         {
 
@@ -67,11 +55,11 @@ namespace MyDoctor.Tests.IntegTests
             var pDto2 = new CreatePatientDto(new CreateUserDto("adresa@gmail.com", "Test", "Test", "Test1234"), 15);
 
             var content2 = new StringContent(JsonConvert.SerializeObject(pDto2), Encoding.UTF8, "application/json");
-            var res2 = await _client.PostAsync(request, content2);
+            var res2 = await HttpClient.PostAsync(request, content2);
             var pDto = new CreatePatientDto(new CreateUserDto("adresa@gmail.com", "Test", "Test", "Test1234"), 15);
 
             var content = new StringContent(JsonConvert.SerializeObject(pDto), Encoding.UTF8, "application/json");
-            var res = await _client.PostAsync(request, content);
+            var res = await HttpClient.PostAsync(request, content);
             var actualJsonString = await res.Content.ReadAsStringAsync();
 
             // Then
@@ -79,7 +67,7 @@ namespace MyDoctor.Tests.IntegTests
             Assert.Equal(PatientController.UsedEmailError, actualJsonString);
         }
 
-        [Fact, TestPriority(2)]
+        [Fact]
         public async Task TestCreatePacient_BigAge()
         {
 
@@ -92,7 +80,7 @@ namespace MyDoctor.Tests.IntegTests
 
 
             var content = new StringContent(JsonConvert.SerializeObject(pDto), Encoding.UTF8, "application/json");
-            var res = await _client.PostAsync(request, content);
+            var res = await HttpClient.PostAsync(request, content);
             var actualJsonString = await res.Content.ReadAsStringAsync();
 
             // Then
@@ -100,7 +88,7 @@ namespace MyDoctor.Tests.IntegTests
             Assert.Equal(PatientController.BigAgeError, actualJsonString);
         }
 
-        [Fact, TestPriority(3)]
+        [Fact]
         public async Task TestCreatePacient_InvalidEmail()
         {
 
@@ -113,7 +101,7 @@ namespace MyDoctor.Tests.IntegTests
 
 
             var content = new StringContent(JsonConvert.SerializeObject(pDto), Encoding.UTF8, "application/json");
-            var res = await _client.PostAsync(request, content);
+            var res = await HttpClient.PostAsync(request, content);
             var actualJsonString = await res.Content.ReadAsStringAsync();
 
             // Then

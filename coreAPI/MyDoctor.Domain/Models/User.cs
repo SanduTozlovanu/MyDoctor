@@ -1,5 +1,4 @@
-﻿using System;
-namespace MyDoctorApp.Domain.Models
+﻿namespace MyDoctorApp.Domain.Models
 {
     public class User
     {
