@@ -16,7 +16,7 @@ import {
 import 'react-modern-calendar-datepicker/lib/DatePicker.css'
 import { Calendar } from 'react-modern-calendar-datepicker'
 import Select from 'react-select'
-import DoctorsApi from 'api/doctors'
+import DoctorApi from 'api/doctor'
 // core components
 import Header from 'components/Headers/Header.js'
 
@@ -55,7 +55,7 @@ const CreateAppointment = () => {
 
   const getDoctors = async () => {
     try {
-      const response = await DoctorsApi.GetDoctors()
+      const response = await DoctorApi.GetDoctors()
       setDoctors(response.data)
     } catch (err) {
       setError(err)
