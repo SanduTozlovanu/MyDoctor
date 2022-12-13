@@ -28,7 +28,6 @@ builder.Services.AddSwaggerGen(c =>
     c.IncludeXmlComments(xmlPath);
 });
 // Add services to the container.
-
 builder.Services.AddDbContext<DatabaseContext>(options => options.UseSqlite("Data Source = MyDoctorApp.db"));
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
