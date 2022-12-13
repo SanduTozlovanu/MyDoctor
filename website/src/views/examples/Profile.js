@@ -36,6 +36,9 @@ import { useState } from 'react'
 import { useEffect } from 'react'
 import DoctorApi from 'api/doctor'
 import PatientApi from 'api/patient'
+import Swal from 'sweetalert2'
+import AuthApi from 'api/auth'
+import { useHistory } from 'react-router-dom'
 
 const handleAccountTypeText = (text) => {
   const firstLetter = text.charAt(0).toUpperCase()
@@ -52,6 +55,7 @@ const Profile = () => {
   const [speciality, setSpeciality] = useState('')
   const [description, setDescription] = useState('A few words about you...')
   const [username, setUsername] = useState('')
+  const history = useHistory()
 
   useEffect(() => {
     console.log(user)
@@ -78,15 +82,53 @@ const Profile = () => {
           lastName: lastName,
           username: username,
           description: description,
-        }
+        },
       }
-      if (accountType === "DOCTOR"){
-        await DoctorApi.UpdateDoctor(data);
+      if (accountType === 'DOCTOR') {
+        await DoctorApi.UpdateDoctor(data)
       } else {
-        await PatientApi.UpdatePatient(data);
-      }     
+        await PatientApi.UpdatePatient(data)
+      }
     } catch (error) {
       console.log(error)
+    }
+  }
+
+  const deletePopup = async () => {
+    const { value: password } = await Swal.fire({
+      title: 'Sorry to see you go',
+      text:
+        'In order to permanently delete your account, please confirm your password.',
+      icon: 'info',
+      input: 'password',
+      inputPlaceholder: 'Enter your password',
+      inputAttributes: {
+        maxlength: 30,
+        autocapitalize: 'off',
+        autocorrect: 'off',
+      },
+      confirmButtonText: 'Delete',
+      showCloseButton: true
+    })
+    if (password) {
+      try {
+        await AuthApi.Login({
+          email: user.email,
+          password: password,
+        })
+        if (user.accountType === 'DOCTOR') {
+          await DoctorApi.DeleteDoctor(user.id)
+        } else if (user.accountType === 'PATIENT') {
+          await PatientApi.DeletePatient(user.id)
+        }
+        history.push('/auth/logout')
+      } catch (error) {
+        return Swal.fire({
+          title: 'Oops',
+          text: 'Your password is wrong.',
+          icon: 'error',
+        })
+      }
     }
   }
 
@@ -271,7 +313,10 @@ const Profile = () => {
                     </FormGroup>
                   </div>
                   <hr className="my-4" />
-                  <h4 className="text-left mb-0 mt-4 text-danger c-pointer">
+                  <h4
+                    onClick={deletePopup}
+                    className="text-left mb-0 mt-4 text-danger c-pointer"
+                  >
                     Delete my Account
                   </h4>
                 </Form>

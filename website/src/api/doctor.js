@@ -8,7 +8,9 @@ class DoctorApi {
   static async UpdateDoctor(data) {
     return await axios.put(`/Doctor/${data.userId}`, data)
   }
-
+  static async DeleteDoctor(userId){
+    return await axios.delete(`/Doctor/${userId}`)
+  }
 }
 
 export default DoctorApi
