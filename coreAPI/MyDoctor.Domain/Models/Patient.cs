@@ -8,9 +8,10 @@ namespace MyDoctorApp.Domain.Models
             base(AccountTypes.Patient, email, password, firstName, lastName)
         {
             Age = age;
+            Appointments = new List<Appointment>();
         }
         public uint Age { get; private set; }
-        public List<Appointment> Appointments { get; private set; } = new List<Appointment>();
+        public virtual List<Appointment> Appointments { get; private set; }
         public virtual MedicalHistory MedicalHistory { get; private set; }
         public void RegisterMedicalHistory(MedicalHistory medicalHistory)
         {

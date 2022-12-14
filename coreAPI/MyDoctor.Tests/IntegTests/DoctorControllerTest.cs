@@ -22,12 +22,21 @@ namespace MyDoctor.Tests.IntegTests
             var res2 = await HttpClient.PostAsync(request2, content2);
             Assert.Equal(HttpStatusCode.OK, res2.StatusCode);
 
+
         }
         [Fact]
         public async Task TestCreateDoctor_NoMedicalRoom()
         {
+            string reqSpeciality = "https://localhost:7244/api/Speciality";
+            CreateSpecialityDto sDto = new("Chirurg");
+            var contSpeciality = new StringContent(JsonConvert.SerializeObject(sDto), Encoding.UTF8, "application/json");
+            var resSpeciality = await HttpClient.PostAsync(reqSpeciality, contSpeciality);
+            var jsonCreatedSpeciality = await resSpeciality.Content.ReadAsStringAsync();
+            var dtoSpeciality = JsonConvert.DeserializeObject<DisplaySpecialityDto>(jsonCreatedSpeciality);
+            Assert.Equal(HttpStatusCode.OK, resSpeciality.StatusCode);
+
             string request = "https://localhost:7244/api/Doctor";
-            var pDto = new CreateDoctorDto(new CreateUserDto("doctor@gmail.com", "Ion", "Cutelaba", "Test1234"), "Chirurg");
+            var pDto = new CreateDoctorDto(new CreateUserDto("doctor@gmail.com", "Ion", "Cutelaba", "Test1234"), dtoSpeciality.Id);
 
             var content = new StringContent(JsonConvert.SerializeObject(pDto), Encoding.UTF8, "application/json");
             var res = await HttpClient.PostAsync(request, content);
@@ -42,8 +51,16 @@ namespace MyDoctor.Tests.IntegTests
         {
             await Init();
 
+            string reqSpeciality = "https://localhost:7244/api/Speciality";
+            CreateSpecialityDto sDto = new("Chirurg");
+            var contSpeciality = new StringContent(JsonConvert.SerializeObject(sDto), Encoding.UTF8, "application/json");
+            var resSpeciality = await HttpClient.PostAsync(reqSpeciality, contSpeciality);
+            var jsonCreatedSpeciality = await resSpeciality.Content.ReadAsStringAsync();
+            var dtoSpeciality = JsonConvert.DeserializeObject<DisplaySpecialityDto>(jsonCreatedSpeciality);
+            Assert.Equal(HttpStatusCode.OK, resSpeciality.StatusCode);
+
             string request = "https://localhost:7244/api/Doctor";
-            var pDto = new CreateDoctorDto(new CreateUserDto("doctor@gmail.com", "Ion", "Cutelaba", "Test1234"), "Chirurg");
+            var pDto = new CreateDoctorDto(new CreateUserDto("doctor@gmail.com", "Ion", "Cutelaba", "Test1234"), dtoSpeciality.Id);
 
             var content = new StringContent(JsonConvert.SerializeObject(pDto), Encoding.UTF8, "application/json");
             var res = await HttpClient.PostAsync(request, content);
@@ -53,7 +70,6 @@ namespace MyDoctor.Tests.IntegTests
             Assert.True(dto.FirstName == pDto.UserDetails.FirstName);
             Assert.True(dto.Email == pDto.UserDetails.Email);
             Assert.True(dto.LastName == pDto.UserDetails.LastName);
-            Assert.True(dto.Speciality == pDto.Speciality);
         }
 
         [Fact]
@@ -62,10 +78,16 @@ namespace MyDoctor.Tests.IntegTests
 
             // Given
             await Init();
-
+            string reqSpeciality = "https://localhost:7244/api/Speciality";
+            CreateSpecialityDto sDto = new("Chirurg");
+            var contSpeciality = new StringContent(JsonConvert.SerializeObject(sDto), Encoding.UTF8, "application/json");
+            var resSpeciality = await HttpClient.PostAsync(reqSpeciality, contSpeciality);
+            var jsonCreatedSpeciality = await resSpeciality.Content.ReadAsStringAsync();
+            var dtoSpeciality = JsonConvert.DeserializeObject<DisplaySpecialityDto>(jsonCreatedSpeciality);
+            Assert.Equal(HttpStatusCode.OK, resSpeciality.StatusCode);
             // When
             string request = "https://localhost:7244/api/Doctor";
-            var pDto = new CreateDoctorDto(new CreateUserDto("doctor@gmail.com", "Test", "Test", "Test1234"), "Oculist");
+            var pDto = new CreateDoctorDto(new CreateUserDto("doctor@gmail.com", "Test", "Test", "Test1234"), dtoSpeciality.Id);
 
             var content = new StringContent(JsonConvert.SerializeObject(pDto), Encoding.UTF8, "application/json");
             var res = await HttpClient.PostAsync(request, content);
@@ -84,9 +106,17 @@ namespace MyDoctor.Tests.IntegTests
             // Given
             await Init();
 
+            string reqSpeciality = "https://localhost:7244/api/Speciality";
+            CreateSpecialityDto sDto = new("Chirurg");
+            var contSpeciality = new StringContent(JsonConvert.SerializeObject(sDto), Encoding.UTF8, "application/json");
+            var resSpeciality = await HttpClient.PostAsync(reqSpeciality, contSpeciality);
+            var jsonCreatedSpeciality = await resSpeciality.Content.ReadAsStringAsync();
+            var dtoSpeciality = JsonConvert.DeserializeObject<DisplaySpecialityDto>(jsonCreatedSpeciality);
+            Assert.Equal(HttpStatusCode.OK, resSpeciality.StatusCode);
+
             // When
             string request = "https://localhost:7244/api/Doctor";
-            var pDto = new CreateDoctorDto(new CreateUserDto("adresa", "Test", "Test", "Test1234"), "Anarhist");
+            var pDto = new CreateDoctorDto(new CreateUserDto("adresa", "Test", "Test", "Test1234"), dtoSpeciality.Id);
 
             var content = new StringContent(JsonConvert.SerializeObject(pDto), Encoding.UTF8, "application/json");
             var res = await HttpClient.PostAsync(request, content);

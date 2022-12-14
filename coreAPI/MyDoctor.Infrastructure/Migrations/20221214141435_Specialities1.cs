@@ -1,11 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace MyDoctorApp.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Users : Migration
+    public partial class Specialities1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -40,27 +41,15 @@ namespace MyDoctorApp.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Doctors",
+                name: "Specialities",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    MedicalRoomId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Speciality = table.Column<string>(type: "TEXT", nullable: false),
-                    AccountType = table.Column<string>(type: "TEXT", nullable: false),
-                    Email = table.Column<string>(type: "TEXT", nullable: false),
-                    Password = table.Column<string>(type: "TEXT", nullable: false),
-                    FirstName = table.Column<string>(type: "TEXT", nullable: false),
-                    LastName = table.Column<string>(type: "TEXT", nullable: false)
+                    Name = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Doctors", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Doctors_MedicalRooms_MedicalRoomId",
-                        column: x => x.MedicalRoomId,
-                        principalTable: "MedicalRooms",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                    table.PrimaryKey("PK_Specialities", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -100,6 +89,58 @@ namespace MyDoctorApp.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Doctors",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    MedicalRoomId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    SpecialityID = table.Column<Guid>(type: "TEXT", nullable: false),
+                    AccountType = table.Column<string>(type: "TEXT", nullable: false),
+                    Email = table.Column<string>(type: "TEXT", nullable: false),
+                    Password = table.Column<string>(type: "TEXT", nullable: false),
+                    FirstName = table.Column<string>(type: "TEXT", nullable: false),
+                    LastName = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Doctors", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Doctors_MedicalRooms_MedicalRoomId",
+                        column: x => x.MedicalRoomId,
+                        principalTable: "MedicalRooms",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Doctors_Specialities_SpecialityID",
+                        column: x => x.SpecialityID,
+                        principalTable: "Specialities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Drugs",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    DrugStockId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    Description = table.Column<string>(type: "TEXT", nullable: false),
+                    Price = table.Column<double>(type: "REAL", nullable: false),
+                    Quantity = table.Column<uint>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Drugs", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Drugs_DrugStocks_DrugStockId",
+                        column: x => x.DrugStockId,
+                        principalTable: "DrugStocks",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Appointments",
                 columns: table => new
                 {
@@ -130,9 +171,8 @@ namespace MyDoctorApp.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    AppointmentDuration = table.Column<uint>(type: "INTEGER", nullable: false),
+                    DayOfWeek = table.Column<string>(type: "TEXT", nullable: false),
                     DoctorId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Date = table.Column<DateOnly>(type: "TEXT", nullable: false),
                     StartTime = table.Column<TimeOnly>(type: "TEXT", nullable: false),
                     EndTime = table.Column<TimeOnly>(type: "TEXT", nullable: false)
                 },
@@ -148,34 +188,12 @@ namespace MyDoctorApp.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Drugs",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    DrugStockId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
-                    Description = table.Column<string>(type: "TEXT", nullable: false),
-                    Price = table.Column<double>(type: "REAL", nullable: false),
-                    Quantity = table.Column<uint>(type: "INTEGER", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Drugs", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Drugs_DrugStocks_DrugStockId",
-                        column: x => x.DrugStockId,
-                        principalTable: "DrugStocks",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AppointmentIntervals",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    AppointmentId = table.Column<Guid>(type: "TEXT", nullable: false),
                     Date = table.Column<DateOnly>(type: "TEXT", nullable: false),
+                    AppointmentId = table.Column<Guid>(type: "TEXT", nullable: false),
                     StartTime = table.Column<TimeOnly>(type: "TEXT", nullable: false),
                     EndTime = table.Column<TimeOnly>(type: "TEXT", nullable: false)
                 },
@@ -310,6 +328,11 @@ namespace MyDoctorApp.Infrastructure.Migrations
                 column: "MedicalRoomId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Doctors_SpecialityID",
+                table: "Doctors",
+                column: "SpecialityID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Drugs_DrugStockId",
                 table: "Drugs",
                 column: "DrugStockId");
@@ -399,6 +422,9 @@ namespace MyDoctorApp.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "MedicalRooms");
+
+            migrationBuilder.DropTable(
+                name: "Specialities");
         }
     }
 }

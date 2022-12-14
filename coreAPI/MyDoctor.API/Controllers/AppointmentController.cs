@@ -51,13 +51,16 @@ namespace MyDoctor.API.Controllers
             }
 
             var appointment = new Appointment(dto.Price);
+
+            patient.RegisterAppointment(appointment);
+            doctor.RegisterAppointment(appointment);
             var appointmentInterval = new AppointmentInterval(
                 DateOnly.FromDateTime(dto.Date),
                 TimeOnly.FromDateTime(dto.StartTime),
                 TimeOnly.FromDateTime(dto.EndTime)
                 );
-            var bill = new Bill();
 
+            var bill = new Bill();
             patient.RegisterAppointment(appointment);
             doctor.RegisterAppointment(appointment);
             appointment.RegisterAppointmentInterval(appointmentInterval);
