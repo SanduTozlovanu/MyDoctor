@@ -48,6 +48,7 @@ builder.Services.AddScoped<IRepository<Patient>, PatientRepository>();
 builder.Services.AddScoped<IRepository<Prescription>, PrescriptionRepository>();
 builder.Services.AddScoped<IRepository<Procedure>, ProcedureRepository>();
 builder.Services.AddScoped<IRepository<PrescriptedDrug>, PrescriptedDrugRepository>();
+builder.Services.AddScoped<IRepository<Speciality>, SpecialityRepository>();
 
 
 var app = builder.Build();

@@ -20,6 +20,7 @@ namespace MyDoctor.API.Helpers
             CreateMap<MedicalHistory, DisplayMedicalHistoryDto>().ReverseMap();
             CreateMap<Appointment, DisplayAppointmentDto>().ReverseMap();
             CreateMap<Drug, DisplayDrugDto>().ReverseMap();
+            CreateMap<Speciality, DisplaySpecialityDto>().ReverseMap();
             CreateMap<Drug, GetDrugDto>();
 
             CreateMap<CreateAppointmentDto, Appointment>();
@@ -30,6 +31,7 @@ namespace MyDoctor.API.Helpers
             CreateMap<CreateDrugDto, Drug>();
             CreateMap<CreatePatientDto, Patient>();
             CreateMap<CreateMedicalRoomDto, MedicalRoom>();
+            CreateMap<CreateSpecialityDto, Speciality>();
 
 
         }

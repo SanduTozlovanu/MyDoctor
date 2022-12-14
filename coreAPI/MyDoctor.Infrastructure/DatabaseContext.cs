@@ -20,6 +20,7 @@ namespace MyDoctorApp.Infrastructure
         public DbSet<Prescription> Prescriptions => Set<Prescription>();
         public DbSet<Procedure> Procedures => Set<Procedure>();
         public DbSet<PrescriptedDrug> PrescriptedDrugs => Set<PrescriptedDrug>();
+        public DbSet<Speciality> Specialities => Set<Speciality>();
 
         public void Save()
         {

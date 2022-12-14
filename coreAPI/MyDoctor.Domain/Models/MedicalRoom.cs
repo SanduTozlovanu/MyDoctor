@@ -8,10 +8,11 @@ namespace MyDoctorApp.Domain.Models
         {
             Id = Guid.NewGuid();
             Adress = adress;
+            Doctors = new List<Doctor>();
         }
         public Guid Id { get; private set; }
         public string Adress { get; private set; }
-        public List<Doctor> Doctors { get; private set; } = new List<Doctor>();
+        public virtual List<Doctor> Doctors { get; private set; }
         public virtual DrugStock DrugStock { get; private set; }
 
         public Result RegisterDoctors(List<Doctor> doctors)
