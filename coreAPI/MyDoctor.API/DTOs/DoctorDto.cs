@@ -9,8 +9,6 @@
         }
         public CreateUserDto UserDetails { get; set; }
         public Guid SpecialityId { get; set; }
-        //public IFormFile ProfilePhoto { get; set; }
-        //public IFormFile DiplomaPhoto { get; set; }
     }
     public class DisplayDoctorDto
     {
