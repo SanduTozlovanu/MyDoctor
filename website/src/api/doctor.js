@@ -11,6 +11,9 @@ class DoctorApi {
   static async DeleteDoctor(userId){
     return await axios.delete(`/Doctor/${userId}`)
   }
+  static async SendSchedule(data){
+    return await axios.post();
+  }
 }
 
 export default DoctorApi
