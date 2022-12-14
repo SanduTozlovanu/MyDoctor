@@ -17,26 +17,26 @@ import { useEffect } from 'react'
 import DoctorApi from 'api/doctor'
 import Header from 'components/Headers/Header'
 
-function getDayName(date = new Date()) {
-  const locale = 'en-US'
-  return date.toLocaleDateString(locale, { weekday: 'long' })
-}
+// function getDayName(date = new Date()) {
+//   const locale = 'en-US'
+//   return date.toLocaleDateString(locale, { weekday: 'long' })
+// }
 
-function addDay(nrOfDays) {
-  let date = new Date()
-  date.setDate(date.getDate() + nrOfDays)
-  return date
-}
+// function addDay(nrOfDays) {
+//   let date = new Date()
+//   date.setDate(date.getDate() + nrOfDays)
+//   return date
+// }
 
 const DoctorSchedule = () => {
   const [days, setDays] = useState([
-    { dayName: getDayName(addDay(0)), start: '', end: '' },
-    { dayName: getDayName(addDay(1)), start: '', end: '' },
-    { dayName: getDayName(addDay(2)), start: '', end: '' },
-    { dayName: getDayName(addDay(3)), start: '', end: '' },
-    { dayName: getDayName(addDay(4)), start: '', end: '' },
-    { dayName: getDayName(addDay(5)), start: '', end: '' },
-    { dayName: getDayName(addDay(6)), start: '', end: '' },
+    {dayName: "Monday",  start: '', end: ''},
+    {dayName: "Tuesday",  start: '', end: ''},
+    {dayName: "Wednesday",  start: '', end: ''},
+    {dayName: "Thursday",  start: '', end: ''},
+    {dayName: "Friday",  start: '', end: ''},
+    {dayName: "Saturday",  start: '', end: ''},
+    {dayName: "Sunday",  start: '', end: ''},
   ])
 
   const updateState = (index ,target , value) => {
@@ -51,9 +51,17 @@ const DoctorSchedule = () => {
       return day;
     }))
   };
+  const sendSchedule = async () => {
+    try {
+     const data = days;
+     await DoctorApi.SendSchedule(data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
-useEffect(()=>{
-    console.log(days)
+useEffect(() => {
+  console.log(days)
 }, [days])
   return (
     <>
@@ -72,7 +80,7 @@ useEffect(()=>{
                     </h3>
                   </Col>
                   <Col lg="4" md="4" sm="12" xs="12" className="text-right">
-                    <Button color="primary">Save Schedule</Button>
+                    <Button onClick={sendSchedule} color="primary">Save Schedule</Button>
                   </Col>
                 </Row>
               </CardHeader>
