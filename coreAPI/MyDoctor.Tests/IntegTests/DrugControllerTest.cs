@@ -13,15 +13,9 @@ namespace MyDoctor.Tests.IntegTests
         {
         }
 
-        private void Init()
-        {
-
-        }
-
         [Fact]
         public async Task TestGetDrugs()
         {
-            Init();
 
             // When
             string request = "https://localhost:7244/api/MedicalRoom";
