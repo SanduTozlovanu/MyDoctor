@@ -8,7 +8,7 @@ namespace MyDoctorApp.Infrastructure.Generics
         : IRepository<T> where T : class
     {
         protected DatabaseContext context;
-        public IMapper mapper;
+        private readonly IMapper mapper;
 
         protected Repository(DatabaseContext context, IMapper mapper)
         {

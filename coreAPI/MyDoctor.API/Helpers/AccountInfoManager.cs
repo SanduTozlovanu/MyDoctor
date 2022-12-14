@@ -8,9 +8,8 @@ namespace MyDoctor.API.Helpers
     {
         public static string HashPassword(string password)
         {
-            var sha = SHA256.Create();
             var asByteArray = Encoding.UTF8.GetBytes(password);
-            var hashedPassword = sha.ComputeHash(asByteArray);
+            var hashedPassword = SHA256.HashData(asByteArray);
 
             return Convert.ToBase64String(hashedPassword);
         }

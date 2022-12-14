@@ -39,7 +39,7 @@ import Select from 'react-select'
 import AuthApi from 'api/auth'
 import { useHistory } from 'react-router-dom'
 import { useUserContext } from "context/UserContext";
-
+import DoctorApi from 'api/doctor'
 const Register = () => {
   const [accountType, setAccountType] = useState('')
   const [firstName, setFirstName] = useState('')
@@ -427,19 +427,35 @@ const SecondStep = ({
 
 const ThirdStep = ({ firstName, lastName, email, password, history }) => {
   const [speciality, setSpeciality] = useState('')
+  const [specialities, setSpecialities] = useState([])
   const [degreePhoto, setDegreePhoto] = useState('')
   const [profilePhoto, setProfilePhoto] = useState('')
   const [error, setError] = useState(null)
   const [creating, setCreating] = useState(false)
   const { login: loginContext } = useUserContext()
 
-  const specialitiesOptions = [
-    { value: 'neurologist', label: 'Neurologist' },
-    { value: 'orl', label: 'ORL' },
-    { value: 'family medicine', label: 'Family medicine' },
-    { value: 'internal medicine', label: 'Internal medicine' },
-  ]
+  // const specialitiesOptions = [
+  //   { value: 'neurologist', label: 'Neurologist' },
+  //   { value: 'orl', label: 'ORL' },
+  //   { value: 'family medicine', label: 'Family medicine' },
+  //   { value: 'internal medicine', label: 'Internal medicine' },
+  // ]
 
+  useEffect(() => {
+    const fetchData = async () => {
+      await getSpecialities()
+    }
+    fetchData()
+  }, [])
+
+  const getSpecialities = async () => {
+    try {
+      const response = await DoctorApi.GetSpecialities()
+      setSpecialities(response.data)
+    } catch (err) {
+      setError(err)
+    }
+  }
 
   function uploadFile(event, type) {
     var blobFile = event.target.files[0]
@@ -482,8 +498,9 @@ const ThirdStep = ({ firstName, lastName, email, password, history }) => {
           firstName: firstName,
           lastName: lastName
         },
-        speciality: speciality
+        specialityId: speciality
       }
+      console.log(credentials)
       await AuthApi.RegisterDoctor(credentials)
       const user_response = await AuthApi.Login({
         email: email,
@@ -516,12 +533,14 @@ const ThirdStep = ({ firstName, lastName, email, password, history }) => {
           <FormGroup className="mb-3">
             <Label>Choose your speciality *</Label>
             <Select
-              onChange={(value) => setSpeciality(value ? value.label : '')}
+              onChange={(spec) => setSpeciality(spec? spec.value : '')}
               defaultValue={null}
               isSearchable
               isClearable
               name="speciality"
-              options={specialitiesOptions}
+              options={specialities.map((item) => {
+                return { label: item.name, value: item.id }
+              })}
               className="basic-single"
               classNamePrefix="select"
             />

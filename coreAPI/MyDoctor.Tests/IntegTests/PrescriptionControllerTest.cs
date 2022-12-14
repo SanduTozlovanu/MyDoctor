@@ -46,6 +46,7 @@ namespace MyDoctor.Tests.IntegTests
             var resSpeciality = await HttpClient.PostAsync(reqSpeciality, contSpeciality);
             var jsonCreatedSpeciality = await resSpeciality.Content.ReadAsStringAsync();
             var dtoSpeciality = JsonConvert.DeserializeObject<DisplaySpecialityDto>(jsonCreatedSpeciality);
+            Assert.NotNull(dtoSpeciality);
             Assert.Equal(HttpStatusCode.OK, resSpeciality.StatusCode);
 
             string request4 = "https://localhost:7244/api/Doctor/speciality";
