@@ -5,7 +5,7 @@ namespace MyDocAppointment.API.Validations
 {
     public class PatientValidator : AbstractValidator<CreatePatientDto>
     {
-        private const string TOO_BIG_AGE_ERROR = "The age cannot exceed 120";
+        public const string TOO_BIG_AGE_ERROR = "The age cannot exceed 120";
 
         public PatientValidator()
         {
@@ -13,7 +13,7 @@ namespace MyDocAppointment.API.Validations
             RuleFor(p => p.UserDetails).SetValidator(new UserValidator());
         }
 
-        private bool IsAgeValid(uint age) 
+        public bool IsAgeValid(uint age) 
         {
             if (age > 120)
                 return false;

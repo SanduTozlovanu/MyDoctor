@@ -5,10 +5,10 @@ namespace MyDocAppointment.API.Validations
 {
     public class UserValidator : AbstractValidator<CreateUserDto>
     {
-        private const string PASSWORD_LENGTH_ERROR = "The password should contain between 7 and 20 characters";
-        private const string INVALID_MAIL_ERROR = "Invalid mail format";
-        private const string EMPTY_FIRSTNAME_ERROR = "FirstName cannot be empty";
-        private const string EMPTY_LASTNAME_ERROR = "The lastname cannot be empty";
+        public const string PASSWORD_LENGTH_ERROR = "The password should contain between 7 and 20 characters";
+        public const string INVALID_MAIL_ERROR = "Invalid mail format";
+        public const string EMPTY_FIRSTNAME_ERROR = "FirstName cannot be empty";
+        public const string EMPTY_LASTNAME_ERROR = "The lastname cannot be empty";
 
         public UserValidator()
         {

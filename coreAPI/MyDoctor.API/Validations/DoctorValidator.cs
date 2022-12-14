@@ -5,7 +5,7 @@ namespace MyDocAppointment.API.Validations
 {
     public class DoctorValidator : AbstractValidator<CreateDoctorDto>
     {
-        private const string EMPTY_SPECIALITY_ERROR = "The Speciality cannot be empty";
+        public const string EMPTY_SPECIALITY_ERROR = "The Speciality cannot be empty";
 
         public DoctorValidator()
         {

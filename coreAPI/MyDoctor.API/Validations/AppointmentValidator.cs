@@ -5,10 +5,10 @@ namespace MyDocAppointment.API.Validations
 {
     public class AppointmentValidator : AbstractValidator<CreateAppointmentDto>
     {
-        private const string TOO_EARLY_DATE_ERROR = "The appointment date should be later than now.";
-        private const string ENDTIME_EARLIER_THAN_STARTTIME_ERROR = "The appointment should end later than it starts.";
-        private const string TOO_EARLY_STARTIME_ERROR = "The appointment should start later than now.";
-        private const string NEGATIVE_PRICE_ERROR = "Price should not be negative.";
+        public const string TOO_EARLY_DATE_ERROR = "The appointment date should be later than now.";
+        public const string ENDTIME_EARLIER_THAN_STARTTIME_ERROR = "The appointment should end later than it starts.";
+        public const string TOO_EARLY_STARTIME_ERROR = "The appointment should start later than now.";
+        public const string NEGATIVE_PRICE_ERROR = "Price should not be negative.";
 
         public AppointmentValidator()
         {
