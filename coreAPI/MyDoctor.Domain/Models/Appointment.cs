@@ -4,11 +4,9 @@ namespace MyDoctorApp.Domain.Models
 {
     public class Appointment
     {
-        public Appointment(Patient patient, Doctor doctor, double price)
+        public Appointment(double price)
         {
             Id = Guid.NewGuid();
-            patient.RegisterAppointment(this);
-            doctor.RegisterAppointment(this);
             Price = price;
         }
         public Guid Id { get; private set; }

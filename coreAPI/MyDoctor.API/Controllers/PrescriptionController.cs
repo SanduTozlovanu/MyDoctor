@@ -148,10 +148,11 @@ namespace MyDoctor.API.Controllers
             List<PrescriptedDrug> prescriptedDrugs = new();
             drugTuples.ForEach(drugTuple =>
             {
-                PrescriptedDrug prescriptedDrug = new(prescription, drugTuple.Item1, drugTuple.Item2);
+                PrescriptedDrug prescriptedDrug = new(drugTuple.Item2);
                 prescriptedDrug.AttachDrug(drugTuple.Item1);
                 prescriptedDrugs.Add(prescriptedDrug);
             });
+            prescription.RegisterPrescriptedDrugs(prescriptedDrugs);
 
             prescriptedDrugs.ForEach(async prescriptedDrug => await prescriptedDrugRepository.AddAsync(prescriptedDrug));
 

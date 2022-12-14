@@ -4,10 +4,9 @@ namespace MyDoctorApp.Domain.Models
 {
     public class MedicalHistory
     {
-        public MedicalHistory(Patient patient)
+        public MedicalHistory()
         {
             Id = Guid.NewGuid();
-            patient.RegisterMedicalHistory(this);
             Prescriptions = new List<Prescription>();
         }
         public Guid Id { get; private set; }

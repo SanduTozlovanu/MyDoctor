@@ -2,11 +2,9 @@
 {
     public class PrescriptedDrug
     {
-        public PrescriptedDrug(Prescription prescription, Drug drug, uint quantity)
+        public PrescriptedDrug(uint quantity)
         {
             Id = Guid.NewGuid();
-            prescription.RegisterPrescriptedDrugs(new List<PrescriptedDrug> { this });
-            AttachDrug(drug);
             Quantity = quantity;
         }
 

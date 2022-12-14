@@ -40,8 +40,16 @@ namespace MyDoctor.Tests.IntegTests
             var res3 = await HttpClient.PostAsync(request3, content3);
             Assert.Equal(HttpStatusCode.OK, res3.StatusCode);
 
+            string reqSpeciality = "https://localhost:7244/api/Speciality";
+            CreateSpecialityDto sDto = new("Chirurg");
+            var contSpeciality = new StringContent(JsonConvert.SerializeObject(sDto), Encoding.UTF8, "application/json");
+            var resSpeciality = await HttpClient.PostAsync(reqSpeciality, contSpeciality);
+            var jsonCreatedSpeciality = await resSpeciality.Content.ReadAsStringAsync();
+            var dtoSpeciality = JsonConvert.DeserializeObject<DisplaySpecialityDto>(jsonCreatedSpeciality);
+            Assert.Equal(HttpStatusCode.OK, resSpeciality.StatusCode);
+
             string request4 = "https://localhost:7244/api/Doctor";
-            var pDto2 = new CreateDoctorDto(new CreateUserDto(User.CreateRandomEmail(), "Ion", "Cutelaba", "Test1234"), "Chirurg");
+            var pDto2 = new CreateDoctorDto(new CreateUserDto(User.CreateRandomEmail(), "Ion", "Cutelaba", "Test1234"), dtoSpeciality.Id);
 
             var content4 = new StringContent(JsonConvert.SerializeObject(pDto2), Encoding.UTF8, "application/json");
             var resultDoctor = await HttpClient.PostAsync(request4, content4);

@@ -4,10 +4,9 @@ namespace MyDoctorApp.Domain.Models
 {
     public class Drug
     {
-        public Drug(DrugStock drugStock, string name, string description, double price, uint quantity)
+        public Drug(string name, string description, double price, uint quantity)
         {
             Id = Guid.NewGuid();
-            drugStock.RegisterDrugsToDrugStock(new List<Drug> { this });
             Name = name;
             Description = description;
             Price = price;

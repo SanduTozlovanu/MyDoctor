@@ -2,10 +2,9 @@
 {
     public class Procedure
     {
-        public Procedure(Prescription prescription, string name, string description, double price)
+        public Procedure(string name, string description, double price)
         {
             Id = Guid.NewGuid();
-            prescription.RegisterProcedures(new List<Procedure> { this });
             Name = name;
             Description = description;
             Price = price;

@@ -4,10 +4,9 @@ namespace MyDoctorApp.Domain.Models
 {
     public class AppointmentInterval : Interval
     {
-        public AppointmentInterval(Appointment appointment, DateOnly date, TimeOnly startTime, TimeOnly endTime) : base(startTime, endTime)
+        public AppointmentInterval(DateOnly date, TimeOnly startTime, TimeOnly endTime) : base(startTime, endTime)
         {
             Date = date;
-            appointment.RegisterAppointmentInterval(this);
         }
 
         public DateOnly Date { get; private set; }

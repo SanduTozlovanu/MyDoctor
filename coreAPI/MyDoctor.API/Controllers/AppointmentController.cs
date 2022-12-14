@@ -50,14 +50,21 @@ namespace MyDoctor.API.Controllers
                 return NotFound(DoctorNotFoundError);
             }
 
-            var appointment = new Appointment(patient, doctor, dto.Price);
+            var appointment = new Appointment(dto.Price);
+
+            patient.RegisterAppointment(appointment);
+            doctor.RegisterAppointment(appointment);
             var appointmentInterval = new AppointmentInterval(
-                appointment,
                 DateOnly.FromDateTime(dto.Date),
                 TimeOnly.FromDateTime(dto.StartTime),
                 TimeOnly.FromDateTime(dto.EndTime)
                 );
-            var bill = new Bill(appointment);
+
+            var bill = new Bill();
+            patient.RegisterAppointment(appointment);
+            doctor.RegisterAppointment(appointment);
+            appointment.RegisterAppointmentInterval(appointmentInterval);
+            appointment.RegisterBill(bill);
 
             await billRepository.AddAsync(bill);
             await appointmentRepository.AddAsync(appointment);

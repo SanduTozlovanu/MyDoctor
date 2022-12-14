@@ -4,13 +4,11 @@ namespace MyDoctorApp.Domain.Models
 {
     public class Doctor : User
     {
-        public Doctor(string email, string password, string firstName, string lastName, Speciality speciality, MedicalRoom medicalRoom, List<ScheduleInterval> scheduleIntervals) :
+        public Doctor(string email, string password, string firstName, string lastName) :
             base(AccountTypes.Doctor, email, password, firstName, lastName)
         {
-            speciality.RegisterDoctor(this);
-            medicalRoom.RegisterDoctors(new List<Doctor> { this });
             Appointments = new List<Appointment>();
-            ScheduleIntervals = scheduleIntervals;
+            ScheduleIntervals = new List<ScheduleInterval>();
         }
         public virtual MedicalRoom MedicalRoom { get; private set; }
         public Guid MedicalRoomId { get; private set; }
@@ -35,6 +33,15 @@ namespace MyDoctorApp.Domain.Models
         {
             appointment.AttachToDoctor(this);
             Appointments.Add(appointment);
+        }
+
+        public void RegisterScheduleIntervals(List<ScheduleInterval> scheduleIntervals)
+        {
+            foreach (var si in scheduleIntervals)
+            {
+                si.AttachToDoctor(this);
+                ScheduleIntervals.Add(si);
+            }
         }
 
         public void Update(Doctor doctor)

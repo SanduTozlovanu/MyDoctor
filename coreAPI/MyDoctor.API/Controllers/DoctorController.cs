@@ -101,7 +101,7 @@ namespace MyDoctor.API.Controllers
                 await scheduleIntervalRepository.AddAsync(scheduleInterval);
             }
 
-            var ActionResultDoctorTuple = await CreateDoctorFromDto(speciality, medicalRoom, scheduleIntervals, dto);
+            var ActionResultDoctorTuple = await CreateDoctorFromDto(dto);
 
             if (ActionResultDoctorTuple.Item2.GetType() != typeof(OkResult))
                 return ActionResultDoctorTuple.Item2;
@@ -111,6 +111,8 @@ namespace MyDoctor.API.Controllers
 
             Doctor doctor = ActionResultDoctorTuple.Item1;
             medicalRoom.RegisterDoctors(new List<Doctor> { doctor });
+            doctor.RegisterScheduleIntervals(scheduleIntervals);
+            speciality.RegisterDoctor(doctor);
 
             //if (dto.ProfilePhoto == null)
             //{
@@ -155,7 +157,7 @@ namespace MyDoctor.API.Controllers
                 return NotFound();
             }
 
-            var ActionResultDoctorTuple = await CreateDoctorFromDto(new Speciality(""), new MedicalRoom(""), new List<ScheduleInterval>(), dto);
+            var ActionResultDoctorTuple = await CreateDoctorFromDto(dto);
 
             if (ActionResultDoctorTuple.Item2.GetType() != typeof(OkResult))
                 return ActionResultDoctorTuple.Item2;
@@ -187,7 +189,7 @@ namespace MyDoctor.API.Controllers
             return Ok();
         }
 
-        private async Task<(Doctor?, IActionResult)> CreateDoctorFromDto(Speciality speciality, MedicalRoom medicalRoom, List<ScheduleInterval> scheduleIntervals, CreateDoctorDto dto)
+        private async Task<(Doctor?, IActionResult)> CreateDoctorFromDto(CreateDoctorDto dto)
         {
             var oldPatient = (await patientRepository.FindAsync(p => p.Email == dto.UserDetails.Email)).FirstOrDefault();
             var oldDoctor = (await doctorRepository.FindAsync(d => d.Email == dto.UserDetails.Email)).FirstOrDefault();
@@ -202,8 +204,7 @@ namespace MyDoctor.API.Controllers
             }
 
             string hashedPassword = AccountInfoManager.HashPassword(dto.UserDetails.Password);
-            var newDoctor = new Doctor(dto.UserDetails.Email, hashedPassword, dto.UserDetails.FirstName, dto.UserDetails.LastName,
-                speciality, medicalRoom, scheduleIntervals);
+            var newDoctor = new Doctor(dto.UserDetails.Email, hashedPassword, dto.UserDetails.FirstName, dto.UserDetails.LastName);
 
             return (newDoctor, Ok());
         }
