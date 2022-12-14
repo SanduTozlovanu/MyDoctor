@@ -45,7 +45,7 @@ namespace MyDoctor.Tests.IntegTests
             var jsonString = await res.Content.ReadAsStringAsync();
             var cont = JsonConvert.DeserializeObject<List<DisplayDrugStockDto>>(jsonString);
             Assert.NotNull(cont);
-            Assert.True(cont.Count() >= 2);
+            Assert.True(cont.Count >= 2);
             uint foundTimes = 0;
             cont.ForEach(dto =>
             {

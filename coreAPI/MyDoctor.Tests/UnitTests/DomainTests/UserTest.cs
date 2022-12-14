@@ -10,7 +10,7 @@ namespace MyDoctor.Tests.UnitTests.DomainTests
         private const string FIRST_NAME = "Ionut";
         private const string LAST_NAME = "Virgil";
 
-        private Patient CreateDefaultPatient()
+        static private Patient CreateDefaultPatient()
         {
             var email = EMAIL;
             var password = PASSWORD;

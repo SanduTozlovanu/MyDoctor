@@ -44,7 +44,7 @@ namespace MyDoctor.Tests.IntegTests
             var jsonString = await res.Content.ReadAsStringAsync();
             var cont = JsonConvert.DeserializeObject<List<DisplayDrugStockDto>>(jsonString);
             Assert.NotNull(cont);
-            Assert.True(cont.Count() >= 1);
+            Assert.True(cont.Count >= 1);
             bool medicalRoomFound = false;
             cont.ForEach(dto =>
             {

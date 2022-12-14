@@ -36,7 +36,7 @@ namespace MyDoctor.API.Controllers
             this.scheduleIntervalRepository = scheduleIntervalRepository;
         }
 
-        private List<ScheduleInterval> GenerateScheduleIntervals()
+        private static List<ScheduleInterval> GenerateScheduleIntervals()
         {
             var scheduleIntervals = new List<ScheduleInterval>();
             foreach (var day in Enum.GetNames(typeof(WeekDays)))
