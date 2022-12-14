@@ -4,19 +4,17 @@ namespace MyDoctorApp.Domain.Models
 {
     public class Prescription
     {
-        public Prescription(string name, string description)
+        public Prescription(string description, string name)
         {
             Id = Guid.NewGuid();
-            PrescriptedDrugs = new List<PrescriptedDrug>();
-            Procedures = new List<Procedure>();
             Description = description;
             Name = name;
         }
         public Guid Id { get; private set; }
         public string Name { get; private set; }
         public string Description { get; private set; }
-        public virtual List<PrescriptedDrug> PrescriptedDrugs { get; private set; }
-        public virtual List<Procedure> Procedures { get; private set; }
+        public List<PrescriptedDrug> PrescriptedDrugs { get; private set; } = new List<PrescriptedDrug>();
+        public List<Procedure> Procedures { get; private set; } = new List<Procedure>();
         public virtual Appointment Appointment { get; private set; }
         public Guid AppointmentId { get; private set; }
         public void AttachAppointment(Appointment appointment)

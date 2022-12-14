@@ -13,7 +13,7 @@ namespace MyDoctorApp.Domain.Models
             Quantity = quantity;
         }
         public Guid Id { get; private set; }
-        public virtual DrugStock DrugStock { get; private set; }
+        public DrugStock DrugStock { get; private set; }
         public Guid DrugStockId { get; private set; }
         public string Name { get; private set; }
         public string Description { get; private set; }

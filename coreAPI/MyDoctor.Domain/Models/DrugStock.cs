@@ -7,10 +7,9 @@ namespace MyDoctorApp.Domain.Models
         public DrugStock()
         {
             Id = Guid.NewGuid();
-            Drugs = new List<Drug>();
         }
         public Guid Id { get; private set; }
-        public virtual List<Drug> Drugs { get; private set; }
+        public List<Drug> Drugs { get; private set; } = new List<Drug>();
         public virtual MedicalRoom MedicalRoom { get; private set; }
         public Guid MedicalRoomId { get; private set; }
 
