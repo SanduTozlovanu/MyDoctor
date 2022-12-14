@@ -9,7 +9,7 @@ namespace MyDocAppointment.API.Validations
 
         public DoctorValidator()
         {
-            RuleFor(d => d.Speciality).NotEmpty().WithMessage(EMPTY_SPECIALITY_ERROR);
+            RuleFor(d => d.SpecialityId).NotEmpty().WithMessage(EMPTY_SPECIALITY_ERROR);
             RuleFor(d => d.UserDetails).SetValidator(new UserValidator());
         }
     }
