@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react'
 // react component that copies the given text inside your clipboard
 // reactstrap components
@@ -20,47 +21,49 @@ import DoctorApi from 'api/doctor'
 // core components
 import Header from 'components/Headers/Header.js'
 
-const specialitiesOptions = [
-  { value: 'neurologist', label: 'Neurologist' },
-  { value: 'orl', label: 'ORL' },
-  { value: 'family medicine', label: 'Family medicine' },
-  { value: 'internal medicine', label: 'Internal medicine' },
-]
-
 const CreateAppointment = () => {
-  // eslint-disable-next-line
   const [date, setDate] = useState(new Date())
   const [speciality, setSpeciality] = useState('')
-  // eslint-disable-next-line
+  const [specialities, setSpecialities] = useState([])
   const [error, setError] = useState('')
   const [doctors, setDoctors] = useState([])
-  const [filteredDoctors, setFilteredDoctors] = useState([])
+ 
+  useEffect(() => {
+    const fetchData = async () => {
+      await getSpecialities()
+    }
+    fetchData()
+  }, [])
+
+  const getSpecialities = async () => {
+    try {
+      const response = await DoctorApi.GetSpecialities()
+      setSpecialities(response.data)
+    } catch (err) {
+      setError(err)
+    }
+  }
+
+  const getDoctors = async () => {
+    if (!speciality) {
+      return
+    }
+    try {
+      const response = await DoctorApi.GetDoctorsBySpeciality(speciality)
+      console.log(response.data)
+      setDoctors(response.data)
+    } catch (err) {
+      setError(err)
+    }
+  }
 
   useEffect(() => {
     const fetchData = async () => {
       await getDoctors()
     }
     fetchData()
-  }, [])
+  }, [speciality])
 
-  useEffect(() => {
-    if (speciality) {
-      setFilteredDoctors(
-        doctors.filter((doctor) => doctor.speciality === speciality),
-      )
-    } else {
-      setFilteredDoctors([])
-    }
-  }, [doctors, speciality])
-
-  const getDoctors = async () => {
-    try {
-      const response = await DoctorApi.GetDoctors()
-      setDoctors(response.data)
-    } catch (err) {
-      setError(err)
-    }
-  }
   return (
     <>
       <Header />
@@ -79,20 +82,20 @@ const CreateAppointment = () => {
                   <Col lg="6" md="12" sm="12" xs="12" className="text-left">
                     <h3>Select a speciality</h3>
                     <Select
-                      onChange={(value) =>
-                        setSpeciality(value ? value.label : '')
-                      }
+                      onChange={(spec) => setSpeciality(spec ? spec.value : '')}
                       defaultValue={null}
                       isSearchable
                       isClearable
                       name="speciality"
-                      options={specialitiesOptions}
+                      options={specialities.map((item) => {
+                        return { label: item.name, value: item.id }
+                      })}
                       className="basic-single"
                       classNamePrefix="select"
                     />
                     <h3 className="mt-3">Choose your Doctor</h3>
                     <Row>
-                      {filteredDoctors.map((doc, index) => {
+                      {doctors && doctors.length ? doctors.map((doc, index) => {
                         return (
                           <Col
                             className="text-left"
@@ -103,7 +106,7 @@ const CreateAppointment = () => {
                             xs="6"
                             key={index}
                           >
-                            <Card>
+                            <Card className='shadow'>
                               <CardBody>
                                 <Row className="align-items-center">
                                   <Col
@@ -157,7 +160,7 @@ const CreateAppointment = () => {
                             </Card>
                           </Col>
                         )
-                      })}
+                      }) : speciality ? <Col><p className='text-sm'>No doctors found for this speciality.</p></Col> : null}
                     </Row>
                   </Col>
                   <Col lg="6" md="12" sm="12" xs="12" className="text-left">
