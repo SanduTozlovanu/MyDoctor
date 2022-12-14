@@ -38,7 +38,7 @@ namespace MyDoctor.Tests.IntegTests
             Assert.Equal(HttpStatusCode.OK, resSpeciality.StatusCode);
 
             string request = "https://localhost:7244/api/Doctor/speciality";
-            var pDto = new CreateDoctorDto(new CreateUserDto("doctor@gmail.com", "Testurilef51sf5", "Cutelaba", "Test1234"), dtoSpeciality.Id);
+            var pDto = new CreateDoctorDto(new CreateUserDto(RandomGenerators.CreateRandomEmail(), "Testurilef51sf5", "Cutelaba", "Test1234"), dtoSpeciality.Id);
 
             var content = new StringContent(JsonConvert.SerializeObject(pDto), Encoding.UTF8, "application/json");
             var res = await HttpClient.PostAsync(request, content);
@@ -63,7 +63,7 @@ namespace MyDoctor.Tests.IntegTests
             Assert.Equal(HttpStatusCode.OK, resSpeciality.StatusCode);
 
             string request = "https://localhost:7244/api/Doctor/speciality";
-            var pDto = new CreateDoctorDto(new CreateUserDto("doctor@gmail.com", "Testurilef51sf5", "Cutelaba", "Test1234"), dtoSpeciality.Id);
+            var pDto = new CreateDoctorDto(new CreateUserDto(RandomGenerators.CreateRandomEmail(), "Testurilef51sf5", "Cutelaba", "Test1234"), dtoSpeciality.Id);
 
             var content = new StringContent(JsonConvert.SerializeObject(pDto), Encoding.UTF8, "application/json");
             var res = await HttpClient.PostAsync(request, content);
