@@ -66,9 +66,10 @@ namespace MyDoctor.API.Controllers
             return Ok(doctors.Select(d => doctorRepository.GetMapper().Map<DisplayDoctorDto>(d)));
         }
 
-        [HttpPost("{specialityId:guid}")]
-        public async Task<IActionResult> Create(Guid specialityId, [FromBody] CreateDoctorDto dto)
+        [HttpPost("speciality")]
+        public async Task<IActionResult> Create([FromBody] CreateDoctorDto dto)
         {
+            var specialityId = dto.SpecialityId;
             Speciality? speciality = await specialityRepository.GetAsync(specialityId);
             if (speciality == null)
             {
