@@ -152,16 +152,9 @@ namespace MyDoctor.API.Controllers
                 prescriptedDrug.AttachDrug(drugTuple.Item1);
                 prescriptedDrugs.Add(prescriptedDrug);
             });
-            prescription.RegisterPrescriptedDrugs(prescriptedDrugs);
 
+            prescription.RegisterPrescriptedDrugs(prescriptedDrugs);
             prescriptedDrugs.ForEach(async prescriptedDrug => await prescriptedDrugRepository.AddAsync(prescriptedDrug));
-            prescription.RegisterPrescriptedDrugs(prescriptedDrugs);
-
-            await prescriptedDrugRepository.SaveChangesAsync();
-            await prescriptonRepository.SaveChangesAsync();
-            await drugRepository.SaveChangesAsync();
-            await appointmentRepository.SaveChangesAsync();
-
             return Ok();
         }
     }

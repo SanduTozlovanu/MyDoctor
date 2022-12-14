@@ -128,7 +128,7 @@ namespace MyDoctor.Tests.IntegTests
             string request = "https://localhost:7244/api/Prescription/{0}";
             var procedure1dto = new CreateProcedureDto("Taierea piciorului", "Taierea piciorului drept cu cutitul", 64);
             var procedure2dto = new CreateProcedureDto("Taierea piciorului", "Taierea piciorului stang cu cutitul", 64);
-            var pDto = new CreatePrescriptionDto("Amputare", "Amputare", new List<GetDrugDto>() { new GetDrugDto(drug1Id, 2), new GetDrugDto(drug2Id, 1) },
+            var pDto = new CreatePrescriptionDto("Amputare lunga si sccurta", "Amputare", new List<GetDrugDto>() { new GetDrugDto(drug1Id, 2), new GetDrugDto(drug2Id, 1) },
                 new List<CreateProcedureDto>() { procedure1dto, procedure2dto });
 
             var content = new StringContent(JsonConvert.SerializeObject(pDto), Encoding.UTF8, "application/json");
@@ -148,7 +148,7 @@ namespace MyDoctor.Tests.IntegTests
             string request = "https://localhost:7244/api/Prescription/{0}";
             var procedure1dto = new CreateProcedureDto("Taierea piciorului", "Taierea piciorului drept cu cutitul", 64);
             var procedure2dto = new CreateProcedureDto("Taierea piciorului", "Taierea piciorului stang cu cutitul", 64);
-            var pDto = new CreatePrescriptionDto("Amputare", "Amputare", new List<GetDrugDto>() { new GetDrugDto(drug1Id, 2), new GetDrugDto(drug2Id, 1) },
+            var pDto = new CreatePrescriptionDto("Amputare lunga si scurta", "Amputare", new List<GetDrugDto>() { new GetDrugDto(drug1Id, 2), new GetDrugDto(drug2Id, 1) },
                 new List<CreateProcedureDto>() { procedure1dto, procedure2dto });
 
             var content = new StringContent(JsonConvert.SerializeObject(pDto), Encoding.UTF8, "application/json");
@@ -164,7 +164,7 @@ namespace MyDoctor.Tests.IntegTests
             string request = "https://localhost:7244/api/Prescription/{0}";
             var procedure1dto = new CreateProcedureDto("Taierea piciorului", "Taierea piciorului drept cu cutitul", 64);
             var procedure2dto = new CreateProcedureDto("Taierea piciorului", "Taierea piciorului stang cu cutitul", 64);
-            var pDto = new CreatePrescriptionDto("Amputare", "Amputare", new List<GetDrugDto>() { new GetDrugDto(Guid.NewGuid(), 2), new GetDrugDto(drug2Id, 1) },
+            var pDto = new CreatePrescriptionDto("Amputare lunga si scurta", "Amputare", new List<GetDrugDto>() { new GetDrugDto(Guid.NewGuid(), 2), new GetDrugDto(drug2Id, 1) },
                 new List<CreateProcedureDto>() { procedure1dto, procedure2dto });
 
             var content = new StringContent(JsonConvert.SerializeObject(pDto), Encoding.UTF8, "application/json");
