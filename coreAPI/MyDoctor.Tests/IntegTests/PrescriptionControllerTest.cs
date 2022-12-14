@@ -23,7 +23,7 @@ namespace MyDoctor.Tests.IntegTests
         private async Task Init()
         {
             string request2 = "https://localhost:7244/api/Patient";
-            var pDto = new CreatePatientDto(new CreateUserDto(RandomGenerators.CreateRandomEmail(), "Test", "Test", "Test1234"), 15);
+            var pDto = new CreatePatientDto(new CreateUserDto(RandomGenerators.CreateRandomEmail(), "Test1234", "Test", "Test"), 15);
 
             var content2 = new StringContent(JsonConvert.SerializeObject(pDto), Encoding.UTF8, "application/json");
             var resultPatient = await HttpClient.PostAsync(request2, content2);
@@ -40,7 +40,7 @@ namespace MyDoctor.Tests.IntegTests
             var res3 = await HttpClient.PostAsync(request3, content3);
             Assert.Equal(HttpStatusCode.OK, res3.StatusCode);
 
-            string reqSpeciality = "https://localhost:7244/api/Speciality";
+            string reqSpeciality = "https://localhost:7244/api/Speciality/create_speciality";
             CreateSpecialityDto sDto = new("Chirurg");
             var contSpeciality = new StringContent(JsonConvert.SerializeObject(sDto), Encoding.UTF8, "application/json");
             var resSpeciality = await HttpClient.PostAsync(reqSpeciality, contSpeciality);
@@ -48,8 +48,8 @@ namespace MyDoctor.Tests.IntegTests
             var dtoSpeciality = JsonConvert.DeserializeObject<DisplaySpecialityDto>(jsonCreatedSpeciality);
             Assert.Equal(HttpStatusCode.OK, resSpeciality.StatusCode);
 
-            string request4 = "https://localhost:7244/api/Doctor";
-            var pDto2 = new CreateDoctorDto(new CreateUserDto(RandomGenerators.CreateRandomEmail(), "Ion", "Cutelaba", "Test1234"), dtoSpeciality.Id);
+            string request4 = "https://localhost:7244/api/Doctor/speciality";
+            var pDto2 = new CreateDoctorDto(new CreateUserDto(RandomGenerators.CreateRandomEmail(), "Test1234", "Ion", "Cutelaba"), dtoSpeciality.Id);
 
             var content4 = new StringContent(JsonConvert.SerializeObject(pDto2), Encoding.UTF8, "application/json");
             var resultDoctor = await HttpClient.PostAsync(request4, content4);
@@ -85,12 +85,12 @@ namespace MyDoctor.Tests.IntegTests
 
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
 
-            string requestAppointment = "https://localhost:7244/api/Appointment/{0}_{1}/create_appointment";
-            var aDto = new CreateAppointmentDto(50, DateTime.Today, DateTime.Now, DateTime.Now.AddHours(5));
+            string requestAppointment = $"https://localhost:7244/api/Appointment/{contentPatient.Id}_{contentDoctor.Id}/create_appointment";
+            var aDto = new CreateAppointmentDto(50, DateTime.Today.AddDays(1), DateTime.Now.AddHours(1), DateTime.Now.AddHours(5));
             var content = new StringContent(JsonConvert.SerializeObject(aDto), Encoding.UTF8, "application/json");
             var res = await HttpClient.PostAsync(string.Format(requestAppointment, patientId.ToString(), doctorId.ToString()), content);
-            Assert.Equal(HttpStatusCode.OK, res.StatusCode);
             var jsonStringAppointment = await res.Content.ReadAsStringAsync();
+            Assert.Equal(HttpStatusCode.OK, res.StatusCode);
             var appointmentDto = JsonConvert.DeserializeObject<DisplayAppointmentDto>(jsonStringAppointment);
             Assert.NotNull(appointmentDto);
             appointmentId = appointmentDto.Id;
@@ -107,13 +107,13 @@ namespace MyDoctor.Tests.IntegTests
             string request = "https://localhost:7244/api/Prescription/{0}";
             var procedure1dto = new CreateProcedureDto("Taierea piciorului", "Taierea piciorului drept cu cutitul", 64);
             var procedure2dto = new CreateProcedureDto("Taierea piciorului", "Taierea piciorului stang cu cutitul", 64);
-            var pDto = new CreatePrescriptionDto("Amputare", "Amputare", new List<GetDrugDto>() { new GetDrugDto(drug1Id, 2), new GetDrugDto(drug2Id, 1) },
+            var pDto = new CreatePrescriptionDto("Amputare lunga si scurta", "Amputare", new List<GetDrugDto>() { new GetDrugDto(drug1Id, 2), new GetDrugDto(drug2Id, 1) },
                 new List<CreateProcedureDto>() { procedure1dto, procedure2dto });
 
             var content = new StringContent(JsonConvert.SerializeObject(pDto), Encoding.UTF8, "application/json");
             var res = await HttpClient.PostAsync(string.Format(request, appointmentId.ToString()), content);
-            Assert.Equal(HttpStatusCode.OK, res.StatusCode);
             var jsonString = await res.Content.ReadAsStringAsync();
+            Assert.Equal(HttpStatusCode.OK, res.StatusCode);
             var dto = JsonConvert.DeserializeObject<DisplayPrescriptionDto>(jsonString);
             Assert.NotNull(dto);
             Assert.True(dto.Name == pDto.Name);

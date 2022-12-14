@@ -155,6 +155,7 @@ namespace MyDoctor.API.Controllers
             prescription.RegisterPrescriptedDrugs(prescriptedDrugs);
 
             prescriptedDrugs.ForEach(async prescriptedDrug => await prescriptedDrugRepository.AddAsync(prescriptedDrug));
+            prescription.RegisterPrescriptedDrugs(prescriptedDrugs);
 
             await prescriptedDrugRepository.SaveChangesAsync();
             await prescriptonRepository.SaveChangesAsync();
