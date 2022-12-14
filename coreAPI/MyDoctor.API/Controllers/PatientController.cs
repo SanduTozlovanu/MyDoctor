@@ -101,8 +101,6 @@ namespace MyDoctor.API.Controllers
 
         private async Task<(Patient?, IActionResult)> CreatePatientFromDto(CreatePatientDto dto)
         {
-            if (dto.Age > 120) return (null, BadRequest(BigAgeError));
-
             var oldPatient = (await patientRepository.FindAsync(p => p.Email == dto.UserDetails.Email)).FirstOrDefault();
             var oldDoctor = (await doctorRepository.FindAsync(d => d.Email == dto.UserDetails.Email)).FirstOrDefault();
             if (oldPatient != null || oldDoctor != null)
