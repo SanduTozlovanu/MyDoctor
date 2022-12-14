@@ -39,13 +39,13 @@ namespace MyDoctorApp.Infrastructure.Generics
             return await context.Set<T>().ToListAsync();
         }
 
-        public virtual async Task<T> Update(T entity)
+        public virtual T Update(T entity)
         {
             return context.Update(entity)
                 .Entity;
         }
 
-        public virtual async Task<T> Delete(T entity)
+        public virtual T Delete(T entity)
         {
             return context.Remove(entity)
                 .Entity;
