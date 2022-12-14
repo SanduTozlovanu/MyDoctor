@@ -6,7 +6,7 @@ class AuthApi {
   }
 
   static async RegisterDoctor(data) {
-    return await axios.post('/Doctor', data)
+    return await axios.post('/Doctor/speciality', data)
   }
 
   static async Login(data) {
