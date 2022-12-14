@@ -11,7 +11,7 @@ namespace MyDoctor.Tests.UnitTests.DomainTests
         public void Create()
         {
             // When
-            var pre = new Prescription(NAME, DESCRIPTION);
+            var pre = new Prescription(DESCRIPTION, NAME);
 
             // Then
             Assert.NotEqual(Guid.Empty, pre.Id);
