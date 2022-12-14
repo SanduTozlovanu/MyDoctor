@@ -28,7 +28,7 @@ builder.Services.AddSwaggerGen(c =>
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
     c.IncludeXmlComments(xmlPath);
 });
-//builder.Services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters(c => c.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly()));
+
 builder.Services.AddControllers().AddFluentValidation(c => c.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly()));
 // Add services to the container.
 builder.Services.AddDbContext<DatabaseContext>(options => options.UseSqlite("Data Source = MyDoctorApp.db"));
@@ -70,4 +70,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-public partial class Program { }
+
+public partial class Program {
+    protected Program() { }
+}

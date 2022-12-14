@@ -12,25 +12,10 @@ namespace MyDoctor.API.Controllers
         public const string PatientNotFoundError = "Could not find a patient with this Id.";
         public const string DoctorNotFoundError = "Could not find a doctor with this Id.";
         private readonly IRepository<Speciality> specialityRepository;
-        private readonly IRepository<Appointment> appointmentRepository;
-        private readonly IRepository<AppointmentInterval> appointmentIntervalRepository;
-        private readonly IRepository<Bill> billRepository;
-        private readonly IRepository<Doctor> doctorRepository;
-        private readonly IRepository<Patient> patientsRepository;
 
-        public SpecialityController(IRepository<Speciality> specialityRepository,
-            IRepository<Appointment> appointmentRepository,
-            IRepository<Patient> patientsRepository,
-            IRepository<Doctor> doctorRepository,
-            IRepository<AppointmentInterval> appointmentIntervalRepository,
-            IRepository<Bill> billRepository)
-        {
+        public SpecialityController(IRepository<Speciality> specialityRepository)
+        { 
             this.specialityRepository = specialityRepository;
-            this.appointmentRepository = appointmentRepository;
-            this.patientsRepository = patientsRepository;
-            this.doctorRepository = doctorRepository;
-            this.appointmentIntervalRepository = appointmentIntervalRepository;
-            this.billRepository = billRepository;
         }
 
         [HttpGet]
