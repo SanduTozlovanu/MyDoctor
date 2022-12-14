@@ -1,10 +1,12 @@
 import axios from './index'
 
 class DoctorApi {
-  static async GetDoctors() {
-    return await axios.get('/Doctor')
+  static async GetDoctorsBySpeciality(specialityId) {
+    return await axios.get(`/Doctor/get_by_speciality/${specialityId}`)
   }
-
+  static async GetSpecialities(){
+    return await axios.get('/Speciality')
+  }
   static async UpdateDoctor(data) {
     return await axios.put(`/Doctor/${data.userId}`, data)
   }
