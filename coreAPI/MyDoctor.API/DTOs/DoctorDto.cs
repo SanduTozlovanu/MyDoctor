@@ -2,15 +2,13 @@
 {
     public class CreateDoctorDto
     {
-        public CreateDoctorDto(CreateUserDto userDetails, string speciality)
+        public CreateDoctorDto(CreateUserDto userDetails)
         {
             this.UserDetails = userDetails;
-            this.Speciality = speciality;
         }
         public CreateUserDto UserDetails { get; set; }
         //public IFormFile ProfilePhoto { get; set; }
         //public IFormFile DiplomaPhoto { get; set; }
-        public string Speciality { get; set; }
     }
     public class DisplayDoctorDto
     {

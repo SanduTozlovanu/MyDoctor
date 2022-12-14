@@ -4,9 +4,10 @@ namespace MyDoctorApp.Domain.Models
 {
     public class Bill
     {
-        public Bill()
+        public Bill(Appointment appointment)
         {
             Id = Guid.NewGuid();
+            appointment.RegisterBill(this);
         }
         public Guid Id { get; private set; }
         public virtual Appointment Appointment { get; private set; }

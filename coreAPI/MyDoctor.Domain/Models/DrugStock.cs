@@ -4,12 +4,14 @@ namespace MyDoctorApp.Domain.Models
 {
     public class DrugStock
     {
-        public DrugStock()
+        public DrugStock(MedicalRoom medicalRoom)
         {
             Id = Guid.NewGuid();
+            Drugs = new List<Drug>();
+            medicalRoom.RegisterDrugStock(this);
         }
         public Guid Id { get; private set; }
-        public List<Drug> Drugs { get; private set; } = new List<Drug>();
+        public virtual List<Drug> Drugs { get; private set; }
         public virtual MedicalRoom MedicalRoom { get; private set; }
         public Guid MedicalRoomId { get; private set; }
 

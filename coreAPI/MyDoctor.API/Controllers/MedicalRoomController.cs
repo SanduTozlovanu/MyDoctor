@@ -29,8 +29,7 @@ namespace MyDoctor.API.Controllers
         public async Task<IActionResult> Create([FromBody] CreateMedicalRoomDto dto)
         {
             var medicalRoom = new MedicalRoom(dto.Adress);
-            var drugStock = new DrugStock();
-            medicalRoom.RegisterDrugStock(drugStock);
+            var drugStock = new DrugStock(medicalRoom);
 
             await medicalRoomRepository.AddAsync(medicalRoom);
             await drugStockRepository.AddAsync(drugStock);

@@ -44,10 +44,8 @@ namespace MyDoctor.API.Controllers
             if (ActionResultPatientTuple.Item1 == null)
                 return BadRequest(CouldNotCreatePatientError);
 
-            var medicalHistory = new MedicalHistory();
             Patient patient = ActionResultPatientTuple.Item1;
-
-            patient.RegisterMedicalHistory(medicalHistory);
+            var medicalHistory = new MedicalHistory(patient);
 
             await medicalHistoryRepository.AddAsync(medicalHistory);
             await patientRepository.AddAsync(patient);
