@@ -9,7 +9,6 @@ namespace MyDoctor.Tests.UnitTests.DomainTests
         private const string PASSWORD = "pass";
         private const string FIRST_NAME = "Ionut";
         private const string LAST_NAME = "Virgil";
-        private const string SPECIALITY = "Chirurg";
 
         public static Doctor CreateDefaultDoctor()
         {
@@ -17,9 +16,8 @@ namespace MyDoctor.Tests.UnitTests.DomainTests
             var password = PASSWORD;
             var firstName = FIRST_NAME;
             var lastName = LAST_NAME;
-            var speciality = SPECIALITY;
 
-            return new Doctor(email, password, firstName, lastName, speciality);
+            return new Doctor(email, password, firstName, lastName);
         }
 
         [Fact]
@@ -35,7 +33,6 @@ namespace MyDoctor.Tests.UnitTests.DomainTests
             Assert.Equal(PASSWORD, d.Password);
             Assert.Equal(FIRST_NAME, d.FirstName);
             Assert.Equal(LAST_NAME, d.LastName);
-            Assert.Equal(SPECIALITY, d.Speciality);
             Assert.Equal(AccountTypes.Doctor, d.AccountType);
 
             Assert.Null(d.MedicalRoom);
@@ -84,9 +81,8 @@ namespace MyDoctor.Tests.UnitTests.DomainTests
             string password = "password";
             string firstName = "firstName";
             string lastName = "lastName";
-            string speciality = "speciality";
 
-            Doctor newDoctor = new(email, password, firstName, lastName, speciality);
+            Doctor newDoctor = new(email, password, firstName, lastName);
 
             // When
             d.Update(newDoctor);

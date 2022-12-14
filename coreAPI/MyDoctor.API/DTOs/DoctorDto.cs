@@ -2,31 +2,31 @@
 {
     public class CreateDoctorDto
     {
-        public CreateDoctorDto(CreateUserDto userDetails, string speciality)
+        public CreateDoctorDto(CreateUserDto userDetails, Guid specialityId)
         {
             this.UserDetails = userDetails;
-            this.Speciality = speciality;
+            SpecialityId = specialityId;
         }
         public CreateUserDto UserDetails { get; set; }
+        public Guid SpecialityId { get; set; }
         //public IFormFile ProfilePhoto { get; set; }
         //public IFormFile DiplomaPhoto { get; set; }
-        public string Speciality { get; set; }
     }
     public class DisplayDoctorDto
     {
-        public DisplayDoctorDto(Guid id, Guid medicalRoomId, string email, string speciality, string firstName, string lastName)
+        public DisplayDoctorDto(Guid id, Guid medicalRoomId, Guid specialityId, string email, string firstName, string lastName)
         {
             this.Id = id;
             this.MedicalRoomId = medicalRoomId;
+            this.SpecialityId = specialityId;
             this.Email = email;
             this.FirstName = firstName;
             this.LastName = lastName;
-            this.Speciality = speciality;
         }
         public Guid Id { get; set; }
         public Guid MedicalRoomId { get; set; }
+        public Guid SpecialityId { get; set; }
         public string Email { get; set; }
-        public string Speciality { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
     }

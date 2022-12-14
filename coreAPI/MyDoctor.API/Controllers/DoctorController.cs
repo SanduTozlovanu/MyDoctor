@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyDoctor.API.DTOs;
 using MyDoctor.API.Helpers;
+using MyDoctorApp.Domain.Helpers;
 using MyDoctorApp.Domain.Models;
 using MyDoctorApp.Infrastructure.Generics;
 
@@ -10,6 +11,7 @@ namespace MyDoctor.API.Controllers
     [ApiController]
     public class DoctorController : ControllerBase
     {
+        public const string SpecialityNotFoundError = "Could not find specialty by the specialityId provided.";
         public const string FreeMedicalRoomNotFoundError = "Could not find a free medical room for this doctor.";
         public const string MedicalRoomNotFoundError = "Could not find a medicalRoom with this Id.";
         public const string UsedEmailError = "The email is already used!";
@@ -18,14 +20,30 @@ namespace MyDoctor.API.Controllers
         private readonly IRepository<Doctor> doctorRepository;
         private readonly IRepository<MedicalRoom> medicalRoomRepository;
         private readonly IRepository<Patient> patientRepository;
+        private readonly IRepository<Speciality> specialityRepository;
+        private readonly IRepository<ScheduleInterval> scheduleIntervalRepository;
 
         public DoctorController(IRepository<Doctor> doctorRepository,
             IRepository<MedicalRoom> medicalRoomRepository,
-            IRepository<Patient> patientRepository)
+            IRepository<Patient> patientRepository,
+            IRepository<Speciality> specialityRepository,
+            IRepository<ScheduleInterval> scheduleIntervalRepository)
         {
             this.doctorRepository = doctorRepository;
             this.medicalRoomRepository = medicalRoomRepository;
             this.patientRepository = patientRepository;
+            this.specialityRepository = specialityRepository;
+            this.scheduleIntervalRepository = scheduleIntervalRepository;
+        }
+
+        private List<ScheduleInterval> GenerateScheduleIntervals()
+        {
+            var scheduleIntervals = new List<ScheduleInterval>();
+            foreach (var day in Enum.GetNames(typeof(WeekDays)))
+            {
+                scheduleIntervals.Add(new ScheduleInterval(day, new TimeOnly(0, 0), new TimeOnly(23, 59)));
+            }
+            return scheduleIntervals;
         }
 
         [HttpGet]
@@ -33,9 +51,31 @@ namespace MyDoctor.API.Controllers
         {
             return Ok((await doctorRepository.AllAsync()).Select(d => doctorRepository.GetMapper().Map<DisplayDoctorDto>(d)));
         }
-        [HttpPost]
+
+        [HttpGet("get_by_speciality/{specialityId:guid}")]
+        public async Task<IActionResult> GetBySpeciality(Guid specialityId)
+        {
+            Speciality? speciality = await specialityRepository.GetAsync(specialityId);
+            if (speciality == null)
+            {
+                return NotFound(SpecialityNotFoundError);
+            }
+
+            var doctors = await doctorRepository.FindAsync(d => d.SpecialityID == specialityId);
+
+            return Ok(doctors.Select(d => doctorRepository.GetMapper().Map<DisplayDoctorDto>(d)));
+        }
+
+        [HttpPost("speciality")]
         public async Task<IActionResult> Create([FromBody] CreateDoctorDto dto)
         {
+            var specialityId = dto.SpecialityId;
+            Speciality? speciality = await specialityRepository.GetAsync(specialityId);
+            if (speciality == null)
+            {
+                return NotFound(SpecialityNotFoundError);
+            }
+
             List<MedicalRoom> medicalRooms = (await medicalRoomRepository.AllAsync()).ToList();
             (MedicalRoom?, int) medicalRoomWithFewestDoctors = new(null, int.MaxValue);
             medicalRooms.ForEach(async mr =>
@@ -55,6 +95,13 @@ namespace MyDoctor.API.Controllers
                 return NotFound(MedicalRoomNotFoundError);
             }
 
+
+            var scheduleIntervals = GenerateScheduleIntervals();
+            foreach (var scheduleInterval in scheduleIntervals)
+            {
+                await scheduleIntervalRepository.AddAsync(scheduleInterval);
+            }
+
             var ActionResultDoctorTuple = await CreateDoctorFromDto(dto);
 
             if (ActionResultDoctorTuple.Item2.GetType() != typeof(OkResult))
@@ -65,6 +112,8 @@ namespace MyDoctor.API.Controllers
 
             Doctor doctor = ActionResultDoctorTuple.Item1;
             medicalRoom.RegisterDoctors(new List<Doctor> { doctor });
+            doctor.RegisterScheduleIntervals(scheduleIntervals);
+            speciality.RegisterDoctor(doctor);
 
             //if (dto.ProfilePhoto == null)
             //{
@@ -92,6 +141,8 @@ namespace MyDoctor.API.Controllers
             await doctorRepository.AddAsync(doctor);
             await doctorRepository.SaveChangesAsync();
             await medicalRoomRepository.SaveChangesAsync();
+            await specialityRepository.SaveChangesAsync();
+            await scheduleIntervalRepository.SaveChangesAsync();
 
             return Ok(doctorRepository.GetMapper().Map<DisplayDoctorDto>(doctor));
         }
@@ -154,7 +205,7 @@ namespace MyDoctor.API.Controllers
             }
 
             string hashedPassword = AccountInfoManager.HashPassword(dto.UserDetails.Password);
-            var newDoctor = new Doctor(dto.UserDetails.Email, hashedPassword, dto.UserDetails.FirstName, dto.UserDetails.LastName, dto.Speciality);
+            var newDoctor = new Doctor(dto.UserDetails.Email, hashedPassword, dto.UserDetails.FirstName, dto.UserDetails.LastName);
 
             return (newDoctor, Ok());
         }

@@ -1,17 +1,18 @@
-﻿using MyDoctorApp.Domain.Models;
+﻿using MyDoctorApp.Domain.Helpers;
+using MyDoctorApp.Domain.Models;
 
 namespace MyDoctor.Tests.UnitTests.DomainTests
 {
     public class ScheduleIntervalTest
     {
         private DateTime Now = DateTime.Now;
-        private DateOnly Date;
+        private string WeekDay;
         private TimeOnly StartTime;
         private TimeOnly EndTime;
 
         public ScheduleIntervalTest()
         {
-            Date = DateOnly.FromDateTime(Now);
+            WeekDay = WeekDays.Monday.ToString();
             StartTime = TimeOnly.FromDateTime(Now);
             EndTime = TimeOnly.FromDateTime(Now);
         }
@@ -21,14 +22,13 @@ namespace MyDoctor.Tests.UnitTests.DomainTests
         public void Create()
         {
             // When
-            var si = new ScheduleInterval(Date, StartTime, EndTime, 10);
+            var si = new ScheduleInterval(WeekDay, StartTime, EndTime);
 
             // Then
             Assert.NotEqual(Guid.Empty, si.Id);
-            Assert.Equal(Date, si.Date);
+            Assert.Equal(WeekDay, si.DayOfWeek);
             Assert.Equal(StartTime, si.StartTime);
             Assert.Equal(EndTime, si.EndTime);
-            Assert.Equal(10, (int)si.AppointmentDuration);
 
             Assert.Null(si.Doctor);
             Assert.Equal(Guid.Empty, si.DoctorId);
@@ -38,7 +38,7 @@ namespace MyDoctor.Tests.UnitTests.DomainTests
         public void AttachToDoctor()
         {
             // Given
-            var si = new ScheduleInterval(Date, StartTime, EndTime, 15);
+            var si = new ScheduleInterval(WeekDay, StartTime, EndTime);
             var d = DoctorTest.CreateDefaultDoctor();
 
             // When
