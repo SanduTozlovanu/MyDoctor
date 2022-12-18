@@ -1,11 +1,8 @@
-using FluentValidation.AspNetCore;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using MyDoctorApp.Domain.Models;
+using MyDoctor.Application;
 using MyDoctorApp.Infrastructure;
-using MyDoctorApp.Infrastructure.Generics;
-using MyDoctorApp.Infrastructure.Generics.GenericRepositories;
 using System.Reflection;
+using Microsoft.AspNetCore.Mvc.Versioning;
+using FluentValidation.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
@@ -30,37 +27,24 @@ builder.Services.AddSwaggerGen(c =>
     c.IncludeXmlComments(xmlPath);
 });
 
-
+builder.Services.AddApiVersioning(o =>
+{
+    o.AssumeDefaultVersionWhenUnspecified = true;
+    o.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(1, 0);
+    o.ReportApiVersions = true;
+    o.ApiVersionReader = ApiVersionReader.Combine
+        (
+            new QueryStringApiVersionReader("api-version"),
+            new HeaderApiVersionReader("X-version"),
+            new MediaTypeApiVersionReader("ver")
+        );
+});
 builder.Services.AddControllers().AddFluentValidation(c => c.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly()));
-
-//builder.Services.AddFluentValidation();
-//builder.Services.AddFluentValidationAutoValidation();
-//builder.Services.AddFluentValidationClientsideAdapters();
-
-//builder.Services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters(c => c.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly()));
-// Add services to the container.
-builder.Services.AddDbContext<DatabaseContext>(options => options.UseSqlite("Data Source = MyDoctorApp.db"));
+builder.Services.AddApplicationServices();
+builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddScoped<DatabaseContext>();
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-builder.Services.AddScoped<IRepository<Appointment>, AppointmentRepository>();
-builder.Services.AddScoped<IRepository<AppointmentInterval>, AppointmentIntervalRepository>();
-builder.Services.AddScoped<IRepository<ScheduleInterval>, ScheduleIntervalRepository>();
-builder.Services.AddScoped<IRepository<Bill>, BillRepository>();
-builder.Services.AddScoped<IRepository<Doctor>, DoctorRepository>();
-builder.Services.AddScoped<IRepository<Drug>, DrugRepository>();
-builder.Services.AddScoped<IRepository<DrugStock>, DrugStockRepository>();
-builder.Services.AddScoped<IRepository<MedicalHistory>, MedicalHistoryRepository>();
-builder.Services.AddScoped<IRepository<MedicalRoom>, MedicalRoomRepository>();
-builder.Services.AddScoped<IRepository<Patient>, PatientRepository>();
-builder.Services.AddScoped<IRepository<Prescription>, PrescriptionRepository>();
-builder.Services.AddScoped<IRepository<Procedure>, ProcedureRepository>();
-builder.Services.AddScoped<IRepository<PrescriptedDrug>, PrescriptedDrugRepository>();
-builder.Services.AddScoped<IRepository<Speciality>, SpecialityRepository>();
-
 
 var app = builder.Build();
 

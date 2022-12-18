@@ -1,5 +1,7 @@
 ﻿using MyDoctor.API.Controllers;
 using MyDoctor.API.DTOs;
+using MyDoctor.Application.Commands.MedicalRoomCommands;
+using MyDoctor.Application.Responses;
 using MyDoctor.Tests.Helpers;
 using Newtonsoft.Json;
 using System.Net;
@@ -7,7 +9,7 @@ using System.Text;
 
 namespace MyDoctor.Tests.IntegTests
 {
-    public class DrugControllerTest : BaseControllerTest<DrugController>
+    public class DrugControllerTest : BaseControllerTest<DrugsController>
     {
         public DrugControllerTest(CustomWebApplicationFactory<Program> factory) : base(factory)
         {
@@ -18,10 +20,10 @@ namespace MyDoctor.Tests.IntegTests
         {
 
             // When
-            string request = "https://localhost:7244/api/MedicalRoom";
-            string request1 = "https://localhost:7244/api/DrugStock";
-            string request3 = "https://localhost:7244/api/Drug/{0}";
-            CreateMedicalRoomDto mdDto1 = new("Strada Farmaciei 8");
+            string request = "https://localhost:7244/api/v1/MedicalRooms";
+            string request1 = "https://localhost:7244/api/v1/DrugStocks";
+            string request3 = "https://localhost:7244/api/v1/Drugs/{0}";
+            CreateMedicalRoomCommand mdDto1 = new("Strada Farmaciei 8");
 
             var content1 = new StringContent(JsonConvert.SerializeObject(mdDto1), Encoding.UTF8, "application/json");
             var res1 = await HttpClient.PostAsync(request, content1);
@@ -29,9 +31,9 @@ namespace MyDoctor.Tests.IntegTests
             Assert.Equal(HttpStatusCode.OK, res1.StatusCode);
 
             var jsonString1 = await res1.Content.ReadAsStringAsync();
-            var cont1 = JsonConvert.DeserializeObject<DisplayMedicalRoomDto>(jsonString1);
+            var cont1 = JsonConvert.DeserializeObject<MedicalRoomResponse>(jsonString1);
             Assert.NotNull(cont1);
-            DisplayMedicalRoomDto medRoom1 = new(cont1.Id, mdDto1.Adress);
+            MedicalRoomResponse medRoom1 = new(cont1.Id, mdDto1.Adress);
 
             var res = await HttpClient.GetAsync(request1);
 
@@ -71,7 +73,7 @@ namespace MyDoctor.Tests.IntegTests
         [Fact]
         public async Task TestGetDrugs_WrongDrugStockId()
         {
-            string request3 = "https://localhost:7244/api/Drug/{0}";
+            string request3 = "https://localhost:7244/api/v1/Drugs/{0}";
 
             CreateDrugDto drugDto1 = new("Peniciline is bad", "Not Peniciline", 35.64, 5);
 
@@ -85,7 +87,7 @@ namespace MyDoctor.Tests.IntegTests
             var result = await HttpClient.PostAsync(string.Format(request3, "48db124a-e731-4664-9add-44172a403b90"), content);
             var jsonString1 = await result.Content.ReadAsStringAsync();
             Assert.Equal(HttpStatusCode.NotFound, result.StatusCode);
-            Assert.Equal(DrugController.DrugStockNotFoundError, jsonString1);
+            Assert.Equal(DrugsController.DrugStockNotFoundError, jsonString1);
         }
     }
 }

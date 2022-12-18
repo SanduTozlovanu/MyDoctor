@@ -5,13 +5,14 @@ using MyDoctorApp.Infrastructure.Generics;
 
 namespace MyDoctor.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
-    public class ProcedureController : ControllerBase
+    [ApiVersion("1.0")]
+    public class ProceduresController : ControllerBase
     {
         private readonly IRepository<Procedure> procedureRepository;
 
-        public ProcedureController(IRepository<Procedure> procedureRepository)
+        public ProceduresController(IRepository<Procedure> procedureRepository)
         {
             this.procedureRepository = procedureRepository;
         }

@@ -5,13 +5,14 @@ using MyDoctorApp.Infrastructure.Generics;
 
 namespace MyDoctor.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
-    public class MedicalHistoryController : ControllerBase
+    [ApiVersion("1.0")]
+    public class MedicalHistoriesController : ControllerBase
     {
         private readonly IRepository<MedicalHistory> medicalHistoryRepository;
 
-        public MedicalHistoryController(IRepository<MedicalHistory> medicalHistoryRepository)
+        public MedicalHistoriesController(IRepository<MedicalHistory> medicalHistoryRepository)
         {
             this.medicalHistoryRepository = medicalHistoryRepository;
         }

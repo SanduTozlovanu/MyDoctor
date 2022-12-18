@@ -6,15 +6,16 @@ using MyDoctorApp.Infrastructure.Generics;
 
 namespace MyDoctor.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
-    public class LoginController : ControllerBase
+    [ApiVersion("1.0")]
+    public class LoginsController : ControllerBase
     {
         public const string InvalidCredentialsError = "Invalid credentials!";
         private readonly IRepository<Patient> patientsRepository;
         private readonly IRepository<Doctor> doctorsRepository;
 
-        public LoginController(IRepository<Patient> patientsRepository,
+        public LoginsController(IRepository<Patient> patientsRepository,
             IRepository<Doctor> doctorsRepository)
         {
             this.patientsRepository = patientsRepository;

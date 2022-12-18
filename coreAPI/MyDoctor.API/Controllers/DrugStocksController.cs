@@ -5,13 +5,14 @@ using MyDoctorApp.Infrastructure.Generics;
 
 namespace MyDoctor.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
-    public class DrugStockController : ControllerBase
+    [ApiVersion("1.0")]
+    public class DrugStocksController : ControllerBase
     {
         private readonly IRepository<DrugStock> drugStockRepository;
 
-        public DrugStockController(IRepository<DrugStock> drugStockRepository)
+        public DrugStocksController(IRepository<DrugStock> drugStockRepository)
         {
             this.drugStockRepository = drugStockRepository;
         }
