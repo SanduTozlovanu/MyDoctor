@@ -1,4 +1,5 @@
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MyDoctorApp.Domain.Models;
 using MyDoctorApp.Infrastructure;
@@ -29,7 +30,14 @@ builder.Services.AddSwaggerGen(c =>
     c.IncludeXmlComments(xmlPath);
 });
 
+
 builder.Services.AddControllers().AddFluentValidation(c => c.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly()));
+
+//builder.Services.AddFluentValidation();
+//builder.Services.AddFluentValidationAutoValidation();
+//builder.Services.AddFluentValidationClientsideAdapters();
+
+//builder.Services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters(c => c.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly()));
 // Add services to the container.
 builder.Services.AddDbContext<DatabaseContext>(options => options.UseSqlite("Data Source = MyDoctorApp.db"));
 builder.Services.AddControllers();

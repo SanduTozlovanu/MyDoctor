@@ -13,17 +13,11 @@ namespace MyDoctor.Tests.IntegTests
         {
         }
 
-        private void Init()
-        {
-
-        }
-
         [Fact]
         public async Task TestCreatePacient_Valid()
         {
 
             // Given
-            Init();
 
             // When
             string request = "https://localhost:7244/api/Patient";
@@ -48,7 +42,6 @@ namespace MyDoctor.Tests.IntegTests
         {
 
             // Given
-            Init();
 
             // When
             string request = "https://localhost:7244/api/Patient";
@@ -72,7 +65,6 @@ namespace MyDoctor.Tests.IntegTests
         {
 
             // Given
-            Init();
 
             // When
             string request = "https://localhost:7244/api/Patient";
@@ -92,7 +84,6 @@ namespace MyDoctor.Tests.IntegTests
         {
 
             // Given
-            Init();
 
             // When
             string request = "https://localhost:7244/api/Patient";
