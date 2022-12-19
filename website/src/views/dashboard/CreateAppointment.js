@@ -9,8 +9,6 @@ import {
   Container,
   Row,
   Col,
-  // eslint-disable-next-line
-  Label,
   Button,
   CardFooter,
 } from 'reactstrap'
@@ -22,12 +20,10 @@ import DoctorApi from 'api/doctor'
 import Header from 'components/Headers/Header.js'
 
 const CreateAppointment = () => {
-  const [date, setDate] = useState(new Date())
   const [speciality, setSpeciality] = useState('')
   const [specialities, setSpecialities] = useState([])
   const [error, setError] = useState('')
   const [doctors, setDoctors] = useState([])
- 
   useEffect(() => {
     const fetchData = async () => {
       await getSpecialities()
@@ -98,7 +94,7 @@ const CreateAppointment = () => {
                     <h3 className="mt-3">Choose your Doctor</h3>
                     <Row>
                       {doctors && doctors.length ? doctors.map((doc, index) => {
-                        var array = new Uint32Array(1)
+                        let array = new Uint32Array(1)
                         return (
                           <Col
                             className="text-left"

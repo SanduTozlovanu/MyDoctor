@@ -15,7 +15,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import { Link } from "react-router-dom";
+import { Link, useHistory  } from "react-router-dom";
 // reactstrap components
 import {
   DropdownMenu,
@@ -27,11 +27,8 @@ import {
   Container,
   Media
 } from "reactstrap";
-import { useHistory } from "react-router-dom";
 import { useUserContext } from 'context/UserContext'
-import { useEffect } from "react";
-import { useState } from "react";
-
+import { useEffect, useState } from "react";
 
 const AdminNavbar = (props) => {
   const history = useHistory()
