@@ -3,6 +3,7 @@ using MyDoctorApp.Infrastructure;
 using System.Reflection;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using FluentValidation.AspNetCore;
+using FluentValidation;
 
 var builder = WebApplication.CreateBuilder(args);
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
@@ -39,7 +40,8 @@ builder.Services.AddApiVersioning(o =>
             new MediaTypeApiVersionReader("ver")
         );
 });
-builder.Services.AddControllers().AddFluentValidation(c => c.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly()));
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddControllers();
