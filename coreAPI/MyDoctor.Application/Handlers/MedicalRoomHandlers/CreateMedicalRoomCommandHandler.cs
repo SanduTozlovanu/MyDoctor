@@ -20,7 +20,7 @@ namespace MyDoctor.Application.Handlers.MedicalRoomHandlers
         }
         public async Task<MedicalRoomResponse> Handle(CreateMedicalRoomCommand request, CancellationToken cancellationToken)
         {
-            MedicalRoom medicalRoomEntity = MedicalRoomMapper.Mapper.Map<MedicalRoom>(request);
+            MedicalRoom medicalRoomEntity = AvailableAppointmentIntervalsMapper.Mapper.Map<MedicalRoom>(request);
             if (medicalRoomEntity == null)
             {
                 throw new ApplicationException("Issue with the mapper");
@@ -31,7 +31,7 @@ namespace MyDoctor.Application.Handlers.MedicalRoomHandlers
             await drugStockRepository.AddAsync(drugStock);
             await medicalRoomRepository.SaveChangesAsync();
             await drugStockRepository.SaveChangesAsync();
-            return MedicalRoomMapper.Mapper.Map<MedicalRoomResponse>(newMedicalRoomEntity);
+            return AvailableAppointmentIntervalsMapper.Mapper.Map<MedicalRoomResponse>(newMedicalRoomEntity);
         }
     }
 }

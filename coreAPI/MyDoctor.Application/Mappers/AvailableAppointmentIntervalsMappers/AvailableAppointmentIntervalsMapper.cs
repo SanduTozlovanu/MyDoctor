@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 
-namespace MyDoctor.Application.Mappers.MedicalRoomMappers
+namespace MyDoctor.Application.Mappers.AvailableAppointmentIntervalsMappers
 {
     public class AvailableAppointmentIntervalsMapper
     {

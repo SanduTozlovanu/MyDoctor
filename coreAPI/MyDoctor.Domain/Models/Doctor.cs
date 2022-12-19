@@ -49,5 +49,47 @@ namespace MyDoctorApp.Domain.Models
             base.Update(doctor);
             Speciality = doctor.Speciality;
         }
+
+        public List<Tuple<TimeOnly, TimeOnly>> GetAvailableAppointmentIntervals(
+            DateOnly date,
+            List<ScheduleInterval> scheduleIntervals,
+            List<AppointmentInterval> appointmentIntervals)
+        {
+            var weekDay = date.ToString("dddd");
+            var appointmentDurationInMins = 30;
+            List<Tuple<TimeOnly, TimeOnly>> availableIntervals = new List<Tuple<TimeOnly, TimeOnly>>();
+            foreach (var interval in scheduleIntervals)
+            {
+                if (interval.DayOfWeek.ToString() == weekDay)
+                {
+                    TimeOnly intervalStartTime;
+                    TimeOnly intervalEndTime = interval.StartTime;
+
+                    while ((interval.EndTime - intervalEndTime).TotalMinutes >= appointmentDurationInMins)
+                    {
+                        intervalStartTime = intervalEndTime;
+                        intervalEndTime = intervalStartTime.AddMinutes(appointmentDurationInMins);
+                        bool skipCurrentInterval = false;
+                        foreach (var appointmentInterval in appointmentIntervals)
+                        {
+                            if (appointmentInterval.StartTime.IsBetween(intervalStartTime, intervalEndTime) ||
+                                appointmentInterval.EndTime.IsBetween(intervalStartTime, intervalEndTime) ||
+                                appointmentInterval.StartTime == intervalStartTime ||
+                                appointmentInterval.EndTime == intervalEndTime)
+                            {
+                                skipCurrentInterval = true;
+                                break;
+                            }
+                        }
+                        if (!skipCurrentInterval)
+                        {
+                            availableIntervals.Add(Tuple.Create(intervalStartTime, intervalEndTime));
+                        }
+                    }
+                    break;
+                }
+            }
+            return availableIntervals;
+        }
     }
 }

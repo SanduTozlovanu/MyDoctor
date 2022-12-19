@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyDoctor.API.DTOs;
 using MyDoctor.API.Helpers;
+using MyDoctor.Application.Mappers.MedicalRoomMappers;
+using MyDoctor.Application.Mappers.ScheduleIntervalMappers;
+using MyDoctor.Application.Response;
 using MyDoctorApp.Domain.Helpers;
 using MyDoctorApp.Domain.Models;
 using MyDoctorApp.Infrastructure.Generics;
@@ -24,18 +27,24 @@ namespace MyDoctor.API.Controllers
         private readonly IRepository<Patient> patientRepository;
         private readonly IRepository<Speciality> specialityRepository;
         private readonly IRepository<ScheduleInterval> scheduleIntervalRepository;
+        private readonly IRepository<Appointment> appointmentsRepository;
+        private readonly IRepository<AppointmentInterval> appointmentIntervalsRepository;
 
         public DoctorsController(IRepository<Doctor> doctorRepository,
             IRepository<MedicalRoom> medicalRoomRepository,
             IRepository<Patient> patientRepository,
             IRepository<Speciality> specialityRepository,
-            IRepository<ScheduleInterval> scheduleIntervalRepository)
+            IRepository<ScheduleInterval> scheduleIntervalRepository,
+            IRepository<Appointment> appointmentsRepository,
+            IRepository<AppointmentInterval> appointmentIntervalsRepository)
         {
             this.doctorRepository = doctorRepository;
             this.medicalRoomRepository = medicalRoomRepository;
             this.patientRepository = patientRepository;
             this.specialityRepository = specialityRepository;
             this.scheduleIntervalRepository = scheduleIntervalRepository;
+            this.appointmentsRepository = appointmentsRepository;
+            this.appointmentIntervalsRepository = appointmentIntervalsRepository;
         }
 
         private static List<ScheduleInterval> GenerateScheduleIntervals()
@@ -66,6 +75,36 @@ namespace MyDoctor.API.Controllers
             var doctors = await doctorRepository.FindAsync(d => d.SpecialityID == specialityId);
 
             return Ok(doctors.Select(d => doctorRepository.GetMapper().Map<DisplayDoctorDto>(d)));
+        }
+
+        [HttpGet("get_available_appointment_schedule/{doctorId:guid}")]
+        public async Task<IActionResult> GetAvailableAppointmentSchedule(Guid doctorId, DateOnly dateOnly)
+        {
+
+            var doctor = await doctorRepository.GetAsync(doctorId);
+            if (doctor == null)
+            {
+                return NotFound();
+            }
+
+            var scheduleIntervs = (await scheduleIntervalRepository.FindAsync(si => si.DoctorId == doctorId)).ToList();
+            var appointments = (await appointmentsRepository.FindAsync(a => a.DoctorId == doctorId)).ToList();
+            var appointmentsIntervs = new List<AppointmentInterval>();
+            foreach (var appointment in appointments)
+            {
+                var appointmentInterval = (await appointmentIntervalsRepository.FindAsync(ai => ai.AppointmentId == appointment.Id)).SingleOrDefault();
+                if (appointmentInterval != null)
+                {
+                    appointmentsIntervs.Add(appointmentInterval);
+                }
+            }
+            var intervs = new List<AvailableAppointmentIntervalsResponse>();
+            foreach (var interval in doctor.GetAvailableAppointmentIntervals(dateOnly, scheduleIntervs, appointmentsIntervs))
+            {
+                intervs.Add(new AvailableAppointmentIntervalsResponse(interval.Item1, interval.Item2));
+            }
+
+            return Ok(intervs);
         }
 
         [HttpPost("speciality")]
