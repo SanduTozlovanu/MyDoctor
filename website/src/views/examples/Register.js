@@ -40,6 +40,14 @@ import AuthApi from 'api/auth'
 import { useHistory } from 'react-router-dom'
 import { useUserContext } from "context/UserContext";
 import DoctorApi from 'api/doctor'
+
+const hasSpecialChars = (password, rule) =>{
+  console.log(rule.split(""))
+  if (rule.split("").some(v => password.includes(v))) {
+   return true;
+}
+  return false;
+}
 const Register = () => {
   const [accountType, setAccountType] = useState('')
   const [firstName, setFirstName] = useState('')
@@ -49,7 +57,6 @@ const Register = () => {
   const [repeatPassword, setRepeatPassword] = useState('')
   const [age, setAge] = useState(0)
   const [error, setError] = useState(null)
-  const [passwordStrength, setPasswordStrength] = useState('Low')
   const [showPassword, setShowPassword] = useState(false)
   const [creating, setCreating] = useState(false)
 
@@ -57,22 +64,8 @@ const Register = () => {
   const history = useHistory()
   const { login: loginContext } = useUserContext()
 
-  var strongRegex = new RegExp(
-    '(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,50})',
-  )
-  var mediumRegex = new RegExp(
-    '(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z]))|((?=.*[A-Z])))(?=.{6,50})',
-  )
 
-  useEffect(() => {
-    if (strongRegex.test(password)) {
-      setPasswordStrength('Strong')
-    } else if (mediumRegex.test(password)) {
-      setPasswordStrength('Medium')
-    } else {
-      setPasswordStrength('Low')
-    }
-  }, [password])
+  
 
   useEffect(() => {
     setError(null)
@@ -113,8 +106,8 @@ const Register = () => {
       setError('Password do not match.')
       return true
     }
-    if (passwordStrength === 'Low') {
-      setError('Please create a stronger password.')
+    if (password.length < 8 || !hasSpecialChars(password, "!#$%&'()*+,-./:;<=>?@[\\]^_`{|}~")) {
+      setError('Please create a password longer than 8 characters which also contains at least one special character.')
       return true
     }
     return false
@@ -175,7 +168,6 @@ const Register = () => {
               setRepeatPassword={setRepeatPassword}
               setPassword={setPassword}
               setAge={setAge}
-              passwordStrength={passwordStrength}
               error={error}
               handleRegister={handleRegister}
               accountType={accountType}
@@ -245,7 +237,6 @@ const SecondStep = ({
   setRepeatPassword,
   setPassword,
   setAge,
-  passwordStrength,
   error,
   handleRegister,
   accountType,
@@ -361,22 +352,6 @@ const SecondStep = ({
               </InputGroup>
             </FormGroup>
           )}
-          <div className="text-muted font-italic">
-            <small>
-              Password strength:{' '}
-              <span
-                className={`${
-                  passwordStrength === 'Low'
-                    ? 'text-danger'
-                    : passwordStrength === 'Medium'
-                    ? 'text-warning'
-                    : 'text-success'
-                } font-weight-700`}
-              >
-                {passwordStrength}
-              </span>
-            </small>
-          </div>
           <Row className="my-4">
             <Col xs="12">
               <div className="custom-control custom-control-alternative custom-checkbox">
