@@ -69,9 +69,8 @@ gulp.task("licenses", async function () {
 =========================================================
 
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
+ After pipe was an empty return;
 */`)
     )
     .pipe(gulp.dest("./", { overwrite: true }));
-  return;
 });

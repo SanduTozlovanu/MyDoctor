@@ -22,13 +22,13 @@ const Chart = require("chart.js");
 //
 
 Chart.elements.Rectangle.prototype.draw = function () {
-  var ctx = this._chart.ctx;
-  var vm = this._view;
-  var left, right, top, bottom, signX, signY, borderSkipped, radius;
-  var borderWidth = vm.borderWidth;
+  let ctx = this._chart.ctx;
+  let vm = this._view;
+  let left, right, top, bottom, signX, signY, borderSkipped;
+  let borderWidth = vm.borderWidth;
   // Set Radius Here
   // If radius is large enough to cause drawing errors a max radius is imposed
-  var cornerRadius = 6;
+  let cornerRadius = 6;
 
   if (!vm.horizontal) {
     // bar
@@ -54,15 +54,15 @@ Chart.elements.Rectangle.prototype.draw = function () {
   // adjust the sizes to fit if we're setting a stroke on the line
   if (borderWidth) {
     // borderWidth shold be less than bar width and bar height.
-    var barSize = Math.min(Math.abs(left - right), Math.abs(top - bottom));
+    let barSize = Math.min(Math.abs(left - right), Math.abs(top - bottom));
     borderWidth = borderWidth > barSize ? barSize : borderWidth;
-    var halfStroke = borderWidth / 2;
+    let halfStroke = borderWidth / 2;
     // Adjust borderWidth when bar top position is near vm.base(zero).
-    var borderLeft = left + (borderSkipped !== "left" ? halfStroke * signX : 0);
-    var borderRight =
+    let borderLeft = left + (borderSkipped !== "left" ? halfStroke * signX : 0);
+    let borderRight =
       right + (borderSkipped !== "right" ? -halfStroke * signX : 0);
-    var borderTop = top + (borderSkipped !== "top" ? halfStroke * signY : 0);
-    var borderBottom =
+    let borderTop = top + (borderSkipped !== "top" ? halfStroke * signY : 0);
+    let borderBottom =
       bottom + (borderSkipped !== "bottom" ? -halfStroke * signY : 0);
     // not become a vertical line?
     if (borderLeft !== borderRight) {
@@ -84,7 +84,7 @@ Chart.elements.Rectangle.prototype.draw = function () {
   // Corner points, from bottom-left to bottom-right clockwise
   // | 1 2 |
   // | 0 3 |
-  var corners = [
+  let corners = [
     [left, bottom],
     [left, top],
     [right, top],
@@ -92,8 +92,8 @@ Chart.elements.Rectangle.prototype.draw = function () {
   ];
 
   // Find first (starting) corner with fallback to 'bottom'
-  var borders = ["bottom", "left", "top", "right"];
-  var startCorner = borders.indexOf(borderSkipped, 0);
+  let borders = ["bottom", "left", "top", "right"];
+  let startCorner = borders.indexOf(borderSkipped, 0);
   if (startCorner === -1) {
     startCorner = 0;
   }
@@ -103,24 +103,23 @@ Chart.elements.Rectangle.prototype.draw = function () {
   }
 
   // Draw rectangle from 'startCorner'
-  var corner = cornerAt(0);
+  let corner = cornerAt(0);
   ctx.moveTo(corner[0], corner[1]);
 
-  for (var i = 1; i < 4; i++) {
+  for (let i = 1; i < 4; i++) {
     corner = cornerAt(i);
     let nextCornerId = i + 1;
     if (nextCornerId === 4) {
       nextCornerId = 0;
     }
 
-    // let nextCorner = cornerAt(nextCornerId);
-
+  
     let width = corners[2][0] - corners[1][0];
     let height = corners[0][1] - corners[1][1];
     let x = corners[1][0];
     let y = corners[1][1];
     // eslint-disable-next-line
-    var radius = cornerRadius;
+    let radius = cornerRadius;
 
     // Fix radius being too large
     if (radius > height / 2) {
@@ -147,13 +146,13 @@ Chart.elements.Rectangle.prototype.draw = function () {
   }
 };
 
-var mode = "light"; //(themeMode) ? themeMode : 'light';
-var fonts = {
+let mode = "light"; //(themeMode) ? themeMode : 'light';
+let fonts = {
   base: "Open Sans"
 };
 
 // Colors
-var colors = {
+let colors = {
   gray: {
     100: "#f6f9fc",
     200: "#e9ecef",
@@ -184,7 +183,7 @@ var colors = {
 // Chart.js global options
 function chartOptions() {
   // Options
-  var options = {
+  let options = {
     defaults: {
       global: {
         responsive: true,
@@ -234,11 +233,11 @@ function chartOptions() {
       doughnut: {
         cutoutPercentage: 83,
         legendCallback: function (chart) {
-          var data = chart.data;
-          var content = "";
+          let data = chart.data;
+          let content = "";
 
           data.labels.forEach(function (label, index) {
-            var bgColor = data.datasets[0].backgroundColor[index];
+            let bgColor = data.datasets[0].backgroundColor[index];
 
             content += '<span class="chart-legend-item">';
             content +=
@@ -297,7 +296,7 @@ function chartOptions() {
 
 // Parse global options
 function parseOptions(parent, options) {
-  for (var item in options) {
+  for (let item in options) {
     if (typeof options[item] !== "object") {
       parent[item] = options[item];
     } else {
@@ -329,9 +328,9 @@ let chartExample1 = {
     tooltips: {
       callbacks: {
         label: function (item, data) {
-          var label = data.datasets[item.datasetIndex].label || "";
-          var yLabel = item.yLabel;
-          var content = "";
+          let label = data.datasets[item.datasetIndex].label || "";
+          let yLabel = item.yLabel;
+          let content = "";
 
           if (data.datasets.length > 1) {
             content += label;
@@ -387,9 +386,9 @@ let chartExample2 = {
     tooltips: {
       callbacks: {
         label: function (item, data) {
-          var label = data.datasets[item.datasetIndex].label || "";
-          var yLabel = item.yLabel;
-          var content = "";
+          let label = data.datasets[item.datasetIndex].label || "";
+          let yLabel = item.yLabel;
+          let content = "";
           if (data.datasets.length > 1) {
             content += label;
           }
