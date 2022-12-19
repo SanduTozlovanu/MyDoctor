@@ -11,9 +11,7 @@ import {
   Button,
 } from 'reactstrap'
 // core components
-import { useUserContext } from 'context/UserContext'
-import { useState } from 'react'
-import { useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import DoctorApi from 'api/doctor'
 import Header from 'components/Headers/Header'
 
