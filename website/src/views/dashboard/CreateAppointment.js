@@ -64,6 +64,8 @@ const CreateAppointment = () => {
     fetchData()
   }, [speciality])
 
+  const crypto = window.crypto
+
   return (
     <>
       <Header />
@@ -96,6 +98,7 @@ const CreateAppointment = () => {
                     <h3 className="mt-3">Choose your Doctor</h3>
                     <Row>
                       {doctors && doctors.length ? doctors.map((doc, index) => {
+                        var array = new Uint32Array(1)
                         return (
                           <Col
                             className="text-left"
@@ -142,7 +145,7 @@ const CreateAppointment = () => {
                                       {doc.speciality}
                                     </h5>
                                     <h3 className="mb-0 text-success">
-                                      ${Math.floor(Math.random() * 100)}
+                                      ${crypto.getRandomValues(array)}
                                     </h3>
                                   </Col>
                                   <Col

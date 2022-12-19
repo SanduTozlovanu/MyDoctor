@@ -66,8 +66,11 @@
     "sweetalert2": "^11.6.15"
   },
   "devDependencies": {
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.2",
     "gulp": "4.0.2",
-    "gulp-append-prepend": "1.0.9"
+    "gulp-append-prepend": "1.0.9",
+    "jest-enzyme": "^7.1.2"
   },
   "peerDependencies": {
     "react": ">=16.0.0",
