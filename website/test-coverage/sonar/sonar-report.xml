@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testExecutions version="1">
-    <file path="C:\Users\Teodora\Documents\GitHub\MyDoctor\website\src\tests\components\Header.test.js">
-        <testCase name="should test Header component" duration="9"/>
-    </file>
-    <file path="C:\Users\Teodora\Documents\GitHub\MyDoctor\website\src\tests\components\UserHeader.test.js">
-        <testCase name="should test Header component" duration="32"/>
-    </file>
-</testExecutions>
