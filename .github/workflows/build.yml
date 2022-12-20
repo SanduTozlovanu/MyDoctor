@@ -62,9 +62,6 @@ jobs:
           ls
           cd website
           npm install -D jest-sonar-reporter sonarqube-scanner
-          npx sonar-scanner \
-          -Dsonar.projectKey=SanduTozlovanu_MyDoctor_React \
-          -Dsonar.login="${{ secrets.SONAR_TOKEN }}" 
           npm run test -- --coverage . --watchAll=false
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
