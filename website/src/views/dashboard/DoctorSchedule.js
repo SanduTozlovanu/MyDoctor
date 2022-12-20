@@ -15,16 +15,6 @@ import { useState, useEffect } from 'react'
 import DoctorApi from 'api/doctor'
 import Header from 'components/Headers/Header'
 
-// function getDayName(date = new Date()) {
-//   const locale = 'en-US'
-//   return date.toLocaleDateString(locale, { weekday: 'long' })
-// }
-
-// function addDay(nrOfDays) {
-//   let date = new Date()
-//   date.setDate(date.getDate() + nrOfDays)
-//   return date
-// }
 
 const DoctorSchedule = () => {
   const [days, setDays] = useState([
