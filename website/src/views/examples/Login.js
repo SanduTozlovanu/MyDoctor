@@ -57,6 +57,7 @@ const Login = () => {
         password: password,
       }
       const response = await AuthApi.Login(credentials)
+      console.log(credentials, response.data)
       const user = response.data
       localStorage.setItem(
         'user',
