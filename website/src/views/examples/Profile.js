@@ -32,8 +32,7 @@ import {
 // core components
 import UserHeader from 'components/Headers/UserHeader.js'
 import { useUserContext } from 'context/UserContext'
-import { useState } from 'react'
-import { useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import DoctorApi from 'api/doctor'
 import PatientApi from 'api/patient'
 import Swal from 'sweetalert2'

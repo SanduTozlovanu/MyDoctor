@@ -345,7 +345,7 @@ const SecondStep = ({
                   </InputGroupText>
                 </InputGroupAddon>
                 <Input
-                  onChange={(e) => setAge(Math.abs(e.target.value))}
+                  onChange={(e) => setAge(Math.abs(Number(e.target.value)))}
                   placeholder="Age"
                   type="number"
                 />
@@ -433,9 +433,9 @@ const ThirdStep = ({ firstName, lastName, email, password, history }) => {
   }
 
   function uploadFile(event, type) {
-    var blobFile = event.target.files[0]
+    let blobFile = event.target.files[0]
     const img = new Image()
-    var url = window.URL.createObjectURL(blobFile)
+    let url = window.URL.createObjectURL(blobFile)
     img.src = url
     if (type === 'profile') {
       setProfilePhoto(img.src)
