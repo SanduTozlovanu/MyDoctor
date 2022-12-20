@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`should test AdminFooter component 1`] = `
+exports[`should test Login component 1`] = `
 <Fragment>
   <Col
     lg="5"
