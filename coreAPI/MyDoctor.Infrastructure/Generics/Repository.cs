@@ -41,14 +41,18 @@ namespace MyDoctorApp.Infrastructure.Generics
 
         public virtual T Update(T entity)
         {
-            return context.Update(entity)
-                .Entity;
+            return context.Update(entity).Entity;
         }
 
-        public virtual T Delete(T entity)
+        public virtual async Task<T> Delete(Guid id)
         {
-            return context.Remove(entity)
-                .Entity;
+            var entity = await context.FindAsync<T>(id);
+            if(entity == null)
+            {
+                throw new ArgumentException($"There is no {typeof(T).Name} with id = {id}");
+            }
+            context.Remove(entity);
+            return entity;
         }
 
         public async Task SaveChangesAsync()

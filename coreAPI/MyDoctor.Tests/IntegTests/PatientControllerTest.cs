@@ -7,7 +7,7 @@ using System.Text;
 
 namespace MyDoctor.Tests.IntegTests
 {
-    public class PatientControllerTest : BaseControllerTest<PatientController>
+    public class PatientControllerTest : BaseControllerTest<PatientsController>
     {
         public PatientControllerTest(CustomWebApplicationFactory<Program> factory) : base(factory)
         {
@@ -20,7 +20,7 @@ namespace MyDoctor.Tests.IntegTests
             // Given
 
             // When
-            string request = "https://localhost:7244/api/Patient";
+            string request = "https://localhost:7244/api/v1/Patients";
             var pDto = new CreatePatientDto(new CreateUserDto(RandomGenerators.CreateRandomEmail(), "Test1234", "Test", "Test"), 15);
 
             var content = new StringContent(JsonConvert.SerializeObject(pDto), Encoding.UTF8, "application/json");
@@ -44,7 +44,7 @@ namespace MyDoctor.Tests.IntegTests
             // Given
 
             // When
-            string request = "https://localhost:7244/api/Patient";
+            string request = "https://localhost:7244/api/v1/Patients";
             var pDto2 = new CreatePatientDto(new CreateUserDto("adresa@gmail.com", "Test1234", "Test", "Test"), 15);
 
             var content2 = new StringContent(JsonConvert.SerializeObject(pDto2), Encoding.UTF8, "application/json");
@@ -57,7 +57,7 @@ namespace MyDoctor.Tests.IntegTests
 
             // Then
             Assert.Equal(HttpStatusCode.BadRequest, res.StatusCode);
-            Assert.Equal(PatientController.UsedEmailError, actualJsonString);
+            Assert.Equal(PatientsController.UsedEmailError, actualJsonString);
         }
 
         [Fact]
@@ -67,7 +67,7 @@ namespace MyDoctor.Tests.IntegTests
             // Given
 
             // When
-            string request = "https://localhost:7244/api/Patient";
+            string request = "https://localhost:7244/api/v1/Patients";
             var pDto = new CreatePatientDto(new CreateUserDto("troller@gmail.com", "Test1234", "Test", "Test"), 100);
 
 
@@ -86,7 +86,7 @@ namespace MyDoctor.Tests.IntegTests
             // Given
 
             // When
-            string request = "https://localhost:7244/api/Patient";
+            string request = "https://localhost:7244/api/v1/Patients";
             var pDto = new CreatePatientDto(new CreateUserDto(RandomGenerators.CreateRandomEmail(), "Test1234", "Test", "Test"), 15);
 
 

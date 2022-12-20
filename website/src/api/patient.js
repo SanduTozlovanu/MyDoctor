@@ -2,10 +2,10 @@ import axios from './index'
 
 class PatientApi {
   static async UpdatePatient(data) {
-    return await axios.put(`/Patient/${data.userId}`, data)
+    return await axios.put(`/Patients/${data.userId}`, data)
   }
   static async DeletePatient(userId){
-    return await axios.delete(`Patient/${userId}`)
+    return await axios.delete(`Patients/${userId}`)
   }
 }
 
