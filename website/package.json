@@ -28,7 +28,6 @@
     "build": "react-scripts build",
     "build-win": "set CI=false&&react-scripts build",
     "test": "react-scripts test",
-    "test-coverage": "react-scripts test --coverageDirectory test-coverage --coverage --watchAll=false --testResultsProcessor jest-sonar-reporter",
     "eject": "react-scripts eject",
     "install:clean": "rm -rf node_modules/ && rm -rf package-lock.json && npm install && npm start",
     "compile:scss": "sass src/assets/scss/argon-dashboard-react.scss src/assets/css/argon-dashboard-react.css",
@@ -37,11 +36,6 @@
   },
   "eslintConfig": {
     "extends": "react-app"
-  },
-  "jestSonar":{
-    "reportPath": "test-coverage/sonar",
-    "reportFile": "sonar-report.xml",
-    "indent": 4
   },
   "browserslist": [
     ">0.2%",
@@ -55,7 +49,6 @@
     "bootstrap": "4.6.0",
     "chart.js": "2.9.4",
     "classnames": "2.3.1",
-    "jest-sonar-reporter": "^2.0.0",
     "moment": "2.29.4",
     "nouislider": "15.2.0",
     "react": ">=16.0.0",
@@ -78,7 +71,9 @@
     "enzyme-adapter-react-16": "^1.15.2",
     "gulp": "4.0.2",
     "gulp-append-prepend": "1.0.9",
-    "jest-enzyme": "^7.1.2"
+    "jest-enzyme": "^7.1.2",
+    "jest-sonar-reporter": "^2.0.0",
+    "sonarqube-scanner": "^2.9.1"
   },
   "peerDependencies": {
     "react": ">=16.0.0",
