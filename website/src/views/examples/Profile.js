@@ -266,6 +266,7 @@ const Profile = () => {
                             First name
                           </label>
                           <Input
+                            maxLength={20}
                             className="form-control-alternative"
                             defaultValue={firstName}
                             id="input-first-name"
@@ -284,6 +285,7 @@ const Profile = () => {
                             Last name
                           </label>
                           <Input
+                            maxLength={20}
                             className="form-control-alternative"
                             defaultValue={lastName}
                             id="input-last-name"
