@@ -56,7 +56,7 @@ const useUserContext = () => {
 
   // if `undefined`, throw an error
   if (context === undefined) {
-    throw new Error('useUserContext was used outside of its Provider')
+    return {};
   }
 
   return context
