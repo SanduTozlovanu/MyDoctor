@@ -5,15 +5,16 @@ using MyDoctorApp.Infrastructure.Generics;
 
 namespace MyDoctor.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
-    public class DrugController : ControllerBase
+    [ApiVersion("1.0")]
+    public class DrugsController : ControllerBase
     {
         public const string DrugStockNotFoundError = "Could not find a drugStock with this Id.";
         private readonly IRepository<Drug> drugRepository;
         private readonly IRepository<DrugStock> drugStockRepository;
 
-        public DrugController(IRepository<Drug> drugRepository,
+        public DrugsController(IRepository<Drug> drugRepository,
             IRepository<DrugStock> drugStockRepository)
         {
             this.drugRepository = drugRepository;

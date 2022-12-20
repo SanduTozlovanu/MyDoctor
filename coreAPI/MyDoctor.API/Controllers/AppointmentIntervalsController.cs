@@ -4,13 +4,14 @@ using MyDoctorApp.Infrastructure.Generics;
 
 namespace MyDoctor.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
-    public class AppointmentIntervalController : ControllerBase
+    [ApiVersion("1.0")]
+    public class AppointmentIntervalsController : ControllerBase
     {
         private readonly IRepository<AppointmentInterval> appointmentIntervalRepository;
 
-        public AppointmentIntervalController(IRepository<AppointmentInterval> appointmentIntervalRepository)
+        public AppointmentIntervalsController(IRepository<AppointmentInterval> appointmentIntervalRepository)
         {
             this.appointmentIntervalRepository = appointmentIntervalRepository;
         }

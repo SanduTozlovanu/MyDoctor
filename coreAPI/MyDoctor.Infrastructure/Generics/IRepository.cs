@@ -7,7 +7,7 @@ namespace MyDoctorApp.Infrastructure.Generics
     {
         Task<T> AddAsync(T entity);
         T Update(T entity);
-        T Delete(T entity);
+        Task<T> Delete(Guid id);
         Task<T?> GetAsync(Guid id);
         Task<IEnumerable<T>> AllAsync();
         Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate);

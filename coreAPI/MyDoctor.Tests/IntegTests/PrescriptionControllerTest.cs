@@ -1,5 +1,6 @@
 ﻿using MyDoctor.API.Controllers;
 using MyDoctor.API.DTOs;
+using MyDoctor.Application.Commands.MedicalRoomCommands;
 using MyDoctor.Tests.Helpers;
 using MyDoctorApp.Domain.Models;
 using Newtonsoft.Json;
@@ -8,7 +9,7 @@ using System.Text;
 
 namespace MyDoctor.Tests.IntegTests
 {
-    public class PrescriptionControllerTest : BaseControllerTest<PrescriptionController>
+    public class PrescriptionControllerTest : BaseControllerTest<PrescriptionsController>
     {
         private Guid appointmentId;
         private Guid drug1Id;
@@ -22,7 +23,7 @@ namespace MyDoctor.Tests.IntegTests
 
         private async Task Init()
         {
-            string request2 = "https://localhost:7244/api/Patient";
+            string request2 = "https://localhost:7244/api/v1/Patients";
             var pDto = new CreatePatientDto(new CreateUserDto(RandomGenerators.CreateRandomEmail(), "Test1234", "Test", "Test"), 15);
 
             var content2 = new StringContent(JsonConvert.SerializeObject(pDto), Encoding.UTF8, "application/json");
@@ -33,14 +34,14 @@ namespace MyDoctor.Tests.IntegTests
             patientId = contentPatient.Id;
 
 
-            string request3 = "https://localhost:7244/api/MedicalRoom";
-            CreateMedicalRoomDto mdDto = new("Strada Cabina 20");
+            string request3 = "https://localhost:7244/api/v1/MedicalRooms";
+            CreateMedicalRoomCommand mdDto = new("Strada Cabina 20");
 
             var content3 = new StringContent(JsonConvert.SerializeObject(mdDto), Encoding.UTF8, "application/json");
             var res3 = await HttpClient.PostAsync(request3, content3);
             Assert.Equal(HttpStatusCode.OK, res3.StatusCode);
 
-            string reqSpeciality = "https://localhost:7244/api/Speciality/create_speciality";
+            string reqSpeciality = "https://localhost:7244/api/v1/Specialities/create_speciality";
             CreateSpecialityDto sDto = new("Chirurg");
             var contSpeciality = new StringContent(JsonConvert.SerializeObject(sDto), Encoding.UTF8, "application/json");
             var resSpeciality = await HttpClient.PostAsync(reqSpeciality, contSpeciality);
@@ -49,7 +50,7 @@ namespace MyDoctor.Tests.IntegTests
             Assert.NotNull(dtoSpeciality);
             Assert.Equal(HttpStatusCode.OK, resSpeciality.StatusCode);
 
-            string request4 = "https://localhost:7244/api/Doctor/speciality";
+            string request4 = "https://localhost:7244/api/v1/Doctors/speciality";
             var pDto2 = new CreateDoctorDto(new CreateUserDto(RandomGenerators.CreateRandomEmail(), "Test1234", "Ion", "Cutelaba"), dtoSpeciality.Id);
 
             var content4 = new StringContent(JsonConvert.SerializeObject(pDto2), Encoding.UTF8, "application/json");
@@ -59,8 +60,8 @@ namespace MyDoctor.Tests.IntegTests
             Assert.NotNull(contentDoctor);
             doctorId = contentDoctor.Id;
 
-            string requestDrugStock = "https://localhost:7244/api/DrugStock";
-            string requestDrug = "https://localhost:7244/api/Drug/{0}";
+            string requestDrugStock = "https://localhost:7244/api/v1/DrugStocks";
+            string requestDrug = "https://localhost:7244/api/v1/Drugs/{0}";
             var resultDrugStock = await HttpClient.GetAsync(requestDrugStock);
 
             var jsonString = await resultDrugStock.Content.ReadAsStringAsync();
@@ -86,7 +87,7 @@ namespace MyDoctor.Tests.IntegTests
 
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
 
-            string requestAppointment = $"https://localhost:7244/api/Appointment/{contentPatient.Id}_{contentDoctor.Id}/create_appointment";
+            string requestAppointment = $"https://localhost:7244/api/v1/Appointments/{contentPatient.Id}_{contentDoctor.Id}/create_appointment";
             var aDto = new CreateAppointmentDto(50, DateTime.Today.AddDays(1), DateTime.Now.AddHours(1), DateTime.Now.AddHours(5));
             var content = new StringContent(JsonConvert.SerializeObject(aDto), Encoding.UTF8, "application/json");
             var res = await HttpClient.PostAsync(string.Format(requestAppointment, patientId.ToString(), doctorId.ToString()), content);
@@ -105,7 +106,7 @@ namespace MyDoctor.Tests.IntegTests
             await Init();
 
             // When
-            string request = "https://localhost:7244/api/Prescription/{0}";
+            string request = "https://localhost:7244/api/v1/Prescriptions/{0}";
             var procedure1dto = new CreateProcedureDto("Taierea piciorului", "Taierea piciorului drept cu cutitul", 64);
             var procedure2dto = new CreateProcedureDto("Taierea piciorului", "Taierea piciorului stang cu cutitul", 64);
             var pDto = new CreatePrescriptionDto("Amputare lunga si scurta", "Amputare", new List<GetDrugDto>() { new GetDrugDto(drug1Id, 2), new GetDrugDto(drug2Id, 1) },
@@ -126,7 +127,7 @@ namespace MyDoctor.Tests.IntegTests
         public async Task TestCreatePrescription_WrongAppointmentId()
         {
             await Init();
-            string request = "https://localhost:7244/api/Prescription/{0}";
+            string request = "https://localhost:7244/api/v1/Prescriptions/{0}";
             var procedure1dto = new CreateProcedureDto("Taierea piciorului", "Taierea piciorului drept cu cutitul", 64);
             var procedure2dto = new CreateProcedureDto("Taierea piciorului", "Taierea piciorului stang cu cutitul", 64);
             var pDto = new CreatePrescriptionDto("Amputare lunga si sccurta", "Amputare", new List<GetDrugDto>() { new GetDrugDto(drug1Id, 2), new GetDrugDto(drug2Id, 1) },
@@ -136,17 +137,17 @@ namespace MyDoctor.Tests.IntegTests
             var res = await HttpClient.PostAsync(string.Format(request, Guid.NewGuid().ToString()), content);
             var jsonString = await res.Content.ReadAsStringAsync();
             Assert.Equal(HttpStatusCode.NotFound, res.StatusCode);
-            Assert.Equal(PrescriptionController.AppointmentNotFoundError, jsonString);
+            Assert.Equal(PrescriptionsController.AppointmentNotFoundError, jsonString);
         }
 
         [Fact]
         public async Task TestCreatePrescription_DoctorNotFound()
         {
             await Init();
-            string requestDoctor = "https://localhost:7244/api/Doctor/{0}";
+            string requestDoctor = "https://localhost:7244/api/v1/Doctors/{0}";
             var resultDoctorDelete = await HttpClient.DeleteAsync(string.Format(requestDoctor, doctorId.ToString()));
             Assert.Equal(HttpStatusCode.OK, resultDoctorDelete.StatusCode);
-            string request = "https://localhost:7244/api/Prescription/{0}";
+            string request = "https://localhost:7244/api/v1/Prescriptions/{0}";
             var procedure1dto = new CreateProcedureDto("Taierea piciorului", "Taierea piciorului drept cu cutitul", 64);
             var procedure2dto = new CreateProcedureDto("Taierea piciorului", "Taierea piciorului stang cu cutitul", 64);
             var pDto = new CreatePrescriptionDto("Amputare lunga si scurta", "Amputare", new List<GetDrugDto>() { new GetDrugDto(drug1Id, 2), new GetDrugDto(drug2Id, 1) },
@@ -156,13 +157,13 @@ namespace MyDoctor.Tests.IntegTests
             var res = await HttpClient.PostAsync(string.Format(request, appointmentId.ToString()), content);
             var jsonString = await res.Content.ReadAsStringAsync();
             Assert.Equal(HttpStatusCode.NotFound, res.StatusCode);
-            Assert.Equal(PrescriptionController.AppointmentNotFoundError, jsonString);
+            Assert.Equal(PrescriptionsController.AppointmentNotFoundError, jsonString);
         }
         [Fact]
         public async Task TestCreatePrescription_DrugNotFound()
         {
             await Init();
-            string request = "https://localhost:7244/api/Prescription/{0}";
+            string request = "https://localhost:7244/api/v1/Prescriptions/{0}";
             var procedure1dto = new CreateProcedureDto("Taierea piciorului", "Taierea piciorului drept cu cutitul", 64);
             var procedure2dto = new CreateProcedureDto("Taierea piciorului", "Taierea piciorului stang cu cutitul", 64);
             var pDto = new CreatePrescriptionDto("Amputare lunga si scurta", "Amputare", new List<GetDrugDto>() { new GetDrugDto(Guid.NewGuid(), 2), new GetDrugDto(drug2Id, 1) },
@@ -172,7 +173,7 @@ namespace MyDoctor.Tests.IntegTests
             var res = await HttpClient.PostAsync(string.Format(request, appointmentId.ToString()), content);
             var jsonString = await res.Content.ReadAsStringAsync();
             Assert.Equal(HttpStatusCode.NotFound, res.StatusCode);
-            Assert.Equal(PrescriptionController.DrugCreateError, jsonString);
+            Assert.Equal(PrescriptionsController.DrugCreateError, jsonString);
         }
     }
 }

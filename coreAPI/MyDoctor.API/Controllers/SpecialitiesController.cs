@@ -5,15 +5,16 @@ using MyDoctorApp.Infrastructure.Generics;
 
 namespace MyDoctor.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
-    public class SpecialityController : ControllerBase
+    [ApiVersion("1.0")]
+    public class SpecialitiesController : ControllerBase
     {
         public const string PatientNotFoundError = "Could not find a patient with this Id.";
         public const string DoctorNotFoundError = "Could not find a doctor with this Id.";
         private readonly IRepository<Speciality> specialityRepository;
 
-        public SpecialityController(IRepository<Speciality> specialityRepository)
+        public SpecialitiesController(IRepository<Speciality> specialityRepository)
         { 
             this.specialityRepository = specialityRepository;
         }

@@ -8,7 +8,6 @@ namespace MyDoctor.API.Helpers
     {
         public ApplicationMapper()
         {
-            CreateMap<MedicalRoom, DisplayMedicalRoomDto>().ReverseMap();
             CreateMap<Doctor, DisplayDoctorDto>();
             CreateMap<Patient, DisplayPatientDto>();
             CreateMap<DrugStock, DisplayDrugStockDto>().ReverseMap();
@@ -30,7 +29,6 @@ namespace MyDoctor.API.Helpers
             CreateMap<CreatePatientDto, Patient>();
             CreateMap<CreateDrugDto, Drug>();
             CreateMap<CreatePatientDto, Patient>();
-            CreateMap<CreateMedicalRoomDto, MedicalRoom>();
             CreateMap<CreateSpecialityDto, Speciality>();
 
 

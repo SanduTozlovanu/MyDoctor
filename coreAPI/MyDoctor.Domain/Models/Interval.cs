@@ -10,7 +10,12 @@
         }
 
         public Guid Id { get; private set; }
-        public TimeOnly StartTime { get; private set; }
-        public TimeOnly EndTime { get; private set; }
+        public TimeOnly StartTime { get; protected set; }
+        public TimeOnly EndTime { get; protected set; }
+        public void Update(TimeOnly startTime, TimeOnly endTime)
+        {
+            this.StartTime = startTime;
+            this.EndTime = endTime;
+        }
     }
 }

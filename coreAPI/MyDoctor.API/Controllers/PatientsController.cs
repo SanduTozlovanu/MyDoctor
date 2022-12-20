@@ -6,19 +6,21 @@ using MyDoctorApp.Infrastructure.Generics;
 
 namespace MyDoctor.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
-    public class PatientController : ControllerBase
+    [ApiVersion("1.0")]
+    public class PatientsController : ControllerBase
     {
         public const string UsedEmailError = "The email is already used!";
         public const string InvalidEmailError = "The email is invalid!";
         public const string BigAgeError = "Too big age value.";
         private const string CouldNotCreatePatientError = "Could not create a patient from the dto.";
+        private const string InvalidPatientIdError = "There doesn't exist such patient with this id.";
         private readonly IRepository<Patient> patientRepository;
         private readonly IRepository<MedicalHistory> medicalHistoryRepository;
         private readonly IRepository<Doctor> doctorRepository;
 
-        public PatientController(IRepository<Patient> patientRepository,
+        public PatientsController(IRepository<Patient> patientRepository,
             IRepository<MedicalHistory> medicalHistoryRepository,
             IRepository<Doctor> doctorRepository)
         {
@@ -86,13 +88,13 @@ namespace MyDoctor.API.Controllers
         [HttpDelete("{patientId:guid}")]
         public async Task<IActionResult> Delete(Guid patientId)
         {
-            var patient = await patientRepository.GetAsync(patientId);
-            if (patient == null)
+            try
             {
-                return NotFound();
+                await patientRepository.Delete(patientId);
+            }catch (ArgumentException)
+            {
+                return BadRequest(InvalidPatientIdError);
             }
-
-            patientRepository.Delete(patient);
 
             await patientRepository.SaveChangesAsync();
             return Ok();
