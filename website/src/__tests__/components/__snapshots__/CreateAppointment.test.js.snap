@@ -96,11 +96,32 @@ exports[`should test CreateAppointment component 1`] = `
                   onChange={[Function]}
                   options={Array []}
                 />
-                <h3
-                  className="mt-3"
-                >
-                  Choose your Doctor
-                </h3>
+              </Col>
+            </Row>
+            <Row
+              tag="div"
+              widths={
+                Array [
+                  "xs",
+                  "sm",
+                  "md",
+                  "lg",
+                  "xl",
+                ]
+              }
+            >
+              <Col
+                tag="div"
+                widths={
+                  Array [
+                    "xs",
+                    "sm",
+                    "md",
+                    "lg",
+                    "xl",
+                  ]
+                }
+              >
                 <Row
                   tag="div"
                   widths={
@@ -114,8 +135,22 @@ exports[`should test CreateAppointment component 1`] = `
                   }
                 />
               </Col>
+            </Row>
+            <Row
+              className="d-none"
+              tag="div"
+              widths={
+                Array [
+                  "xs",
+                  "sm",
+                  "md",
+                  "lg",
+                  "xl",
+                ]
+              }
+            >
               <Col
-                className="text-left"
+                className="text-left mt-3"
                 lg="6"
                 md="12"
                 sm="12"
@@ -131,9 +166,7 @@ exports[`should test CreateAppointment component 1`] = `
                 }
                 xs="12"
               >
-                <h3
-                  className="mt-3"
-                >
+                <h3>
                   Select Date
                 </h3>
                 <F
@@ -189,6 +222,7 @@ exports[`should test CreateAppointment component 1`] = `
               >
                 <Button
                   color="primary btn-lg"
+                  disabled={true}
                   tag="button"
                 >
                   Create Appointment
