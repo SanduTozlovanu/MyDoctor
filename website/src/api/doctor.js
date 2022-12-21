@@ -14,6 +14,7 @@ class DoctorApi {
     return await axios.delete(`/Doctors/${userId}`)
   }
   static async SendSchedule(data){
+    console.log(data)
     return await axios.put(`/ScheduleIntervals`, data);
   }
   static async GetSchedule(userId){

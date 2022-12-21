@@ -46,6 +46,7 @@ const DoctorSchedule = () => {
       setError(err)
     }
   }
+
   const updateState = (index ,target , value) => {
     setDays(days.map(day => {
       if (days.indexOf(day) === index) {
@@ -58,9 +59,16 @@ const DoctorSchedule = () => {
       return day;
     }))
   };
+  
   const sendSchedule = async () => {
     try {
-     const data = {...days, doctorId: user.id};
+      const data = days.map(item => {
+        return {
+          id: item.id,
+          startTime: item.startTime,
+          endTime: item.endTime
+        }
+      })
      await DoctorApi.SendSchedule(data)
     } catch (error) {
       console.log(error)
@@ -68,7 +76,7 @@ const DoctorSchedule = () => {
   }
 
 useEffect(() => {
-  console.log("days", days)
+  console.log("useeffect days", days)
 }, [days])
   return (
     <>
