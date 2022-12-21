@@ -4,7 +4,7 @@ namespace MyDoctorApp.Domain.Models
 {
     public class Appointment
     {
-        public Appointment(double price) //NOSONAR
+        public Appointment(double price) 
         {
             Id = Guid.NewGuid();
             Price = price;

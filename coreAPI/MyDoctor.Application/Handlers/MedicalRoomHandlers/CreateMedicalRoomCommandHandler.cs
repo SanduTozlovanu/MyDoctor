@@ -4,7 +4,6 @@ using MyDoctor.Application.Mappers.MedicalRoomMappers;
 using MyDoctor.Application.Responses;
 using MyDoctorApp.Domain.Models;
 using MyDoctorApp.Infrastructure.Generics;
-using MyDoctorApp.Infrastructure.Generics.GenericRepositories;
 
 namespace MyDoctor.Application.Handlers.MedicalRoomHandlers
 {
@@ -23,7 +22,7 @@ namespace MyDoctor.Application.Handlers.MedicalRoomHandlers
             MedicalRoom medicalRoomEntity = AvailableAppointmentIntervalsMapper.Mapper.Map<MedicalRoom>(request);
             if (medicalRoomEntity == null)
             {
-                throw new ArgumentException("Issue with the mapper");
+                throw new ApplicationException("Issue with the mapper"); 
             }
             var drugStock = new DrugStock();
             medicalRoomEntity.RegisterDrugStock(drugStock);

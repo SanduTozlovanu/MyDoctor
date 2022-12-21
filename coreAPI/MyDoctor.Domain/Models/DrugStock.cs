@@ -4,7 +4,7 @@ namespace MyDoctorApp.Domain.Models
 {
     public class DrugStock
     {
-        public DrugStock() //NOSONAR
+        public DrugStock() 
         {
             Id = Guid.NewGuid();
         }

@@ -2,7 +2,7 @@
 {
     public class PrescriptedDrug
     {
-        public PrescriptedDrug(uint quantity) //NOSONAR
+        public PrescriptedDrug(uint quantity) 
         {
             Id = Guid.NewGuid();
             Quantity = quantity;
