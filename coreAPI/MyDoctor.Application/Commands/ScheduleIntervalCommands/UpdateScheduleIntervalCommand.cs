@@ -10,7 +10,11 @@ namespace MyDoctor.Application.Commands.ScheduleIntervalCommands
             this.ScheduleIntervalList = scheduleIntervalList;
         }
 
-        public List<UpdateScheduleIntervalDto> ScheduleIntervalList;
+        private List<UpdateScheduleIntervalDto> ScheduleIntervalList;
+        public List<UpdateScheduleIntervalDto> GetScheduleIntervalList()
+        {
+            return this.ScheduleIntervalList;
+        }
     }
     public class UpdateScheduleIntervalDto
     {
