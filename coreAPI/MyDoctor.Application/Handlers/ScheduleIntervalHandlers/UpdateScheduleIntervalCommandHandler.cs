@@ -19,7 +19,7 @@ namespace MyDoctor.Application.Handlers.ScheduleIntervalHandlers
         public async Task<List<ScheduleIntervalResponse>> Handle(UpdateScheduleIntervalCommand request, CancellationToken cancellationToken)
         {
             List<ScheduleInterval> scheduleIntervals = new();
-            request.GetScheduleIntervalList().ForEach(async interval =>
+            request.ScheduleIntervalList.ForEach(async interval =>
             {
                 ScheduleInterval? scheduleIntervalEntity = await repository.GetAsync(interval.Id);
                 if (scheduleIntervalEntity == null)

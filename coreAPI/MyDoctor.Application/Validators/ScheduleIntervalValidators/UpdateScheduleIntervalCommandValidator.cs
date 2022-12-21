@@ -6,10 +6,9 @@ namespace MyDoctor.Application.Validators.ScheduleIntervalValidators
 {
     public class UpdateScheduleIntervalCommandValidator : AbstractValidator<UpdateScheduleIntervalCommand>
     {
-
         public UpdateScheduleIntervalCommandValidator()
         {
-            RuleForEach(si => si.GetScheduleIntervalList()).SetValidator(new UpdateScheduleIntervalDtoValidator());
+            RuleForEach(si => si.ScheduleIntervalList).SetValidator(new UpdateScheduleIntervalDtoValidator());
         }
     }
 }
