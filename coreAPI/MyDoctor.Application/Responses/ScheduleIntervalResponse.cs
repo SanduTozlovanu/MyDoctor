@@ -2,17 +2,21 @@
 {
     public class ScheduleIntervalResponse
     {
-       public ScheduleIntervalResponse(Guid id, TimeOnly startTime, TimeOnly endTime, string dayOfWeek, Guid doctorId)
+       public ScheduleIntervalResponse(Guid id, string startTime, string endTime, string dayOfWeek, Guid doctorId)
         {
             Id = id;
+            var auxSTime = TimeOnly.Parse(startTime);
+            startTime = auxSTime.ToString("HH:mm");
+            var auxETime = TimeOnly.Parse(endTime);
+            endTime = auxETime.ToString("HH:mm");
             StartTime = startTime;
             EndTime = endTime;
             DayOfWeek = dayOfWeek;
             DoctorId = doctorId;
         }
         public Guid Id { get; private set; }
-        public TimeOnly StartTime { get; private set; }
-        public TimeOnly EndTime { get; private set; }
+        public string StartTime { get; private set; }
+        public string EndTime { get; private set; }
         public string DayOfWeek { get; set; }
         public Guid DoctorId { get; private set; }
 

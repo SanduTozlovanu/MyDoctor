@@ -14,7 +14,7 @@ namespace MyDoctor.Application.Commands.ScheduleIntervalCommands
     }
     public class UpdateScheduleIntervalDto
     {
-        public UpdateScheduleIntervalDto(Guid id, TimeOnly startTime, TimeOnly endTime)
+        public UpdateScheduleIntervalDto(Guid id, string startTime, string endTime)
         {
             Id = id;
             StartTime = startTime;
@@ -22,8 +22,8 @@ namespace MyDoctor.Application.Commands.ScheduleIntervalCommands
         }
 
         public Guid Id { get; private set; }
-        public TimeOnly StartTime { get; private set; }
-        public TimeOnly EndTime { get; private set; }
+        public string StartTime { get; private set; }
+        public string EndTime { get; private set; }
     }
 
 }

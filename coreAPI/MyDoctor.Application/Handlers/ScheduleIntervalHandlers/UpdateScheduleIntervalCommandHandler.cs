@@ -22,13 +22,26 @@ namespace MyDoctor.Application.Handlers.ScheduleIntervalHandlers
             request.ScheduleIntervalList.ForEach(async interval =>
             {
                 ScheduleInterval? scheduleIntervalEntity = await repository.GetAsync(interval.Id);
-                if (scheduleIntervalEntity == null)
+                try
+                {
+                    TimeOnly startTime = TimeOnly.Parse(interval.StartTime);
+                    TimeOnly endTime = TimeOnly.Parse(interval.EndTime);
+
+                    if (scheduleIntervalEntity == null)
+                    {
+                        throw new SqlNullValueException();
+                    }
+                    scheduleIntervalEntity.Update(startTime, endTime);
+
+                    scheduleIntervals.Add(repository.Update(scheduleIntervalEntity));
+                }
+                catch (Exception ex) when (ex is ArgumentNullException ||
+                               ex is FormatException)
                 {
                     throw new SqlNullValueException();
                 }
-                scheduleIntervalEntity.Update(interval.StartTime, interval.EndTime);
 
-                scheduleIntervals.Add(repository.Update(scheduleIntervalEntity));
+
             });
 
             await repository.SaveChangesAsync();

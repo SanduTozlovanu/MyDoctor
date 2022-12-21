@@ -4,11 +4,11 @@
     {
         public AvailableAppointmentIntervalsResponse(TimeOnly startTime, TimeOnly endTime)
         {
-            StartTime = startTime;
-            EndTime = endTime;
+            StartTime = startTime.ToString("HH:mm");
+            EndTime = endTime.ToString("HH:mm");
         }
-        public TimeOnly StartTime { get; private set; }
-        public TimeOnly EndTime { get; private set; }
+        public string StartTime { get; private set; }
+        public string EndTime { get; private set; }
 
         public override bool Equals(object? obj)
         {
