@@ -24,7 +24,7 @@ namespace MyDoctor.API.Controllers
         private readonly IRepository<Procedure> procedureRepository;
         private readonly IRepository<Bill> billRepository;
         private readonly IRepository<PrescriptedDrug> prescriptedDrugRepository;
-        public PrescriptionsController(IRepository<Prescription> prescriptonRepository, 
+        public PrescriptionsController(IRepository<Prescription> prescriptonRepository,  //NOSONAR
                                       IRepository<Appointment> appointmentRepository,
                                       IRepository<DrugStock> drugStockRepository,
                                       IRepository<Drug> drugRepository,

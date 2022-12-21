@@ -2,7 +2,7 @@
 
 namespace MyDoctor.Application.Mappers.MedicalRoomMappers
 {
-    public class AvailableAppointmentIntervalsMapper
+    public static class AvailableAppointmentIntervalsMapper
     {
         private static Lazy<IMapper> Lazy =
             new Lazy<IMapper>(() =>

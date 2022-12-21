@@ -4,7 +4,7 @@ namespace MyDoctorApp.Domain.Models
 {
     public class AppointmentInterval : Interval
     {
-        public AppointmentInterval(DateOnly date, TimeOnly startTime, TimeOnly endTime) : base(startTime, endTime)
+        public AppointmentInterval(DateOnly date, TimeOnly startTime, TimeOnly endTime) : base(startTime, endTime) //NOSONAR
         {
             Date = date;
         }

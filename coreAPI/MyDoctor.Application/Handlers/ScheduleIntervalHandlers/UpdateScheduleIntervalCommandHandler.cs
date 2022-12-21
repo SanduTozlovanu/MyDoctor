@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http.HttpResults;
 using MyDoctor.Application.Commands.ScheduleIntervalCommands;
 using MyDoctor.Application.Mappers.ScheduleIntervalMappers;
 using MyDoctor.Application.Response;

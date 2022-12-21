@@ -99,7 +99,7 @@ namespace MyDoctor.API.Controllers
                 }
             }
             var intervs = new List<AvailableAppointmentIntervalsResponse>();
-            foreach (var interval in doctor.GetAvailableAppointmentIntervals(dateOnly, scheduleIntervs, appointmentsIntervs))
+            foreach (var interval in Doctor.GetAvailableAppointmentIntervals(dateOnly, scheduleIntervs, appointmentsIntervs))
             {
                 intervs.Add(new AvailableAppointmentIntervalsResponse(interval.Item1, interval.Item2));
             }
