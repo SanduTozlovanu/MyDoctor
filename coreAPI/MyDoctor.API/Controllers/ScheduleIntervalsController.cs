@@ -1,8 +1,10 @@
-﻿using MediatR;
+﻿using FluentValidation.Results;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using MyDoctor.Application.Commands.ScheduleIntervalCommands;
 using MyDoctor.Application.Queries.ScheduleIntervalQueries;
 using MyDoctor.Application.Response;
+using MyDoctor.Application.Validators.ScheduleIntervalValidators;
 
 namespace MyDoctor.API.Controllers
 {
@@ -31,8 +33,15 @@ namespace MyDoctor.API.Controllers
         ///         
         /// </remarks>
         [HttpPut]
-        public async Task<ActionResult<ScheduleIntervalResponse>> Update([FromBody] UpdateScheduleIntervalCommand command)
+        public async Task<ActionResult<List<ScheduleIntervalResponse>>> Update([FromBody] List<UpdateScheduleIntervalDto> scheduleIntervalList)
         {
+            UpdateScheduleIntervalCommandValidator validator = new UpdateScheduleIntervalCommandValidator();
+            UpdateScheduleIntervalCommand command = new(scheduleIntervalList);
+            ValidationResult validationResult = validator.Validate(command);
+            if (!validationResult.IsValid) 
+            {
+                return BadRequest(validationResult);
+            }
             var result = await mediator.Send(command);
             return Ok(result);
         }

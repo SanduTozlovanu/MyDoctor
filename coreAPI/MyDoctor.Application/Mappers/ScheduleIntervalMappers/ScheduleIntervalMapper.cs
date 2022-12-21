@@ -2,7 +2,7 @@
 
 namespace MyDoctor.Application.Mappers.ScheduleIntervalMappers
 {
-    public class ScheduleIntervalMapper
+    public static class ScheduleIntervalMapper
     {
         private static Lazy<IMapper> Lazy =
             new Lazy<IMapper>(() =>

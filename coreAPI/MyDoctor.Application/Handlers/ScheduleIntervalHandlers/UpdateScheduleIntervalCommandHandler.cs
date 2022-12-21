@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http.HttpResults;
 using MyDoctor.Application.Commands.ScheduleIntervalCommands;
 using MyDoctor.Application.Mappers.ScheduleIntervalMappers;
 using MyDoctor.Application.Response;
@@ -9,7 +8,7 @@ using System.Data.SqlTypes;
 
 namespace MyDoctor.Application.Handlers.ScheduleIntervalHandlers
 {
-    public class UpdateScheduleIntervalCommandHandler : IRequestHandler<UpdateScheduleIntervalCommand, ScheduleIntervalResponse>
+    public class UpdateScheduleIntervalCommandHandler : IRequestHandler<UpdateScheduleIntervalCommand, List<ScheduleIntervalResponse>>
     {
         private readonly IRepository<ScheduleInterval> repository;
 
@@ -17,18 +16,23 @@ namespace MyDoctor.Application.Handlers.ScheduleIntervalHandlers
         {
             this.repository = repository;
         }
-        public async Task<ScheduleIntervalResponse> Handle(UpdateScheduleIntervalCommand request, CancellationToken cancellationToken)
+        public async Task<List<ScheduleIntervalResponse>> Handle(UpdateScheduleIntervalCommand request, CancellationToken cancellationToken)
         {
-            ScheduleInterval? scheduleIntervalEntity = await repository.GetAsync(request.Id);
-            if (scheduleIntervalEntity == null) 
+            List<ScheduleInterval> scheduleIntervals = new();
+            request.GetScheduleIntervalList().ForEach(async interval =>
             {
-                throw new SqlNullValueException();
-            }
-            scheduleIntervalEntity.Update(request.StartTime, request.EndTime);  
+                ScheduleInterval? scheduleIntervalEntity = await repository.GetAsync(interval.Id);
+                if (scheduleIntervalEntity == null)
+                {
+                    throw new SqlNullValueException();
+                }
+                scheduleIntervalEntity.Update(interval.StartTime, interval.EndTime);
 
-            var newScheduleInterval = repository.Update(scheduleIntervalEntity);
+                scheduleIntervals.Add(repository.Update(scheduleIntervalEntity));
+            });
+
             await repository.SaveChangesAsync();
-            return ScheduleIntervalMapper.Mapper.Map<ScheduleIntervalResponse>(newScheduleInterval);
+            return ScheduleIntervalMapper.Mapper.Map<List<ScheduleIntervalResponse>>(scheduleIntervals);
         }
     }
 }

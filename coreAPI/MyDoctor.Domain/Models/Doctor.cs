@@ -50,7 +50,7 @@ namespace MyDoctorApp.Domain.Models
             Speciality = doctor.Speciality;
         }
 
-        public List<Tuple<TimeOnly, TimeOnly>> GetAvailableAppointmentIntervals(
+        public static List<Tuple<TimeOnly, TimeOnly>> GetAvailableAppointmentIntervals(
             DateOnly date,
             List<ScheduleInterval> scheduleIntervals,
             List<AppointmentInterval> appointmentIntervals)
@@ -62,34 +62,39 @@ namespace MyDoctorApp.Domain.Models
             {
                 if (interval.DayOfWeek.ToString() == weekDay)
                 {
-                    TimeOnly intervalStartTime;
                     TimeOnly intervalEndTime = interval.StartTime;
 
                     while ((interval.EndTime - intervalEndTime).TotalMinutes >= appointmentDurationInMins)
                     {
-                        intervalStartTime = intervalEndTime;
-                        intervalEndTime = intervalStartTime.AddMinutes(appointmentDurationInMins);
-                        bool skipCurrentInterval = false;
-                        foreach (var appointmentInterval in appointmentIntervals)
-                        {
-                            if (appointmentInterval.StartTime.IsBetween(intervalStartTime, intervalEndTime) ||
-                                appointmentInterval.EndTime.IsBetween(intervalStartTime, intervalEndTime) ||
-                                appointmentInterval.StartTime == intervalStartTime ||
-                                appointmentInterval.EndTime == intervalEndTime)
-                            {
-                                skipCurrentInterval = true;
-                                break;
-                            }
-                        }
-                        if (!skipCurrentInterval)
-                        {
-                            availableIntervals.Add(Tuple.Create(intervalStartTime, intervalEndTime));
-                        }
+                        ProcessInterval(ref intervalEndTime, ref appointmentDurationInMins, ref appointmentIntervals, ref availableIntervals);
                     }
                     break;
                 }
             }
             return availableIntervals;
+        }
+        public static void ProcessInterval(ref TimeOnly intervalEndTime,
+            ref int appointmentDurationInMins, ref List<AppointmentInterval> appointmentIntervals,
+            ref List<Tuple<TimeOnly, TimeOnly>> availableIntervals)
+        {
+            TimeOnly intervalStartTime = intervalEndTime;
+            intervalEndTime = intervalStartTime.AddMinutes(appointmentDurationInMins);
+            bool skipCurrentInterval = false;
+            foreach (var appointmentInterval in appointmentIntervals)
+            {
+                if (appointmentInterval.StartTime.IsBetween(intervalStartTime, intervalEndTime) ||
+                    appointmentInterval.EndTime.IsBetween(intervalStartTime, intervalEndTime) ||
+                    appointmentInterval.StartTime == intervalStartTime ||
+                    appointmentInterval.EndTime == intervalEndTime)
+                {
+                    skipCurrentInterval = true;
+                    break;
+                }
+            }
+            if (!skipCurrentInterval)
+            {
+                availableIntervals.Add(Tuple.Create(intervalStartTime, intervalEndTime));
+            }
         }
     }
 }

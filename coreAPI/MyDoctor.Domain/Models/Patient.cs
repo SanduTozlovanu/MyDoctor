@@ -4,7 +4,7 @@ namespace MyDoctorApp.Domain.Models
 {
     public class Patient : User
     {
-        public Patient(string email, string password, string firstName, string lastName, uint age) :
+        public Patient(string email, string password, string firstName, string lastName, uint age) : 
             base(AccountTypes.Patient, email, password, firstName, lastName)
         {
             Age = age;

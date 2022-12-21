@@ -1,12 +1,24 @@
 ﻿using MediatR;
 using MyDoctor.Application.Response;
-using MyDoctorApp.Domain.Models;
 
 namespace MyDoctor.Application.Commands.ScheduleIntervalCommands
 {
-    public class UpdateScheduleIntervalCommand : IRequest<ScheduleIntervalResponse>
+    public class UpdateScheduleIntervalCommand : IRequest<List<ScheduleIntervalResponse>>
     {
-        public UpdateScheduleIntervalCommand(Guid id, TimeOnly startTime, TimeOnly endTime)
+        public UpdateScheduleIntervalCommand(List<UpdateScheduleIntervalDto> scheduleIntervalList)
+        {
+            this.ScheduleIntervalList = scheduleIntervalList;
+        }
+
+        private List<UpdateScheduleIntervalDto> ScheduleIntervalList;
+        public List<UpdateScheduleIntervalDto> GetScheduleIntervalList()
+        {
+            return this.ScheduleIntervalList;
+        }
+    }
+    public class UpdateScheduleIntervalDto
+    {
+        public UpdateScheduleIntervalDto(Guid id, TimeOnly startTime, TimeOnly endTime)
         {
             Id = id;
             StartTime = startTime;

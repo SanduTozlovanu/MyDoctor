@@ -2,7 +2,7 @@
 {
     public class Procedure
     {
-        public Procedure(string name, string description, double price)
+        public Procedure(string name, string description, double price) 
         {
             Id = Guid.NewGuid();
             Name = name;

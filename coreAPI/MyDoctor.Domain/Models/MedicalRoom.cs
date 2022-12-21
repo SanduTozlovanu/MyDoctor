@@ -4,7 +4,7 @@ namespace MyDoctorApp.Domain.Models
 {
     public class MedicalRoom
     {
-        public MedicalRoom(string adress)
+        public MedicalRoom(string adress) 
         {
             Id = Guid.NewGuid();
             Adress = adress;

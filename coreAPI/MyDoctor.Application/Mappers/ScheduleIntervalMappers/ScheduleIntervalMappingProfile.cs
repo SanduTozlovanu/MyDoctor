@@ -10,7 +10,6 @@ namespace MyDoctor.Application.Mappers.ScheduleIntervalMappers
         public ScheduleIntervalMappingProfile()
         {
             CreateMap<ScheduleInterval, ScheduleIntervalResponse>().ReverseMap();
-            CreateMap<ScheduleInterval, UpdateScheduleIntervalCommand>();
         }
     }
 }
