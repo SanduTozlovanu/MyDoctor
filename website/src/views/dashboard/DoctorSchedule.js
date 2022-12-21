@@ -28,7 +28,7 @@ const DoctorSchedule = () => {
     {id: "", dayOfWeek: "Saturday",  startTime: '', endTime: ''},
     {id: "", dayOfWeek: "Sunday",  startTime: '', endTime: ''},
   ])
-  const [error, setError] = useState("")
+  const [error, setError] = useState(null)
   const { user } = useUserContext()
 
   useEffect(() => {
@@ -43,10 +43,9 @@ const DoctorSchedule = () => {
       const response = await DoctorApi.GetSchedule(user.id)
       setDays(response.data)
     } catch (err) {
-      setError(err)
+      setError("Server error.")
     }
   }
-
   const updateState = (index ,target , value) => {
     setDays(days.map(day => {
       if (days.indexOf(day) === index) {
@@ -70,14 +69,17 @@ const DoctorSchedule = () => {
         }
       })
      await DoctorApi.SendSchedule(data)
+     await getSchedule();
     } catch (error) {
-      console.log(error)
+      setError("Server error.")
     }
   }
 
 useEffect(() => {
   console.log("useeffect days", days)
+  setError(null)
 }, [days])
+
   return (
     <>
       <Header />
