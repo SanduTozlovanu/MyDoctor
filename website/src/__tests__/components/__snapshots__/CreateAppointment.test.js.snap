@@ -66,6 +66,11 @@ exports[`should test CreateAppointment component 1`] = `
                 lg="6"
                 md="12"
                 sm="12"
+                style={
+                  Object {
+                    "zIndex": "100",
+                  }
+                }
                 tag="div"
                 widths={
                   Array [
