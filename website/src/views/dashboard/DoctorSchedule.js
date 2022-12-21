@@ -11,37 +11,64 @@ import {
   Button,
 } from 'reactstrap'
 // core components
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from 'react'
 import DoctorApi from 'api/doctor'
 import Header from 'components/Headers/Header'
-
+import { useUserContext } from "context/UserContext";
 
 const DoctorSchedule = () => {
+ 
   const [days, setDays] = useState([
-    {dayName: "Monday",  start: '', end: ''},
-    {dayName: "Tuesday",  start: '', end: ''},
-    {dayName: "Wednesday",  start: '', end: ''},
-    {dayName: "Thursday",  start: '', end: ''},
-    {dayName: "Friday",  start: '', end: ''},
-    {dayName: "Saturday",  start: '', end: ''},
-    {dayName: "Sunday",  start: '', end: ''},
+    {id: "", dayOfWeek: "Monday",  startTime: '', endTime: ''},
+    {id: "", dayOfWeek: "Tuesday",  startTime: '', endTime: ''},
+    {id: "", dayOfWeek: "Wednesday",  startTime: '', endTime: ''},
+    {id: "", dayOfWeek: "Thursday",  startTime: '', endTime: ''},
+    {id: "", dayOfWeek: "Friday",  startTime: '', endTime: ''},
+    {id: "", dayOfWeek: "Saturday",  startTime: '', endTime: ''},
+    {id: "", dayOfWeek: "Sunday",  startTime: '', endTime: ''},
   ])
+  const [error, setError] = useState("")
+  const { user } = useUserContext()
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await getSchedule()
+    }
+    fetchData()
+  }, [])
+
+  const getSchedule = async () => {
+    try {
+      const response = await DoctorApi.GetSchedule(user.id)
+      setDays(response.data)
+    } catch (err) {
+      setError(err)
+    }
+  }
 
   const updateState = (index ,target , value) => {
     setDays(days.map(day => {
       if (days.indexOf(day) === index) {
         if (target === "start"){
-            return {...day, start: value};
+            return {...day, startTime: value};
         } else if (target === "end"){
-            return {...day, end: value};
+            return {...day, endTime: value};
         }
       }
       return day;
     }))
   };
+  
   const sendSchedule = async () => {
     try {
-     const data = days;
+      const data = days.map(item => {
+        return {
+          id: item.id,
+          startTime: item.startTime,
+          endTime: item.endTime
+        }
+      })
      await DoctorApi.SendSchedule(data)
     } catch (error) {
       console.log(error)
@@ -49,7 +76,7 @@ const DoctorSchedule = () => {
   }
 
 useEffect(() => {
-  console.log(days)
+  console.log("useeffect days", days)
 }, [days])
   return (
     <>
@@ -66,9 +93,14 @@ useEffect(() => {
                     <h3 className="mb-0">
                       Set your schedule for the current week
                     </h3>
-                  </Col>
+                  </Col>               
                   <Col lg="4" md="4" sm="12" xs="12" className="text-right">
                     <Button onClick={sendSchedule} color="primary">Save Schedule</Button>
+                    {error ? (
+                    <h4 className="text-right text-danger mt-3 font-weight-400">
+                      {error}
+                    </h4>
+                  ) : null}
                   </Col>
                 </Row>
               </CardHeader>
@@ -88,13 +120,13 @@ useEffect(() => {
                           <CardBody>
                             <Row>
                               <Col className="text-center">
-                                <h2>{day.dayName}</h2>
+                                <h2>{day.dayOfWeek}</h2>
                                 <hr />
                                 <Row>
                                   <Col  xl="6" lg="12" md="12" sm="6" xs="6" className="text-left">
                                     <Label>Start time</Label>
                                     <Input
-                                      defaultValue={day.start}
+                                      defaultValue={day.startTime}
                                       onChange={(e) => updateState(index, "start", e.target.value)}
                                       type="time"
                                     />
@@ -102,7 +134,7 @@ useEffect(() => {
                                   <Col xl="6" lg="12" md="12" sm="6" xs="6" className="text-left">
                                     <Label>End time</Label>
                                     <Input
-                                      defaultValue={day.end}
+                                      defaultValue={day.endTime}
                                       onChange={(e) => updateState(index, "end", e.target.value)}
                                       type="time"
                                     />
