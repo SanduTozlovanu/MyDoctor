@@ -85,9 +85,14 @@ useEffect(() => {
                     <h3 className="mb-0">
                       Set your schedule for the current week
                     </h3>
-                  </Col>
+                  </Col>               
                   <Col lg="4" md="4" sm="12" xs="12" className="text-right">
                     <Button onClick={sendSchedule} color="primary">Save Schedule</Button>
+                    {error ? (
+                    <h4 className="text-right text-danger mt-3 font-weight-400">
+                      {error}
+                    </h4>
+                  ) : null}
                   </Col>
                 </Row>
               </CardHeader>

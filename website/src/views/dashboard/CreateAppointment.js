@@ -24,6 +24,8 @@ const CreateAppointment = () => {
   const [specialities, setSpecialities] = useState([])
   const [error, setError] = useState('')
   const [doctors, setDoctors] = useState([])
+  const [doctor, setDoctor] = useState({})
+
   useEffect(() => {
     const fetchData = async () => {
       await getSpecialities()
@@ -58,7 +60,21 @@ const CreateAppointment = () => {
       await getDoctors()
     }
     fetchData()
+    console.log(doctors)
   }, [speciality])
+
+  // const handleSpeciality = (spec, info) => {
+  //   console.log(spec, info)
+  //   if (info.action === 'clear') {
+  //     console.log("clear")
+  //     setDoctors([])
+  //     setDoctor({})
+  //   } else {
+  //     console.log("select")
+  //     setSpeciality(spec ? spec.value : '')
+  //     console.log(speciality)
+  //   }
+  // }
 
   const crypto = window.crypto
 
@@ -77,10 +93,26 @@ const CreateAppointment = () => {
               </CardHeader>
               <CardBody>
                 <Row>
-                  <Col lg="6" md="12" sm="12" xs="12" className="text-left" style={{zIndex: '100'}} >
+                  <Col
+                    lg="6"
+                    md="12"
+                    sm="12"
+                    xs="12"
+                    className="text-left"
+                    style={{ zIndex: '100' }}
+                  >
                     <h3>Select a speciality</h3>
                     <Select
-                      onChange={(spec) => setSpeciality(spec ? spec.value : '')}
+                      onChange={(spec, action) =>
+                        {
+                          if (action.action === "select-option" && spec){
+                            setSpeciality(spec.value)
+                          } else if(action.action === "clear"){
+                            setDoctors([])
+                            setDoctor({})
+                          }
+                        }
+                      }
                       defaultValue={null}
                       isSearchable
                       isClearable
@@ -91,32 +123,37 @@ const CreateAppointment = () => {
                       className="basic-single"
                       classNamePrefix="select"
                     />
-                    <h3 className="mt-3">Choose your Doctor</h3>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col>
+                    {doctors?.length ? (
+                      <h3 className="mt-3">Choose your Doctor</h3>
+                    ) : null}
                     <Row>
                       {doctors && doctors.length ? (
                         doctors.map((doc, index) => {
                           let array = new Uint32Array(1)
                           return (
                             <Col
-                              className="text-left"
-                              xl="12"
-                              lg="12"
-                              md="6"
+                              className="text-left mb-3"
+                              xl="3"
+                              lg="4"
+                              md="4"
                               sm="6"
                               xs="6"
                               key={index}
                             >
-                              <Card className="shadow">
+                              <Card
+                                className={`shadow ${
+                                  doc.id === doctor.id
+                                    ? 'border border-primary'
+                                    : ''
+                                } `}
+                              >
                                 <CardBody>
                                   <Row className="align-items-center">
-                                    <Col
-                                      xl="2"
-                                      lg="3"
-                                      md="12"
-                                      sm="12"
-                                      xs="12"
-                                      className="text-center text-lg-left"
-                                    >
+                                    <Col className="text-center">
                                       <img
                                         className="rounded-circle avatar-lg"
                                         src={
@@ -126,34 +163,25 @@ const CreateAppointment = () => {
                                         }
                                         alt="avatar"
                                       />
-                                    </Col>
-                                    <Col
-                                      xl="4"
-                                      lg="4"
-                                      md="12"
-                                      sm="12"
-                                      xs="12"
-                                      className="text-center text-lg-left"
-                                    >
-                                      <h3 className="mb-0">
+                                      <h3 className="mb-0 mt-1">
                                         {doc.firstName} {doc.lastName}
                                       </h3>
-                                      <h5 className="text-muted font-weight-400 mb-0">
+                                      <h5 className="text-muted font-weight-400 mb-0 mt-2">
                                         {doc.speciality}
                                       </h5>
                                       <h3 className="mb-0 text-success">
-                                        ${crypto.getRandomValues(array)}
+                                        $
+                                        {crypto.getRandomValues(array) < 200
+                                          ? crypto.getRandomValues()
+                                          : 150}
                                       </h3>
-                                    </Col>
-                                    <Col
-                                      xl="6"
-                                      lg="5"
-                                      md="12"
-                                      sm="12"
-                                      xs="12"
-                                      className="text-center text-lg-right mt-3 mt-lg-0"
-                                    >
-                                      <Button color="primary">Choose</Button>
+                                      <Button
+                                        color="primary"
+                                        className="text-center mt-3"
+                                        onClick={() => setDoctor(doc)}
+                                      >
+                                        Choose
+                                      </Button>
                                     </Col>
                                   </Row>
                                 </CardBody>
@@ -163,15 +191,23 @@ const CreateAppointment = () => {
                         })
                       ) : speciality ? (
                         <Col>
-                          <p className="text-sm">
+                          <p className="text-sm mt-2">
                             No doctors found for this speciality.
                           </p>
                         </Col>
                       ) : null}
                     </Row>
                   </Col>
-                  <Col lg="6" md="12" sm="12" xs="12" className="text-left">
-                    <h3 className="mt-3">Select Date</h3>
+                </Row>
+                <Row className={`${doctor?.id ? 'd-initial' : 'd-none'}`}>
+                  <Col
+                    lg="6"
+                    md="12"
+                    sm="12"
+                    xs="12"
+                    className="text-left mt-3"
+                  >
+                    <h3>Select Date</h3>
                     <Calendar
                       calendarClassName="w-100"
                       value={null}
@@ -185,7 +221,9 @@ const CreateAppointment = () => {
               <CardFooter className="border-0 pt-0">
                 <Row>
                   <Col className="text-center">
-                    <Button color="primary btn-lg">Create Appointment</Button>
+                    <Button color="primary btn-lg" disabled={!doctor?.id}>
+                      Create Appointment
+                    </Button>
                   </Col>
                   {error ? (
                     <h4 className="text-center text-danger mt-3 font-weight-400">
