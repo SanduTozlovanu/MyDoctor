@@ -61,7 +61,7 @@ namespace MyDoctor.API.Controllers
 
 
         [HttpPut("{patientId:guid}")]
-        public async Task<IActionResult> Update(Guid patientId, [FromBody] CreatePatientDto dto)
+        public async Task<IActionResult> Update(Guid patientId, [FromBody] UpdateUserDto dto)
         {
             var patient = await patientRepository.GetAsync(patientId);
             if (patient == null)
@@ -69,15 +69,9 @@ namespace MyDoctor.API.Controllers
                 return NotFound();
             }
 
-            var ActionResultPatientTuple = await CreatePatientFromDto(dto);
+            var patientNew = new Patient(patient.Email, patient.Password, dto.FirstName, dto.LastName, patient.Age ,dto.Description);
 
-            if (ActionResultPatientTuple.Item2.GetType() != typeof(OkResult))
-                return ActionResultPatientTuple.Item2;
-
-            if (ActionResultPatientTuple.Item1 == null)
-                return BadRequest(CouldNotCreatePatientError);
-
-            patient.Update(ActionResultPatientTuple.Item1);
+            patient.Update(patientNew);
 
             patientRepository.Update(patient);
 

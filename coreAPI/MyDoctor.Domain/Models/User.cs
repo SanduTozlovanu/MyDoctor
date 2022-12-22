@@ -2,7 +2,7 @@
 {
     public class User
     {
-        public User(string accountType, string email, string password, string firstName, string lastName)
+        public User(string accountType, string email, string password, string firstName, string lastName, string description="", string username="")
         {
             Id = Guid.NewGuid();
             AccountType = accountType;
@@ -11,6 +11,16 @@
             FirstName = firstName;
             Password = password;
             LastName = lastName;
+            Description = description;
+
+            if (username == "")
+            {
+                Username = $"{FirstName}.{LastName}";
+            }
+            else
+            {
+                Username = username;
+            }
         }
 
         private const string SEPARATOR = ", ";
@@ -20,6 +30,9 @@
         public string Password { get; private set; }
         public string FirstName { get; private set; }
         public string LastName { get; private set; }
+        public string Description { get; private set; }
+        public string Username{ get; private set; }
+
         public string FullName
         {
             get { return $"{FirstName}{SEPARATOR}{LastName}"; }
@@ -31,6 +44,8 @@
             Password = user.Password;
             FirstName = user.FirstName;
             LastName = user.LastName;
+            Description = user.Description;
+            Username = user.Username;
         }
     }
 }

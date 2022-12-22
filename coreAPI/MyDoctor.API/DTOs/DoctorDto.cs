@@ -12,7 +12,7 @@
     }
     public class DisplayDoctorDto
     {
-        public DisplayDoctorDto(Guid id, Guid medicalRoomId, Guid specialityId, string email, string firstName, string lastName)
+        public DisplayDoctorDto(Guid id, Guid medicalRoomId, Guid specialityId, string email, string firstName, string lastName, string description, string username)
         {
             this.Id = id;
             this.MedicalRoomId = medicalRoomId;
@@ -20,6 +20,8 @@
             this.Email = email;
             this.FirstName = firstName;
             this.LastName = lastName;
+            Description = description;
+            Username = username;
         }
         public Guid Id { get; set; }
         public Guid MedicalRoomId { get; set; }
@@ -27,5 +29,7 @@
         public string Email { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public string Description { get; }
+        public string Username { get; }
     }
 }

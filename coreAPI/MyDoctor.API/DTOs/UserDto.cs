@@ -27,6 +27,7 @@ namespace MyDoctor.API.DTOs
             Email = user.Email;
             FirstName = user.FirstName;
             LastName = user.LastName;
+            Description = user.Description;
         }
 
         public Guid Id { get; set; }
@@ -34,5 +35,22 @@ namespace MyDoctor.API.DTOs
         public string Email { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public string Description { get; set; }
+    }
+
+    public class UpdateUserDto
+    {
+        public UpdateUserDto(string firstName, string lastName, string username, string description)
+        {
+            FirstName = firstName;
+            LastName = lastName;
+            Username = username;
+            Description = description;
+        }
+
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Username { get; set; }
+        public string Description { get; set; }
     }
 }
