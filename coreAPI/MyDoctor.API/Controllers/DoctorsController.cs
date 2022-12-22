@@ -1,9 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using MyDoctor.API.DTOs;
 using MyDoctor.API.Helpers;
-using MyDoctor.Application.Mappers.MedicalRoomMappers;
-using MyDoctor.Application.Mappers.ScheduleIntervalMappers;
-using MyDoctor.Application.Response;
+using MyDoctor.Application.Queries.GetDoctorAvailableAppointmentsQueries;
 using MyDoctorApp.Domain.Helpers;
 using MyDoctorApp.Domain.Models;
 using MyDoctorApp.Infrastructure.Generics;
@@ -22,6 +21,7 @@ namespace MyDoctor.API.Controllers
         public const string InvalidEmailError = "The email is invalid!";
         public const string CouldNotCreateDoctorError = "Could not create a doctor from the dto.";
         private const string InvalidDoctorIdError = "There is no such Doctor with this id.";
+        private readonly IMediator mediator;
         private readonly IRepository<Doctor> doctorRepository;
         private readonly IRepository<MedicalRoom> medicalRoomRepository;
         private readonly IRepository<Patient> patientRepository;
@@ -30,7 +30,7 @@ namespace MyDoctor.API.Controllers
         private readonly IRepository<Appointment> appointmentsRepository;
         private readonly IRepository<AppointmentInterval> appointmentIntervalsRepository;
 
-        public DoctorsController(IRepository<Doctor> doctorRepository,
+        public DoctorsController(IMediator mediator, IRepository<Doctor> doctorRepository,
             IRepository<MedicalRoom> medicalRoomRepository,
             IRepository<Patient> patientRepository,
             IRepository<Speciality> specialityRepository,
@@ -38,6 +38,7 @@ namespace MyDoctor.API.Controllers
             IRepository<Appointment> appointmentsRepository,
             IRepository<AppointmentInterval> appointmentIntervalsRepository)
         {
+            this.mediator = mediator;
             this.doctorRepository = doctorRepository;
             this.medicalRoomRepository = medicalRoomRepository;
             this.patientRepository = patientRepository;
@@ -78,33 +79,11 @@ namespace MyDoctor.API.Controllers
         }
 
         [HttpGet("get_available_appointment_schedule/{doctorId:guid}")]
-        public async Task<IActionResult> GetAvailableAppointmentSchedule(Guid doctorId, DateOnly dateOnly)
+        public async Task<IActionResult> GetAvailableAppointmentSchedules(Guid doctorId, DateOnly dateOnly)
         {
 
-            var doctor = await doctorRepository.GetAsync(doctorId);
-            if (doctor == null)
-            {
-                return NotFound();
-            }
-
-            var scheduleIntervs = (await scheduleIntervalRepository.FindAsync(si => si.DoctorId == doctorId)).ToList();
-            var appointments = (await appointmentsRepository.FindAsync(a => a.DoctorId == doctorId)).ToList();
-            var appointmentsIntervs = new List<AppointmentInterval>();
-            foreach (var appointment in appointments)
-            {
-                var appointmentInterval = (await appointmentIntervalsRepository.FindAsync(ai => ai.AppointmentId == appointment.Id)).SingleOrDefault();
-                if (appointmentInterval != null)
-                {
-                    appointmentsIntervs.Add(appointmentInterval);
-                }
-            }
-            var intervs = new List<AvailableAppointmentIntervalsResponse>();
-            foreach (var interval in Doctor.GetAvailableAppointmentIntervals(dateOnly, scheduleIntervs, appointmentsIntervs))
-            {
-                intervs.Add(new AvailableAppointmentIntervalsResponse(interval.Item1, interval.Item2));
-            }
-
-            return Ok(intervs);
+            var result = await mediator.Send(new GetDoctorAvailableAppointmentsQuery(doctorId, dateOnly));
+            return Ok(result);
         }
 
         [HttpPost("speciality")]

@@ -1,13 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using MyDoctor.API.DTOs;
 using MyDoctor.Application.Commands.MedicalRoomCommands;
 using MyDoctor.Application.Queries.MedicalRoomQueries;
-using MyDoctor.Application.Queries.ScheduleIntervalQueries;
-using MyDoctor.Application.Response;
 using MyDoctor.Application.Responses;
-using MyDoctorApp.Domain.Models;
-using MyDoctorApp.Infrastructure.Generics;
 
 namespace MyDoctor.API.Controllers
 {

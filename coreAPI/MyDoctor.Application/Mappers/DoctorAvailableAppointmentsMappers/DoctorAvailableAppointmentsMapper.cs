@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 
-namespace MyDoctor.Application.Mappers.AvailableAppointmentIntervalsMappers
+namespace MyDoctor.Application.Mappers.DoctorAvailableAppointmentsMappers
 {
-    public static class AvailableAppointmentIntervalsMapper
+    public static class DoctorAvailableAppointmentsMapper
     {
         private static Lazy<IMapper> Lazy =
             new Lazy<IMapper>(() =>
@@ -15,7 +15,7 @@ namespace MyDoctor.Application.Mappers.AvailableAppointmentIntervalsMappers
                         return p.GetMethod.IsPublic ||
                         p.GetMethod.IsAssembly;
                     };
-                    cfg.AddProfile<AvailableAppointmentIntervalsProfile>();
+                    cfg.AddProfile<DoctorAvailableAppointmentsProfile>();
                 });
                 var mapper = config.CreateMapper();
                 return mapper;

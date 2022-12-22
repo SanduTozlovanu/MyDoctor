@@ -2,7 +2,6 @@
 using MyDoctor.API.DTOs;
 using MyDoctor.Application.Commands.MedicalRoomCommands;
 using MyDoctor.Tests.Helpers;
-using MyDoctorApp.Domain.Models;
 using Newtonsoft.Json;
 using System.Net;
 using System.Text;

@@ -24,10 +24,8 @@ namespace MyDoctor.API.Controllers
         /// 
         ///     {
         ///         "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-        ///         "startTime": "15:00:00",
-        ///         "endTime": "15:30:00",
-        ///         "dayOfWeek": "Friday",
-        ///         "doctorId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+        ///         "startTime": "15:00",
+        ///         "endTime": "15:30",
         ///     }
         ///     
         ///         
