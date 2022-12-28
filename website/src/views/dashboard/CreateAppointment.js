@@ -19,12 +19,22 @@ import DoctorApi from 'api/doctor'
 // core components
 import Header from 'components/Headers/Header.js'
 
+
+function getDayName(date) {
+  const locale = 'en-US'
+  return date.toLocaleDateString(locale, {weekday: 'long'});
+}
+
 const CreateAppointment = () => {
   const [speciality, setSpeciality] = useState('')
   const [specialities, setSpecialities] = useState([])
   const [error, setError] = useState('')
   const [doctors, setDoctors] = useState([])
   const [doctor, setDoctor] = useState({})
+  const [scheduleIntervals, setScheduleIntervals] = useState([])
+  const [appointmentInterval, setAppointmentInterval] = useState({})
+  const [appointmentDay, setAppointmentDay] = useState({})
+  const [appointmentDayName, setAppointmentDayName] = useState("")
 
   useEffect(() => {
     const fetchData = async () => {
@@ -76,6 +86,21 @@ const CreateAppointment = () => {
   //   }
   // }
 
+  const getScheduleIntervals = async (data) =>{
+    try{
+      const response = await DoctorApi.GetAvailableAppointmentSchedule(doctor.id, data)
+      setScheduleIntervals(response.data)
+      setAppointmentDay(data)
+      const newDate = data.year + "-" + data.month + "-" + data.day
+      setAppointmentDayName(getDayName(new Date(newDate)))
+    }catch(error){
+      console.log(error)
+    }
+  }
+
+useEffect(()=> {
+  console.log(appointmentDayName)
+}, [appointmentDayName])
   const crypto = window.crypto
 
   return (
@@ -211,17 +236,41 @@ const CreateAppointment = () => {
                     <Calendar
                       calendarClassName="w-100"
                       value={null}
-                      onChange={(value) => console.log(value)}
+                      onChange={(value) => getScheduleIntervals(value)}
                       shouldHighlightWeekends
                     />
+                    {scheduleIntervals && scheduleIntervals.length ? (
                     <h3 className="mt-3">Choose a time range</h3>
+                    )
+                    : <h3 className="mt-3">We don't have any availabily for this day.</h3>}
+                    <Row>
+                    {scheduleIntervals && scheduleIntervals.length ? (scheduleIntervals.map((interval, index) => {
+                      console.log(interval)
+                      return (
+                        <Col
+                          className="text-left mb-3"
+                          xl="3"
+                          lg="4"
+                          md="4"
+                          sm="6"
+                          xs="6"
+                          key={index}
+                        >
+                          <Card className='c-pointer' onClick={() => setAppointmentInterval({startTime: interval.startTime, endTime: interval.endTime})}>
+                            <CardBody>
+                              <div>{interval.startTime} - {interval.endTime}</div>
+                            </CardBody>
+                          </Card>
+                        </Col>
+                    )})) : null} 
+                    </Row>                  
                   </Col>
                 </Row>
               </CardBody>
               <CardFooter className="border-0 pt-0">
                 <Row>
                   <Col className="text-center">
-                    <Button color="primary btn-lg" disabled={!doctor?.id}>
+                    <Button color="primary btn-lg" disabled={doctor && doctor.id && appointmentInterval.startTime && appointmentDay.year? false: true}>
                       Create Appointment
                     </Button>
                   </Col>

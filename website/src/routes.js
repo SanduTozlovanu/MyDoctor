@@ -24,6 +24,7 @@ import Icons from "views/examples/Icons.js";
 import Logout from "views/examples/Logout";
 import CreateAppointment from "views/dashboard/CreateAppointment";
 import DoctorSchedule from "views/dashboard/DoctorSchedule";
+import PatientSurvey from "views/dashboard/PatientSurvey";
 
 const routes = {
   ADMIN: [],
@@ -115,6 +116,13 @@ const routes = {
       name: "User Profile",
       icon: "ni ni-single-02 text-yellow",
       component: Profile,
+      layout: "/admin"
+    },
+    {
+      path: "/survey",
+      name: "Survey",
+      icon: "ni ni-single-02 text-yellow",
+      component: PatientSurvey,
       layout: "/admin"
     },
     {

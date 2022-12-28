@@ -75,18 +75,18 @@ const Profile = () => {
   const updateProfile = async () => {
     try {
       const data = {
-        userId: user.id,
-        userDetails: {
           firstName: firstName,
           lastName: lastName,
           username: username,
           description: description,
-        },
       }
       if (accountType === 'DOCTOR') {
-        await DoctorApi.UpdateDoctor(data)
-      } else {
-        await PatientApi.UpdatePatient(data)
+       const response =  await DoctorApi.UpdateDoctor(user.id, data)
+       console.log(response)
+       /* response va contine noile date si vor trebui setate in state */
+      } else if(accountType === 'PATIENT'){
+        const response  = await PatientApi.UpdatePatient(user.id, data)
+        console.log(response)
       }
     } catch (error) {
       console.log(error)
