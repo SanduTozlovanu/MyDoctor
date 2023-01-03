@@ -11,9 +11,51 @@ import {
 } from 'reactstrap'
 import { useUserContext } from 'context/UserContext'
 import { useState, useEffect } from 'react'
+
+const answers = ['Yes', 'No', "I don't know"]
+
 const PatientSurvey = () => {
   const { user } = useUserContext()
-  const questions = ["Do you have diabetis?", "Do you have high blood pressure?", "Do / did you have cancer?", "Do you have any allergies?"]
+  const [questions, setQuestions] = useState([
+    {
+      question: 'Do you have diabetis?',
+      answer: '',
+    },
+    {
+      question: 'Do you have high blood pressure?',
+      answer: '',
+    },
+    {
+      question: 'Do / did you have cancer?',
+      answer: '',
+    },
+    {
+      question: 'Do you have any allergies?',
+      answer: '',
+    },
+  ])
+
+  const handleQuestionAnswer = (e, index) => {
+    e.persist()
+    // let state = [...questions]
+    // state[index].answer = e.target.value
+    // setQuestions(state)
+
+    setQuestions((current) =>
+      current.map((obj) => {
+        if (questions.indexOf(obj) === index) {
+          return { ...obj, answer: e.target.value }
+        }
+
+        return obj
+      }),
+    )
+  }
+
+  useEffect(() => {
+    console.log(questions)
+  }, [questions])
+
   return (
     <>
       <Header />
@@ -22,52 +64,55 @@ const PatientSurvey = () => {
         <Row>
           <Col>
             <Card className="shadow">
-              <CardHeader className="border-0 pb-0">
-                <h1 className="mb-0 text-center font-weight-700">
-                  Complete this survey
-                </h1>
+              <CardHeader className="bg-transparent">
+                <h3 className="mb-0">Complete Survey</h3>
               </CardHeader>
               <CardBody>
                 <Row>
-                  <Col className='mb-3'>
-                    <h2>
-                      Please answer to all questions by checking the right
-                      answer for you.
-                    </h2>
+                  <Col>
+                    <h3>
+                      Please answer all questions by checking the right answer
+                      for you.
+                    </h3>
                   </Col>
                 </Row>
-                {questions && questions.length ? (questions.map((question, index) =>{
-                    return (
-                        <Row
-                        key={index}>
-                        <Col>
-                          <h4>{question}</h4>
-                        </Col>
-                        <Col>
-                          <label>
-                            <input type="checkbox" className="mr-2"></input>
-                            Yes
-                          </label>
-                        </Col>
-                        <Col>
-                          <label>
-                            <input type="checkbox" className="mr-2"></input>
-                            No
-                          </label>
-                        </Col>
-                        <Col>
-                          <label className="ws-0">
-                            <input type="checkbox" className="mr-2"></input>I don't
-                            know
-                          </label>
-                        </Col>
-                      </Row>
-                    )
-                })) : null}
+                {questions && questions.length
+                  ? questions.map((question, index) => {
+                      return (
+                        <Row key={index} className="mt-3">
+                          <Col>
+                            <h3 className="font-weight-400">
+                              {question.question}
+                            </h3>
+                            <Row className="text-left">
+                              {answers.map((answer, answerIndex) => {
+                                return (
+                                  <Col key={answerIndex}>
+                                    <label className="mb-0 ws-0">
+                                      <input
+                                        onChange={(e) =>
+                                          handleQuestionAnswer(e, index)
+                                        }
+                                        type="radio"
+                                        className="mr-2 mb-0"
+                                        name={`answers-${index}`}
+                                        value={answer}
+                                      />
+                                      {answer}
+                                    </label>
+                                  </Col>
+                                )
+                              })}
+                            </Row>
+                          </Col>
+                        </Row>
+                      )
+                    })
+                  : null}
               </CardBody>
               <CardFooter className="border-0 pt-0">
                 <Row>
-                  <Col className="text-center">
+                  <Col className="text-right">
                     <Button color="primary" className="btn btn-lg">
                       Save survey
                     </Button>

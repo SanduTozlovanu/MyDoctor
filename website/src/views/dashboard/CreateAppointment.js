@@ -18,11 +18,14 @@ import Select from 'react-select'
 import DoctorApi from 'api/doctor'
 // core components
 import Header from 'components/Headers/Header.js'
-
+import Swal from 'sweetalert2'
+import SpecialitiesApi from 'api/specialities'
+import AppointmentApi from 'api/appointments'
+import { useUserContext } from 'context/UserContext'
 
 function getDayName(date) {
   const locale = 'en-US'
-  return date.toLocaleDateString(locale, {weekday: 'long'});
+  return date.toLocaleDateString(locale, { weekday: 'long' })
 }
 
 const CreateAppointment = () => {
@@ -34,7 +37,8 @@ const CreateAppointment = () => {
   const [scheduleIntervals, setScheduleIntervals] = useState([])
   const [appointmentInterval, setAppointmentInterval] = useState({})
   const [appointmentDay, setAppointmentDay] = useState({})
-  const [appointmentDayName, setAppointmentDayName] = useState("")
+  const [appointmentDayName, setAppointmentDayName] = useState('')
+  const { user } = useUserContext()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -45,7 +49,7 @@ const CreateAppointment = () => {
 
   const getSpecialities = async () => {
     try {
-      const response = await DoctorApi.GetSpecialities()
+      const response = await SpecialitiesApi.GetSpecialities()
       setSpecialities(response.data)
     } catch (err) {
       setError(err)
@@ -58,7 +62,6 @@ const CreateAppointment = () => {
     }
     try {
       const response = await DoctorApi.GetDoctorsBySpeciality(speciality)
-      console.log(response.data)
       setDoctors(response.data)
     } catch (err) {
       setError(err)
@@ -70,38 +73,51 @@ const CreateAppointment = () => {
       await getDoctors()
     }
     fetchData()
-    console.log(doctors)
   }, [speciality])
 
-  // const handleSpeciality = (spec, info) => {
-  //   console.log(spec, info)
-  //   if (info.action === 'clear') {
-  //     console.log("clear")
-  //     setDoctors([])
-  //     setDoctor({})
-  //   } else {
-  //     console.log("select")
-  //     setSpeciality(spec ? spec.value : '')
-  //     console.log(speciality)
-  //   }
-  // }
-
-  const getScheduleIntervals = async (data) =>{
-    try{
-      const response = await DoctorApi.GetAvailableAppointmentSchedule(doctor.id, data)
+  const getScheduleIntervals = async (data) => {
+    try {
+      const response = await DoctorApi.GetAvailableAppointmentSchedule(
+        doctor.id,
+        data,
+      )
       setScheduleIntervals(response.data)
       setAppointmentDay(data)
-      const newDate = data.year + "-" + data.month + "-" + data.day
+      const newDate = data.year + '-' + data.month + '-' + data.day
       setAppointmentDayName(getDayName(new Date(newDate)))
-    }catch(error){
+    } catch (error) {
       console.log(error)
     }
   }
 
-useEffect(()=> {
-  console.log(appointmentDayName)
-}, [appointmentDayName])
   const crypto = window.crypto
+
+  const createAppointmentPopup = async () => {
+    await Swal.fire({
+      title: 'Confirm appointment',
+      text: `You will have an appointment with ${doctor.firstName} ${doctor.lastName} on ${appointmentDayName}, ${appointmentDay.day}/${appointmentDay.month}/${appointmentDay.year} at ${appointmentInterval.startTime}.`,
+      icon: 'info',
+      confirmButtonText: 'Create appointment',
+      showCloseButton: true,
+      showCancelButton: true,
+      reverseButtons: true,
+    }).then(async (status) => {
+      if (!status.isConfirmed) {
+        return Swal.close()
+      }
+      try {
+        await AppointmentApi.CreateAppointment(doctor.id, user.id, {
+          price: 0,
+          date: `${appointmentDay.year}-${appointmentDay.month}-${appointmentDay.day}`,
+          startTime: appointmentInterval.startTime,
+          endTime: appointmentInterval.endTime,
+        })
+      } catch (error) {
+        console.log(error)
+        return setError('There has been an error.')
+      }
+    })
+  }
 
   return (
     <>
@@ -111,10 +127,8 @@ useEffect(()=> {
         <Row>
           <Col>
             <Card className="shadow">
-              <CardHeader className="border-0 pb-0">
-                <h1 className="mb-0 text-center font-weight-700">
-                  Make an Appointment
-                </h1>
+              <CardHeader className="bg-transparent">
+                <h3 className="mb-0">Create an Appointment</h3>
               </CardHeader>
               <CardBody>
                 <Row>
@@ -128,16 +142,19 @@ useEffect(()=> {
                   >
                     <h3>Select a speciality</h3>
                     <Select
-                      onChange={(spec, action) =>
-                        {
-                          if (action.action === "select-option" && spec){
-                            setSpeciality(spec.value)
-                          } else if(action.action === "clear"){
-                            setDoctors([])
-                            setDoctor({})
-                          }
+                      onChange={(spec, action) => {
+                        if (action.action === 'select-option' && spec) {
+                          setSpeciality(spec.value)
+                        } else if (action.action === 'clear') {
+                          setDoctors([])
+                          setDoctor({})
+                          setScheduleIntervals([])
+                          setAppointmentDay({})
+                          setAppointmentInterval({})
+                          setAppointmentDayName('')
+                          setError('')
                         }
-                      }
+                      }}
                       defaultValue={null}
                       isSearchable
                       isClearable
@@ -239,46 +256,74 @@ useEffect(()=> {
                       onChange={(value) => getScheduleIntervals(value)}
                       shouldHighlightWeekends
                     />
-                    {scheduleIntervals && scheduleIntervals.length ? (
-                    <h3 className="mt-3">Choose a time range</h3>
-                    )
-                    : <h3 className="mt-3">We don't have any availabily for this day.</h3>}
+                  </Col>
+                  <Col lg="6" md="12" sm="12" xs="12">
+                      <h3 className="mt-3">Choose a time range</h3>
+                      {!scheduleIntervals.length ? <p className='mt-0 text-sm'>Please select a date first.</p> : null}
                     <Row>
-                    {scheduleIntervals && scheduleIntervals.length ? (scheduleIntervals.map((interval, index) => {
-                      console.log(interval)
-                      return (
-                        <Col
-                          className="text-left mb-3"
-                          xl="3"
-                          lg="4"
-                          md="4"
-                          sm="6"
-                          xs="6"
-                          key={index}
-                        >
-                          <Card className='c-pointer' onClick={() => setAppointmentInterval({startTime: interval.startTime, endTime: interval.endTime})}>
-                            <CardBody>
-                              <div>{interval.startTime} - {interval.endTime}</div>
-                            </CardBody>
-                          </Card>
-                        </Col>
-                    )})) : null} 
-                    </Row>                  
+                      {scheduleIntervals && scheduleIntervals.length
+                        ? scheduleIntervals.map((interval, index) => {
+                            return (
+                              <Col
+                                className="text-left mb-3"
+                                xl="3"
+                                lg="4"
+                                md="4"
+                                sm="6"
+                                xs="6"
+                                key={index}
+                              >
+                                <Card
+                                  className={`c-pointer shadow ${
+                                    appointmentInterval.startTime ===
+                                    interval.startTime
+                                      ? 'border border-primary'
+                                      : ''
+                                  }`}
+                                  onClick={() =>
+                                    setAppointmentInterval({
+                                      startTime: interval.startTime,
+                                      endTime: interval.endTime,
+                                    })
+                                  }
+                                >
+                                  <CardBody>
+                                    <div>
+                                      {interval.startTime} - {interval.endTime}
+                                    </div>
+                                  </CardBody>
+                                </Card>
+                              </Col>
+                            )
+                          })
+                        : null}
+                    </Row>
                   </Col>
                 </Row>
               </CardBody>
               <CardFooter className="border-0 pt-0">
                 <Row>
-                  <Col className="text-center">
-                    <Button color="primary btn-lg" disabled={doctor && doctor.id && appointmentInterval.startTime && appointmentDay.year? false: true}>
+                  <Col className="text-right">
+                    <Button
+                      color="primary btn-lg"
+                      disabled={
+                        doctor &&
+                        doctor.id &&
+                        appointmentInterval.startTime &&
+                        appointmentDay.year
+                          ? false
+                          : true
+                      }
+                      onClick={createAppointmentPopup}
+                    >
                       Create Appointment
                     </Button>
-                  </Col>
-                  {error ? (
+                    {error ? (
                     <h4 className="text-center text-danger mt-3 font-weight-400">
                       {error}
                     </h4>
                   ) : null}
+                  </Col>
                 </Row>
               </CardFooter>
             </Card>

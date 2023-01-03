@@ -93,8 +93,15 @@ const routes = {
     {
       path: "/create-appointment",
       name: "Create Appointment",
-      icon: "far fa-calendar-check text-info",
+      icon: "far fa-calendar-check text-primary",
       component: CreateAppointment,
+      layout: "/admin"
+    },
+    {
+      path: "/survey",
+      name: "Survey",
+      icon: "fas fa-poll-h text-primary",
+      component: PatientSurvey,
       layout: "/admin"
     },
     {
@@ -116,13 +123,6 @@ const routes = {
       name: "User Profile",
       icon: "ni ni-single-02 text-yellow",
       component: Profile,
-      layout: "/admin"
-    },
-    {
-      path: "/survey",
-      name: "Survey",
-      icon: "ni ni-single-02 text-yellow",
-      component: PatientSurvey,
       layout: "/admin"
     },
     {

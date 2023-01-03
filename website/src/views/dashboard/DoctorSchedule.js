@@ -13,9 +13,9 @@ import {
 // core components
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from 'react'
-import DoctorApi from 'api/doctor'
 import Header from 'components/Headers/Header'
 import { useUserContext } from "context/UserContext";
+import ScheduleApi from 'api/schedules';
 
 const DoctorSchedule = () => {
  
@@ -40,7 +40,7 @@ const DoctorSchedule = () => {
 
   const getSchedule = async () => {
     try {
-      const response = await DoctorApi.GetSchedule(user.id)
+      const response = await ScheduleApi.GetSchedule(user.id)
       setDays(response.data)
     } catch (err) {
       setError("Server error.")
@@ -68,7 +68,7 @@ const DoctorSchedule = () => {
           endTime: item.endTime
         }
       })
-     await DoctorApi.SendSchedule(data)
+     await ScheduleApi.SendSchedule(data)
      await getSchedule();
     } catch (error) {
       setError("Server error.")
