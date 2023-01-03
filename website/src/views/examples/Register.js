@@ -39,7 +39,7 @@ import Select from 'react-select'
 import AuthApi from 'api/auth'
 import { useHistory } from 'react-router-dom'
 import { useUserContext } from "context/UserContext";
-import DoctorApi from 'api/doctor'
+import SpecialitiesApi from 'api/specialities'
 
 const hasSpecialChars = (password, rule) =>{
   console.log(rule.split(""))
@@ -425,7 +425,7 @@ const ThirdStep = ({ firstName, lastName, email, password, history }) => {
 
   const getSpecialities = async () => {
     try {
-      const response = await DoctorApi.GetSpecialities()
+      const response = await SpecialitiesApi.GetSpecialities()
       setSpecialities(response.data)
     } catch (err) {
       setError(err)

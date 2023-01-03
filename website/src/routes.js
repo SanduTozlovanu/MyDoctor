@@ -24,6 +24,7 @@ import Icons from "views/examples/Icons.js";
 import Logout from "views/examples/Logout";
 import CreateAppointment from "views/dashboard/CreateAppointment";
 import DoctorSchedule from "views/dashboard/DoctorSchedule";
+import PatientSurvey from "views/dashboard/PatientSurvey";
 
 const routes = {
   ADMIN: [],
@@ -92,8 +93,15 @@ const routes = {
     {
       path: "/create-appointment",
       name: "Create Appointment",
-      icon: "far fa-calendar-check text-info",
+      icon: "far fa-calendar-check text-primary",
       component: CreateAppointment,
+      layout: "/admin"
+    },
+    {
+      path: "/survey",
+      name: "Survey",
+      icon: "fas fa-poll-h text-primary",
+      component: PatientSurvey,
       layout: "/admin"
     },
     {
