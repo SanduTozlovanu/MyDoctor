@@ -95,6 +95,4 @@ namespace MyDoctor.API.Controllers
             return Ok(appointmentRepository.GetMapper().Map<DisplayAppointmentDto>(appointment));
         }
     }
-
-
 }

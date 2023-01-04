@@ -3,10 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using MyDoctor.API.DTOs;
 using MyDoctor.API.Helpers;
 using MyDoctor.Application.Queries.GetDoctorAvailableAppointmentsQueries;
-using MyDoctor.Application.Mappers.ScheduleIntervalMappers;
-using MyDoctor.Application.Response;
-using MyDoctor.Application.Mappers.ScheduleIntervalMappers;
-using MyDoctor.Application.Response;
 using MyDoctorApp.Domain.Helpers;
 using MyDoctorApp.Domain.Models;
 using MyDoctorApp.Infrastructure.Generics;
@@ -27,27 +23,24 @@ namespace MyDoctor.API.Controllers
         private const string ResourcesFolderName = "resources";
         private const string MissingPhotoFileName = "missingPhoto.jpg";
         private const string BackPath = "..";
-        private readonly List<string> possiblePhotoExtensions = new() { "jpg", "png", "jpeg" };
-        private readonly IMediator mediator;
         public const string UsedEmailError = "The email is already used!";
         public const string InvalidEmailError = "The email is invalid!";
         public const string CouldNotCreateDoctorError = "Could not create a doctor from the dto.";
         private const string InvalidDoctorIdError = "There is no such Doctor with this id.";
+        private const string SuccessfulPhotosMessage = "Photos have been updated successfully";
+        private readonly List<string> possiblePhotoExtensions = new() { "jpg", "png", "jpeg" };
         private readonly IRepository<Doctor> doctorRepository;
         private readonly IRepository<MedicalRoom> medicalRoomRepository;
         private readonly IRepository<Patient> patientRepository;
         private readonly IRepository<Speciality> specialityRepository;
         private readonly IRepository<ScheduleInterval> scheduleIntervalRepository;
-        private readonly IRepository<Appointment> appointmentsRepository;
-        private readonly IRepository<AppointmentInterval> appointmentIntervalsRepository;
+        private readonly IMediator mediator;
 
         public DoctorsController(IMediator mediator, IRepository<Doctor> doctorRepository,
             IRepository<MedicalRoom> medicalRoomRepository,
             IRepository<Patient> patientRepository,
             IRepository<Speciality> specialityRepository,
-            IRepository<ScheduleInterval> scheduleIntervalRepository,
-            IRepository<Appointment> appointmentsRepository,
-            IRepository<AppointmentInterval> appointmentIntervalsRepository)
+            IRepository<ScheduleInterval> scheduleIntervalRepository)
         {
             this.mediator = mediator;
             this.doctorRepository = doctorRepository;
@@ -55,8 +48,6 @@ namespace MyDoctor.API.Controllers
             this.patientRepository = patientRepository;
             this.specialityRepository = specialityRepository;
             this.scheduleIntervalRepository = scheduleIntervalRepository;
-            this.appointmentsRepository = appointmentsRepository;
-            this.appointmentIntervalsRepository = appointmentIntervalsRepository;
         }
 
         private static List<ScheduleInterval> GenerateScheduleIntervals()
@@ -222,7 +213,7 @@ namespace MyDoctor.API.Controllers
             {
                 return BadRequest(ImageProcessError + ex);
             }
-            return Ok();
+            return Ok(SuccessfulPhotosMessage);
         }
 
         [HttpPut("{doctorId:guid}")]
