@@ -20,8 +20,8 @@
             this.Email = email;
             this.FirstName = firstName;
             this.LastName = lastName;
-            Description = description;
-            Username = username;
+            this.Description = description;
+            this.Username = username;
         }
         public Guid Id { get; set; }
         public Guid MedicalRoomId { get; set; }
@@ -32,4 +32,14 @@
         public string Description { get; }
         public string Username { get; }
     }
+    public class DisplayDoctorPhotoDto
+    {
+        public IFormFile ProfilePhoto { get; set; }
+    }
+    public class UpdateDoctorPhotosDto
+    {
+        public IFormFile ProfilePhoto { get; set; }
+        public IFormFile DiplomaPhoto { get; set; }
+    }
+
 }

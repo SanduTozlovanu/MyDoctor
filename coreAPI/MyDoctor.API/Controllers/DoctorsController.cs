@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyDoctor.API.DTOs;
 using MyDoctor.API.Helpers;
-using MyDoctor.Application.Mappers.MedicalRoomMappers;
-using MyDoctor.Application.Mappers.ScheduleIntervalMappers;
 using MyDoctor.Application.Response;
 using MyDoctorApp.Domain.Helpers;
 using MyDoctorApp.Domain.Models;
@@ -22,6 +20,13 @@ namespace MyDoctor.API.Controllers
         public const string InvalidEmailError = "The email is invalid!";
         public const string CouldNotCreateDoctorError = "Could not create a doctor from the dto.";
         private const string InvalidDoctorIdError = "There is no such Doctor with this id.";
+        private const string ImageProcessError = "An error occured during processing the images - ";
+        private const string ProfilePhotoFolderName = "profilePhotos";
+        private const string DiplomaPhotoFolderName = "diplomaPhotos";
+        private const string ResourcesFolderName = "resources";
+        private const string MissingPhotoFileName = "missingPhoto.jpg";
+        private const string BackPath = "..";
+        private readonly List<string> possiblePhotoExtensions = new() { "jpg", "png", "jpeg" };
         private readonly IRepository<Doctor> doctorRepository;
         private readonly IRepository<MedicalRoom> medicalRoomRepository;
         private readonly IRepository<Patient> patientRepository;
@@ -75,6 +80,37 @@ namespace MyDoctor.API.Controllers
             var doctors = await doctorRepository.FindAsync(d => d.SpecialityID == specialityId);
 
             return Ok(doctors.Select(d => doctorRepository.GetMapper().Map<DisplayDoctorDto>(d)));
+        }
+
+        [HttpGet("profilePhoto/{doctorId:guid}")]
+        public async Task<IActionResult> GetProfilePhoto(Guid doctorId)
+        {
+            var doctor = await doctorRepository.GetAsync(doctorId);
+            if (doctor == null)
+            {
+                return NotFound(InvalidDoctorIdError);
+            }
+            string fileExtension = "";
+            possiblePhotoExtensions.ForEach(extension =>
+            {
+                if (new FileInfo(Path.Combine(Directory.GetCurrentDirectory(), BackPath, ProfilePhotoFolderName, $"{doctor.Email}.{extension}")).Exists)
+                {
+                    fileExtension = extension;
+                    return;
+                }
+            });
+            if(fileExtension.Length == 0)
+            {
+                return PhysicalFile(Path.Combine(Directory.GetCurrentDirectory(), BackPath, ResourcesFolderName, MissingPhotoFileName), "image/jpg");
+            }
+            try
+            {
+                return PhysicalFile(Path.Combine(Directory.GetCurrentDirectory(), BackPath, ProfilePhotoFolderName, $"{doctor.Email}.{fileExtension}"), $"image/{fileExtension}");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ImageProcessError + ex);
+            }
         }
 
         [HttpGet("get_available_appointment_schedule/{doctorId:guid}")]
@@ -165,7 +201,44 @@ namespace MyDoctor.API.Controllers
             return Ok(doctorRepository.GetMapper().Map<DisplayDoctorDto>(doctor));
         }
 
+        [HttpPut("photos/{doctorId:guid}")]
+        public async Task<IActionResult> UpdatePhotos(Guid doctorId, [FromForm] UpdateDoctorPhotosDto dto)
+        {
+            var doctor = await doctorRepository.GetAsync(doctorId);
+            if (doctor == null)
+            {
+                return NotFound();
+            }
+            try
+            {
+                possiblePhotoExtensions.ForEach(extension =>
+                {
+                    var profileFile = new FileInfo(Path.Combine(Directory.GetCurrentDirectory(), BackPath, ProfilePhotoFolderName, $"{doctor.Email}.{extension}"));
+                    if (profileFile.Exists)
+                    {
+                        profileFile.Delete();
+                    }
 
+                    var diplomaFile = new FileInfo(Path.Combine(Directory.GetCurrentDirectory(), BackPath, DiplomaPhotoFolderName, $"{doctor.Email}.{extension}"));
+                    if (diplomaFile.Exists)
+                    {
+                        diplomaFile.Delete();
+                    }
+                });
+                var profilePhotoPath = Path.Combine(Directory.GetCurrentDirectory(), BackPath, ProfilePhotoFolderName, $"{doctor.Email}{new FileInfo(dto.ProfilePhoto.FileName).Extension}");
+                var diplomaPhotoPath = Path.Combine(Directory.GetCurrentDirectory(), BackPath, DiplomaPhotoFolderName, $"{doctor.Email}{new FileInfo(dto.DiplomaPhoto.FileName).Extension}");
+
+                var profileStream = new FileStream(profilePhotoPath, FileMode.Create);
+                var diplomaStream = new FileStream(diplomaPhotoPath, FileMode.Create);
+                await dto.ProfilePhoto.CopyToAsync(profileStream);
+                await dto.DiplomaPhoto.CopyToAsync(diplomaStream);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ImageProcessError + ex);
+            }
+            return Ok();
+        }
 
         [HttpPut("{doctorId:guid}")]
         public async Task<IActionResult> Update(Guid doctorId, [FromBody] UpdateUserDto dto)

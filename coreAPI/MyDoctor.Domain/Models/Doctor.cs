@@ -57,7 +57,7 @@ namespace MyDoctorApp.Domain.Models
         {
             var weekDay = date.ToString("dddd");
             var appointmentDurationInMins = 30;
-            List<Tuple<TimeOnly, TimeOnly>> availableIntervals = new List<Tuple<TimeOnly, TimeOnly>>();
+            List<Tuple<TimeOnly, TimeOnly>> availableIntervals = new();
             foreach (var interval in scheduleIntervals)
             {
                 if (interval.DayOfWeek.ToString() == weekDay)
