@@ -428,7 +428,7 @@ const ThirdStep = ({ firstName, lastName, email, password, history }) => {
       const response = await SpecialitiesApi.GetSpecialities()
       setSpecialities(response.data)
     } catch (err) {
-      setError(err)
+      setError("Error: Couldn't get the specialities.")
     }
   }
 

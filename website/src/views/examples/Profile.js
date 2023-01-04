@@ -146,7 +146,7 @@ const Profile = () => {
                       <img
                         alt="..."
                         className="rounded-circle"
-                        src={require('../../assets/img/theme/team-4-800x800.jpg')}
+                        src={require('../../assets/img/dashboard/default-avatar.jpg')}
                       />
                     </a>
                   </div>
@@ -156,28 +156,14 @@ const Profile = () => {
               <CardBody className="pt-0 pt-md-4">
                 <Row>
                   <div className="col">
-                    <div className="card-profile-stats d-flex justify-content-center mt-md-5">
-                      <div>
-                        <span className="heading">22</span>
-                        <span className="description">Friends</span>
-                      </div>
-                      <div>
-                        <span className="heading">10</span>
-                        <span className="description">Photos</span>
-                      </div>
-                      <div>
-                        <span className="heading">89</span>
-                        <span className="description">Comments</span>
-                      </div>
-                    </div>
                   </div>
                 </Row>
-                <div className="text-center">
+                <div className="text-center mt-6">
                   <h3>
                     {firstName} {lastName}
                   </h3>
                   <div className="h5 font-weight-300">
-                    <i className="ni location_pin mr-2" />
+                    <i className="fas fa-globe mr-2" />
                     Romania
                   </div>
                   <div className="h5 mt-4">

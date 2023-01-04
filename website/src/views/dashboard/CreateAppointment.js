@@ -52,7 +52,7 @@ const CreateAppointment = () => {
       const response = await SpecialitiesApi.GetSpecialities()
       setSpecialities(response.data)
     } catch (err) {
-      setError(err)
+      setError("Error: Couldn't get the speacialities.")
     }
   }
 
@@ -64,7 +64,7 @@ const CreateAppointment = () => {
       const response = await DoctorApi.GetDoctorsBySpeciality(speciality)
       setDoctors(response.data)
     } catch (err) {
-      setError(err)
+      setError("Error: Couldn't get the doctors.")
     }
   }
 

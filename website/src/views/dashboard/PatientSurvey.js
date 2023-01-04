@@ -37,10 +37,6 @@ const PatientSurvey = () => {
 
   const handleQuestionAnswer = (e, index) => {
     e.persist()
-    // let state = [...questions]
-    // state[index].answer = e.target.value
-    // setQuestions(state)
-
     setQuestions((current) =>
       current.map((obj) => {
         if (questions.indexOf(obj) === index) {
