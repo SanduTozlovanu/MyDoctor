@@ -4,6 +4,8 @@ namespace MyDoctorApp.Domain.Models
 {
     public class Doctor : User
     {
+        private const int APPOINTMENT_DURATION = 30;
+
         public Doctor(string email, string password, string firstName, string lastName, string description = "", string username = "") :
             base(AccountTypes.Doctor, email, password, firstName, lastName, description, username)
         {
@@ -59,7 +61,7 @@ namespace MyDoctorApp.Domain.Models
             appointmentIntervals = appointmentIntervals.FindAll(a => a.Date == date || a.Date == date.AddDays(-1));
 
             var weekDay = date.ToString("dddd");
-            var appointmentDurationInMins = 30;
+            var appointmentDurationInMins = APPOINTMENT_DURATION;
             List<Tuple<TimeOnly, TimeOnly>> availableIntervals = new();
             foreach (var interval in scheduleIntervals)
             {

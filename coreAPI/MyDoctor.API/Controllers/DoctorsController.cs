@@ -55,7 +55,7 @@ namespace MyDoctor.API.Controllers
             var scheduleIntervals = new List<ScheduleInterval>();
             foreach (var day in Enum.GetNames(typeof(WeekDays)))
             {
-                scheduleIntervals.Add(new ScheduleInterval(day, new TimeOnly(0, 0), new TimeOnly(23, 59)));
+                scheduleIntervals.Add(new ScheduleInterval(day, new TimeOnly(6, 0), new TimeOnly(20, 00)));
             }
             return scheduleIntervals;
         }
