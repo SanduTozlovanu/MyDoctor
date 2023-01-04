@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using MyDoctor.Application.Commands.ScheduleIntervalCommands;
-using MyDoctorApp.Domain.Models;
 
 namespace MyDoctor.Application.Validators.ScheduleIntervalValidators
 {
@@ -11,12 +10,12 @@ namespace MyDoctor.Application.Validators.ScheduleIntervalValidators
 
         public UpdateScheduleIntervalDtoValidator()
         {
-            RuleFor(si => si.StartTime).Must(isTimeValid).WithMessage(INVALID_STARTTIME_FORMAT_ERROR);
-            RuleFor(si => si.StartTime).Must(isTimeValid).WithMessage(INVALID_ENDTIME_FORMAT_ERROR);
+            RuleFor(si => si.StartTime).Must(IsTimeValid).WithMessage(INVALID_STARTTIME_FORMAT_ERROR);
+            RuleFor(si => si.StartTime).Must(IsTimeValid).WithMessage(INVALID_ENDTIME_FORMAT_ERROR);
             RuleFor(si => si.Id).NotEmpty();
         }
 
-        public static bool isTimeValid(string time)
+        public static bool IsTimeValid(string time)
         {
             return TimeOnly.TryParse(time, out _);
         }

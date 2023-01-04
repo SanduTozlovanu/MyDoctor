@@ -22,7 +22,7 @@ namespace MyDoctorApp.Domain.Models
         public Result CalculateBillPrice(Appointment appointment)
         {
             double totalPrice = 0;
-            totalPrice += appointment.Price;
+            totalPrice += appointment.Doctor.AppointmentPrice;
 
             if (appointment.Prescription != null)
             {

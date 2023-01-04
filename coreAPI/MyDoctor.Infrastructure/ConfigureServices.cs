@@ -19,7 +19,7 @@ namespace MyDoctorApp.Infrastructure
             services.AddScoped<IRepository<Doctor>, DoctorRepository>();
             services.AddScoped<IRepository<Drug>, DrugRepository>();
             services.AddScoped<IRepository<DrugStock>, DrugStockRepository>();
-            services.AddScoped<IRepository<MedicalHistory>, MedicalHistoryRepository>();
+            services.AddScoped<IRepository<SurveyQuestions>, SurveyQuestionsRepository>();
             services.AddScoped<IRepository<MedicalRoom>, MedicalRoomRepository>();
             services.AddScoped<IRepository<Patient>, PatientRepository>();
             services.AddScoped<IRepository<Prescription>, PrescriptionRepository>();

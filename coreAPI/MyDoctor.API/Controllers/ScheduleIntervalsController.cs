@@ -33,12 +33,12 @@ namespace MyDoctor.API.Controllers
         [HttpPut]
         public async Task<ActionResult<List<ScheduleIntervalResponse>>> Update([FromBody] List<UpdateScheduleIntervalDto> scheduleIntervalList)
         {
-            UpdateScheduleIntervalCommandValidator validator = new UpdateScheduleIntervalCommandValidator();
+            UpdateMedicalRoomCommandValidator validator = new ();
             UpdateScheduleIntervalCommand command = new(scheduleIntervalList);
             ValidationResult validationResult = validator.Validate(command);
             if (!validationResult.IsValid) 
             {
-                return BadRequest(validationResult);
+                return BadRequest(validationResult.Errors[0].ErrorMessage);
             }
             var result = await mediator.Send(command);
             return Ok(result);

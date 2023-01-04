@@ -4,11 +4,14 @@ namespace MyDoctorApp.Domain.Models
 {
     public class Doctor : User
     {
-        private const int APPOINTMENT_DURATION = 30;
+        private const int APPOINTMENT_DURATION = 60;
+        public const uint DEFAULT_APPOINTMENT_PRICE = 50;
 
-        public Doctor(string email, string password, string firstName, string lastName, string description = "", string username = "") :
+        public Doctor(string email, string password, string firstName, string lastName,
+            uint appointmentPrice = DEFAULT_APPOINTMENT_PRICE, string description = "", string username = "") :
             base(AccountTypes.Doctor, email, password, firstName, lastName, description, username)
         {
+            AppointmentPrice = appointmentPrice;
             Appointments = new List<Appointment>();
             ScheduleIntervals = new List<ScheduleInterval>();
         }
@@ -16,6 +19,7 @@ namespace MyDoctorApp.Domain.Models
         public Guid MedicalRoomId { get; private set; }
         public virtual Speciality Speciality { get; private set; }
         public Guid SpecialityID { get; private set; }
+        public uint AppointmentPrice { get; private set; }
         public virtual List<Appointment> Appointments { get; private set; }
         public virtual List<ScheduleInterval> ScheduleIntervals { get; private set; }
 
@@ -50,6 +54,7 @@ namespace MyDoctorApp.Domain.Models
         {
             base.Update(doctor);
             Speciality = doctor.Speciality;
+            AppointmentPrice = doctor.AppointmentPrice;
         }
 
         public static List<Tuple<TimeOnly, TimeOnly>> GetAvailableAppointmentIntervals(

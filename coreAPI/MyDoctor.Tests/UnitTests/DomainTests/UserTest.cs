@@ -16,9 +16,8 @@ namespace MyDoctor.Tests.UnitTests.DomainTests
             var password = PASSWORD;
             var firstName = FIRST_NAME;
             var lastName = LAST_NAME;
-            uint age = 10;
 
-            return new Patient(email, password, firstName, lastName, age);
+            return new Patient(email, password, firstName, lastName);
         }
 
         [Fact]

@@ -4,11 +4,13 @@ namespace MyDoctor.Tests.UnitTests.DomainTests
 {
     public class AppointmentTest
     {
-        private const double PRICE = 100;
 
-        private static Appointment CreateDefaultAppointment()
+        public static Appointment CreateDefaultAppointment()
         {
-            return new Appointment(PRICE);
+            var appointment = new Appointment();
+            var doctor = DoctorTest.CreateDefaultDoctor();
+            doctor.RegisterAppointment(appointment);
+            return appointment;
         }
 
         [Fact]
@@ -20,12 +22,10 @@ namespace MyDoctor.Tests.UnitTests.DomainTests
             // Then
             Assert.NotNull(ap);
             Assert.NotEqual(Guid.Empty, ap.Id);
-            Assert.Equal(PRICE, ap.Price);
 
             Assert.Null(ap.Patient);
             Assert.Equal(Guid.Empty, ap.PatientId);
-            Assert.Null(ap.Doctor);
-            Assert.Equal(Guid.Empty, ap.DoctorId);
+            Assert.NotNull(ap.Doctor);
             Assert.Null(ap.AppointmentInterval);
             Assert.Null(ap.Prescription);
             Assert.Null(ap.Bill);

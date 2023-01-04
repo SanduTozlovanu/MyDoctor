@@ -114,7 +114,6 @@ namespace MyDoctor.API.Controllers
         [HttpGet("get_available_appointment_schedule/{doctorId:guid}")]
         public async Task<IActionResult> GetAvailableAppointmentSchedules(Guid doctorId, DateOnly dateOnly)
         {
-
             var result = await mediator.Send(new GetDoctorAvailableAppointmentsQuery(doctorId, dateOnly));
             return Ok(result);
         }
@@ -217,7 +216,7 @@ namespace MyDoctor.API.Controllers
         }
 
         [HttpPut("{doctorId:guid}")]
-        public async Task<IActionResult> Update(Guid doctorId, [FromBody] UpdateUserDto dto)
+        public async Task<IActionResult> Update(Guid doctorId, [FromBody] UpdateDoctorDto dto)
         {
             var doctor = await doctorRepository.GetAsync(doctorId);
             if (doctor == null)
@@ -225,14 +224,15 @@ namespace MyDoctor.API.Controllers
                 return NotFound();
             }
 
-            var doctorNew = new Doctor(doctor.Email, doctor.Password, dto.FirstName, dto.LastName, dto.Description, dto.Username);
+            var doctorNew = new Doctor(doctor.Email, doctor.Password, dto.UpdateUserDto.FirstName,
+                dto.UpdateUserDto.LastName, dto.AppointmentPrice, dto.UpdateUserDto.Description, dto.UpdateUserDto.Username);
 
             doctor.Update(doctorNew);
 
             doctorRepository.Update(doctor);
 
             await doctorRepository.SaveChangesAsync();
-            return Ok();
+            return Ok(doctorRepository.GetMapper().Map<DisplayDoctorDto>(doctor));
         }
 
 

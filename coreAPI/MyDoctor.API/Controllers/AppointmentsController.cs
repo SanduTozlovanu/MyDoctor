@@ -67,7 +67,7 @@ namespace MyDoctor.API.Controllers
             }
 
 
-            var appointment = new Appointment(dto.Price);
+            var appointment = new Appointment();
 
             patient.RegisterAppointment(appointment);
             doctor.RegisterAppointment(appointment);

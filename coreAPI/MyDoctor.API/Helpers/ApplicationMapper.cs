@@ -16,7 +16,6 @@ namespace MyDoctor.API.Helpers
             CreateMap<Procedure, DisplayProcedureDto>().ReverseMap();
             CreateMap<Prescription, DisplayPrescriptionDto>().ReverseMap();
             CreateMap<Bill, DisplayBillDto>().ReverseMap();
-            CreateMap<MedicalHistory, DisplayMedicalHistoryDto>().ReverseMap();
             CreateMap<Appointment, DisplayAppointmentDto>().ReverseMap();
             CreateMap<Drug, DisplayDrugDto>().ReverseMap();
             CreateMap<Speciality, DisplaySpecialityDto>().ReverseMap();
