@@ -1,6 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using MyDoctor.API.DTOs;
 using MyDoctor.API.Helpers;
+using MyDoctor.Application.Queries.GetDoctorAvailableAppointmentsQueries;
+using MyDoctor.Application.Mappers.ScheduleIntervalMappers;
+using MyDoctor.Application.Response;
+using MyDoctor.Application.Mappers.ScheduleIntervalMappers;
 using MyDoctor.Application.Response;
 using MyDoctorApp.Domain.Helpers;
 using MyDoctorApp.Domain.Models;
@@ -16,10 +21,6 @@ namespace MyDoctor.API.Controllers
         public const string SpecialityNotFoundError = "Could not find specialty by the specialityId provided.";
         public const string FreeMedicalRoomNotFoundError = "Could not find a free medical room for this doctor.";
         public const string MedicalRoomNotFoundError = "Could not find a medicalRoom with this Id.";
-        public const string UsedEmailError = "The email is already used!";
-        public const string InvalidEmailError = "The email is invalid!";
-        public const string CouldNotCreateDoctorError = "Could not create a doctor from the dto.";
-        private const string InvalidDoctorIdError = "There is no such Doctor with this id.";
         private const string ImageProcessError = "An error occured during processing the images - ";
         private const string ProfilePhotoFolderName = "profilePhotos";
         private const string DiplomaPhotoFolderName = "diplomaPhotos";
@@ -27,6 +28,11 @@ namespace MyDoctor.API.Controllers
         private const string MissingPhotoFileName = "missingPhoto.jpg";
         private const string BackPath = "..";
         private readonly List<string> possiblePhotoExtensions = new() { "jpg", "png", "jpeg" };
+        private readonly IMediator mediator;
+        public const string UsedEmailError = "The email is already used!";
+        public const string InvalidEmailError = "The email is invalid!";
+        public const string CouldNotCreateDoctorError = "Could not create a doctor from the dto.";
+        private const string InvalidDoctorIdError = "There is no such Doctor with this id.";
         private readonly IRepository<Doctor> doctorRepository;
         private readonly IRepository<MedicalRoom> medicalRoomRepository;
         private readonly IRepository<Patient> patientRepository;
@@ -35,7 +41,7 @@ namespace MyDoctor.API.Controllers
         private readonly IRepository<Appointment> appointmentsRepository;
         private readonly IRepository<AppointmentInterval> appointmentIntervalsRepository;
 
-        public DoctorsController(IRepository<Doctor> doctorRepository,
+        public DoctorsController(IMediator mediator, IRepository<Doctor> doctorRepository,
             IRepository<MedicalRoom> medicalRoomRepository,
             IRepository<Patient> patientRepository,
             IRepository<Speciality> specialityRepository,
@@ -43,6 +49,7 @@ namespace MyDoctor.API.Controllers
             IRepository<Appointment> appointmentsRepository,
             IRepository<AppointmentInterval> appointmentIntervalsRepository)
         {
+            this.mediator = mediator;
             this.doctorRepository = doctorRepository;
             this.medicalRoomRepository = medicalRoomRepository;
             this.patientRepository = patientRepository;
@@ -114,33 +121,11 @@ namespace MyDoctor.API.Controllers
         }
 
         [HttpGet("get_available_appointment_schedule/{doctorId:guid}")]
-        public async Task<IActionResult> GetAvailableAppointmentSchedule(Guid doctorId, DateOnly dateOnly)
+        public async Task<IActionResult> GetAvailableAppointmentSchedules(Guid doctorId, DateOnly dateOnly)
         {
 
-            var doctor = await doctorRepository.GetAsync(doctorId);
-            if (doctor == null)
-            {
-                return NotFound();
-            }
-
-            var scheduleIntervs = (await scheduleIntervalRepository.FindAsync(si => si.DoctorId == doctorId)).ToList();
-            var appointments = (await appointmentsRepository.FindAsync(a => a.DoctorId == doctorId)).ToList();
-            var appointmentsIntervs = new List<AppointmentInterval>();
-            foreach (var appointment in appointments)
-            {
-                var appointmentInterval = (await appointmentIntervalsRepository.FindAsync(ai => ai.AppointmentId == appointment.Id)).SingleOrDefault();
-                if (appointmentInterval != null)
-                {
-                    appointmentsIntervs.Add(appointmentInterval);
-                }
-            }
-            var intervs = new List<AvailableAppointmentIntervalsResponse>();
-            foreach (var interval in Doctor.GetAvailableAppointmentIntervals(dateOnly, scheduleIntervs, appointmentsIntervs))
-            {
-                intervs.Add(new AvailableAppointmentIntervalsResponse(interval.Item1, interval.Item2));
-            }
-
-            return Ok(intervs);
+            var result = await mediator.Send(new GetDoctorAvailableAppointmentsQuery(doctorId, dateOnly));
+            return Ok(result);
         }
 
         [HttpPost("speciality")]

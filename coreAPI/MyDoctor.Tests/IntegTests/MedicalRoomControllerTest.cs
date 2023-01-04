@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using MyDoctor.API.Controllers;
-using MyDoctor.API.DTOs;
 using MyDoctor.Application.Commands.MedicalRoomCommands;
 using MyDoctor.Application.Responses;
 using MyDoctor.Tests.Helpers;

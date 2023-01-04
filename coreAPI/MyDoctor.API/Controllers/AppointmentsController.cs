@@ -2,6 +2,7 @@
 using MyDoctor.API.DTOs;
 using MyDoctorApp.Domain.Models;
 using MyDoctorApp.Infrastructure.Generics;
+using System.Data.SqlTypes;
 
 namespace MyDoctor.API.Controllers
 {
@@ -12,6 +13,7 @@ namespace MyDoctor.API.Controllers
     {
         public const string PatientNotFoundError = "Could not find a patient with this Id.";
         public const string DoctorNotFoundError = "Could not find a doctor with this Id.";
+        public const string TimeFormatInvalid = "Could not convert time string to TimeOnly";
         private readonly IRepository<Appointment> appointmentRepository;
         private readonly IRepository<AppointmentInterval> appointmentIntervalRepository;
         private readonly IRepository<Bill> billRepository;
@@ -50,15 +52,29 @@ namespace MyDoctor.API.Controllers
             {
                 return NotFound(DoctorNotFoundError);
             }
+            TimeOnly startTime;
+            TimeOnly endTime;
+            try
+            {
+                startTime = TimeOnly.Parse(dto.StartTime);
+                endTime = TimeOnly.Parse(dto.EndTime);
+
+            }
+            catch (Exception ex) when (ex is ArgumentNullException ||
+                           ex is FormatException)
+            {
+                return BadRequest(TimeFormatInvalid);
+            }
+
 
             var appointment = new Appointment(dto.Price);
 
             patient.RegisterAppointment(appointment);
             doctor.RegisterAppointment(appointment);
             var appointmentInterval = new AppointmentInterval(
-                DateOnly.FromDateTime(dto.Date),
-                TimeOnly.FromDateTime(dto.StartTime),
-                TimeOnly.FromDateTime(dto.EndTime)
+                dto.Date,
+                startTime,
+                endTime
                 );
 
             var bill = new Bill();

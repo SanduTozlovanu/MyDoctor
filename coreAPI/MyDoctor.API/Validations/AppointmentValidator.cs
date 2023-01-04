@@ -12,9 +12,9 @@ namespace MyDocAppointment.API.Validations
 
         public AppointmentValidator()
         {
-            RuleFor(a => a.Date).NotEmpty().GreaterThan(p => DateTime.Now).WithMessage(TOO_EARLY_DATE_ERROR);
+            RuleFor(a => a.Date).NotEmpty().GreaterThan(p => DateOnly.FromDateTime(DateTime.Now)).WithMessage(TOO_EARLY_DATE_ERROR);
             RuleFor(a => a.EndTime).NotEmpty().GreaterThan(p => p.StartTime).WithMessage(ENDTIME_EARLIER_THAN_STARTTIME_ERROR);
-            RuleFor(a => a.StartTime).NotEmpty().GreaterThan(p => DateTime.Now).WithMessage(TOO_EARLY_STARTIME_ERROR);
+            RuleFor(a => TimeOnly.Parse(a.StartTime)).NotEmpty().GreaterThan(p => TimeOnly.FromDateTime(DateTime.Now)).WithMessage(TOO_EARLY_STARTIME_ERROR);
             RuleFor(a => a.Price).NotEmpty().GreaterThanOrEqualTo(0).WithMessage(NEGATIVE_PRICE_ERROR);
         }
     }

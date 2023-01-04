@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using MyDoctor.Application.Commands.ScheduleIntervalCommands;
-using MyDoctorApp.Domain.Helpers;
 
 namespace MyDoctor.Application.Validators.ScheduleIntervalValidators
 {
