@@ -27,7 +27,6 @@ namespace MyDoctor.Application.Queries.GetDoctorAvailableAppointmentsQueries
         }
         public async Task<List<IntervalResponse>> Handle(GetDoctorAvailableAppointmentsQuery request, CancellationToken cancellationToken)
         {
-
             var scheduleIntervs = (await scheduleIntervalRepository.FindAsync(si => si.DoctorId == request.DoctorId)).ToList();
             var appointments = (await appointmentsRepository.FindAsync(a => a.DoctorId == request.DoctorId)).ToList();
             var appointmentsIntervs = new List<AppointmentInterval>();
