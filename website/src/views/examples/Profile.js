@@ -55,6 +55,7 @@ const Profile = () => {
   const [description, setDescription] = useState('A few words about you...')
   const [username, setUsername] = useState('')
   const history = useHistory()
+  const [price, setPrice] = useState(0)
 
   useEffect(() => {
     console.log(user)
@@ -81,7 +82,7 @@ const Profile = () => {
           description: description,
       }
       if (accountType === 'DOCTOR') {
-       const response =  await DoctorApi.UpdateDoctor(user.id, data)
+       const response =  await DoctorApi.UpdateDoctor(user.id, {updateUserDto: data, appointmentPrice: Number(price)})
        console.log(response)
        /* response va contine noile date si vor trebui setate in state */
       } else if(accountType === 'PATIENT'){
@@ -282,6 +283,27 @@ const Profile = () => {
                         </FormGroup>
                       </Col>
                     </Row>
+                    {user.accountType === "DOCTOR"?                   <Row>
+                      <Col lg="6">
+                      <FormGroup>
+                          <label
+                            className="form-control-label"
+                            htmlFor="input-price"
+                          >
+                            Price
+                          </label>
+                          <Input
+                            max="999"
+                            className="form-control-alternative"
+                            defaultValue={0}
+                            id="input-price"
+                            placeholder="Appointment Price"
+                            type="number"
+                            onChange={(e) => setPrice(e.target.value)}
+                          />
+                        </FormGroup>
+                      </Col>
+                    </Row> : null}
                   </div>
                   <hr className="my-4" />
                   {/* Description */}
