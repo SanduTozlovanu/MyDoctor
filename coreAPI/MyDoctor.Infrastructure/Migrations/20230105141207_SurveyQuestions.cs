@@ -1,11 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace MyDoctorApp.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class SurveyQuestionsAndPatientAge : Migration
+    public partial class SurveyQuestions : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -76,20 +77,8 @@ namespace MyDoctorApp.Infrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     PatientId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    CancerQuestion = table.Column<string>(type: "TEXT", nullable: false),
-                    CancerAnswer = table.Column<string>(type: "TEXT", nullable: false),
-                    BloodPressureQuestion = table.Column<string>(type: "TEXT", nullable: false),
-                    BloodPressureAnswer = table.Column<string>(type: "TEXT", nullable: false),
-                    DiabetisQuestion = table.Column<string>(type: "TEXT", nullable: false),
-                    DiabetisAnswer = table.Column<string>(type: "TEXT", nullable: false),
-                    AllergiesQuestion = table.Column<string>(type: "TEXT", nullable: false),
-                    AllergiesAnswer = table.Column<string>(type: "TEXT", nullable: false),
-                    SexualQuestion = table.Column<string>(type: "TEXT", nullable: false),
-                    SexualAnswer = table.Column<string>(type: "TEXT", nullable: false),
-                    CovidQuestion = table.Column<string>(type: "TEXT", nullable: false),
-                    CovidAnswer = table.Column<string>(type: "TEXT", nullable: false),
-                    HeadAcheQuestion = table.Column<string>(type: "TEXT", nullable: false),
-                    HeadAcheAnswer = table.Column<string>(type: "TEXT", nullable: false)
+                    QuestionBody = table.Column<string>(type: "TEXT", nullable: false),
+                    Answer = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -383,8 +372,7 @@ namespace MyDoctorApp.Infrastructure.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_SurveyQuestions_PatientId",
                 table: "SurveyQuestions",
-                column: "PatientId",
-                unique: true);
+                column: "PatientId");
         }
 
         /// <inheritdoc />

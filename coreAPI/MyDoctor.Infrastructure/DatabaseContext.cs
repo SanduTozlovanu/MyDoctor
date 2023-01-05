@@ -14,7 +14,7 @@ namespace MyDoctorApp.Infrastructure
         public DbSet<Doctor> Doctors => Set<Doctor>();
         public DbSet<Drug> Drugs => Set<Drug>();
         public DbSet<DrugStock> DrugStocks => Set<DrugStock>();
-        public DbSet<SurveyQuestions> SurveyQuestions => Set<SurveyQuestions>();
+        public DbSet<SurveyQuestion> SurveyQuestions => Set<SurveyQuestion>();
         public DbSet<MedicalRoom> MedicalRooms => Set<MedicalRoom>();
         public DbSet<Patient> Patients => Set<Patient>();
         public DbSet<Prescription> Prescriptions => Set<Prescription>();

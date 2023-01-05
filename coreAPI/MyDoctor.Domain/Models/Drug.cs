@@ -4,6 +4,8 @@ namespace MyDoctorApp.Domain.Models
 {
     public class Drug
     {
+        private const string TOO_MANY_CONSUMED_DRUGS_ERROR = "You cannot consume more drugs that the stock has.";
+
         public Drug(string name, string description, double price, uint quantity)
         {
             Id = Guid.NewGuid();
@@ -30,7 +32,7 @@ namespace MyDoctorApp.Domain.Models
         {
             if (Quantity < quantity)
             {
-                return Result.Failure("You cannot consume more drugs that the stock has.");
+                return Result.Failure(TOO_MANY_CONSUMED_DRUGS_ERROR);
             }
             Quantity -= quantity;
             return Result.Success();

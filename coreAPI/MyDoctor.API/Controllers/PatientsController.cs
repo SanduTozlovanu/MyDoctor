@@ -16,22 +16,40 @@ namespace MyDoctor.API.Controllers
         private const string CouldNotCreatePatientError = "Could not create a patient from the dto.";
         private const string InvalidPatientIdError = "There doesn't exist such patient with this id.";
         private readonly IRepository<Patient> patientRepository;
-        private readonly IRepository<SurveyQuestions> surveyQuestionsRepository;
+        private readonly IRepository<SurveyQuestion> surveyQuestionRepository;
         private readonly IRepository<Doctor> doctorRepository;
 
         public PatientsController(IRepository<Patient> patientRepository,
-            IRepository<SurveyQuestions> surveyQuestionsRepository,
+            IRepository<SurveyQuestion> surveyQuestionsRepository,
             IRepository<Doctor> doctorRepository)
         {
             this.patientRepository = patientRepository;
-            this.surveyQuestionsRepository = surveyQuestionsRepository;
+            this.surveyQuestionRepository = surveyQuestionsRepository;
             this.doctorRepository = doctorRepository;
         }
 
+        private static List<SurveyQuestion> GenerateSurveyQuestions()
+        {
+            var surveyQuestions = new List<SurveyQuestion>();
+            foreach (SurveyQuestion.Question question in Enum.GetValues(typeof(SurveyQuestion.Question)))
+            {
+                surveyQuestions.Add(new SurveyQuestion(SurveyQuestion.GetQuestionBody(question)));
+            }
+            return surveyQuestions;
+        }
         [HttpGet]
         public async Task<IActionResult> Get()
         {
             return Ok((await patientRepository.AllAsync()).Select(p => patientRepository.GetMapper().Map<DisplayPatientDto>(p)));
+        }
+
+        [HttpGet("{patientId:guid}")]
+        public async Task<IActionResult> GetById(Guid patientId)
+        {
+            var patient = await patientRepository.GetAsync(patientId);
+            if(patient == null)
+                return NotFound(InvalidPatientIdError);
+            return Ok(patientRepository.GetMapper().Map<DisplayPatientDto>(patient));
         }
 
         [HttpPost]
@@ -46,13 +64,12 @@ namespace MyDoctor.API.Controllers
                 return BadRequest(CouldNotCreatePatientError);
 
             Patient patient = ActionResultPatientTuple.Item1;
-            var surveyQuestions = new SurveyQuestions();
+            var surveyQuestions = GenerateSurveyQuestions();
             patient.RegisterSurveyQuestions(surveyQuestions);
-
-            await surveyQuestionsRepository.AddAsync(surveyQuestions);
+            surveyQuestions.ForEach(async q => await surveyQuestionRepository.AddAsync(q));
             await patientRepository.AddAsync(patient);
 
-            await surveyQuestionsRepository.SaveChangesAsync();
+            await surveyQuestionRepository.SaveChangesAsync();
             await patientRepository.SaveChangesAsync();
             return Ok(patientRepository.GetMapper().Map<DisplayPatientDto>(patient));
         }

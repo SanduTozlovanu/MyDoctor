@@ -9,20 +9,21 @@ namespace MyDoctor.Tests.UnitTests.DomainTests
         public void Create()
         {
             // When
-            var mh = new SurveyQuestions();
+            var mh = new SurveyQuestion(SurveyQuestion.GetQuestionBody(SurveyQuestion.Question.CancerQuestion));
 
             // Then
             Assert.NotEqual(Guid.Empty, mh.Id);
 
             Assert.Null(mh.Patient);
             Assert.Equal(Guid.Empty, mh.PatientId);
+            Assert.Equal(SurveyQuestion.GetQuestionBody(SurveyQuestion.Question.CancerQuestion), mh.QuestionBody);
         }
 
         [Fact]
         public void AttachToPatient()
         {
             // Given
-            var mh = new SurveyQuestions();
+            var mh = new SurveyQuestion(SurveyQuestion.GetQuestionBody(SurveyQuestion.Question.CancerQuestion));
             var p = PatientTest.CreateDefaultPatient();
 
             // When
