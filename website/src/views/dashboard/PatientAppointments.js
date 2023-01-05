@@ -19,32 +19,7 @@ import moment from 'moment';
 const PatientAppointments = () => {
 
     const [error, setError] = useState('')
-    const [appointments, setAppointments] = useState([
-        {
-            date: "2023-01-04",
-            doctorFirstName: "Lavinia",
-            doctorLastName: "Naet",
-            email: "lavinian@gmail.com",
-            startTime: "09:00",
-            endTime: "10:00"
-        },
-        {
-            date: "2023-01-04",
-            doctorFirstName: "Theodor",
-            doctorLastName: "Nae",
-            email: "tnae@gmail.com",
-            startTime: "08:00",
-            endTime: "09:00"
-        },
-        {
-            date: "2023-01-05",
-            doctorFirstName: "Theodora",
-            doctorLastName: "Scott",
-            email: "scottThe@gmail.com",
-            startTime: "08:00",
-            endTime: "09:00"
-        },
-    ])
+    const [appointments, setAppointments] = useState([])
     const { user } = useUserContext()
 
     useEffect(() => {
@@ -60,9 +35,9 @@ const PatientAppointments = () => {
     }, [])
     const getAppointments = async () => {
         try {
-            // const response = await AppointmentApi.GetAppointments(user.id)
-            // console.log(response)
-            // setAppointments(response)
+            const response = await AppointmentApi.GetPatientAppointments(user.id)
+            console.log(response)
+            setAppointments(response.data)
         } catch (error) {
             console.log(error)
             setError("Error: Couldn't get the appointments.")
