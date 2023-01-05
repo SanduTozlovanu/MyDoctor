@@ -1,9 +1,9 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using MyDoctorApp.Domain.Models;
-using MyDoctorApp.Infrastructure.Generics.GenericRepositories;
-using MyDoctorApp.Infrastructure.Generics;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using MyDoctorApp.Domain.Models;
+using MyDoctorApp.Infrastructure.Generics;
+using MyDoctorApp.Infrastructure.Generics.GenericRepositories;
 
 namespace MyDoctorApp.Infrastructure
 {

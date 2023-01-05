@@ -5,13 +5,13 @@ namespace MyDoctor.Application.Queries.GetDoctorAvailableAppointmentsQueries
 {
     public class GetDoctorAvailableAppointmentsQuery : IRequest<List<IntervalResponse>>
     {
-        public GetDoctorAvailableAppointmentsQuery(Guid doctorId, DateOnly dateOnly)
+        public GetDoctorAvailableAppointmentsQuery(Guid doctorId, DateOnly date)
         {
             DoctorId = doctorId;
-            DateOnly = dateOnly;
+            Date = date;
         }
 
         public Guid DoctorId { get; private set; }
-        public DateOnly DateOnly { get; }
+        public DateOnly Date { get; }
     }
 }

@@ -21,11 +21,9 @@ namespace MyDoctor.Application.Queries.GetPatientSurveyQuestionsQueryHandler
         public async Task<SurveyQuestionsResponse> Handle(GetPatientSurveyQuestionsQuery request, CancellationToken cancellationToken)
         {
             var surveyQuestions = (await repository.FindAsync(sq => sq.PatientId == request.PatientId)).FirstOrDefault();
-            if (surveyQuestions == null) 
-            {
-                throw new SqlNullValueException();
-            }
-            return SurveyQuestionsMapper.Mapper.Map<SurveyQuestionsResponse>(surveyQuestions);
+            return surveyQuestions == null
+                ? throw new SqlNullValueException()
+                : SurveyQuestionsMapper.Mapper.Map<SurveyQuestionsResponse>(surveyQuestions);
         }
     }
 }

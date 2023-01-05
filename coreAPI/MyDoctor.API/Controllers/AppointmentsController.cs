@@ -2,7 +2,6 @@
 using MyDoctor.API.DTOs;
 using MyDoctorApp.Domain.Models;
 using MyDoctorApp.Infrastructure.Generics;
-using System.Data.SqlTypes;
 
 namespace MyDoctor.API.Controllers
 {
@@ -14,6 +13,7 @@ namespace MyDoctor.API.Controllers
         public const string PatientNotFoundError = "Could not find a patient with this Id.";
         public const string DoctorNotFoundError = "Could not find a doctor with this Id.";
         public const string TimeFormatInvalid = "Could not convert time string to TimeOnly";
+        private const string AppointmentIntervalNotFoundError = "Could not find the AppointmentInterval of an appointment.";
         private readonly IRepository<Appointment> appointmentRepository;
         private readonly IRepository<AppointmentInterval> appointmentIntervalRepository;
         private readonly IRepository<Bill> billRepository;
@@ -33,12 +33,52 @@ namespace MyDoctor.API.Controllers
             this.billRepository = billRepository;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Get()
+        [HttpGet("{doctorId:guid}")]
+        public async Task<IActionResult> Get(Guid doctorId)
         {
-            return Ok((await appointmentRepository.AllAsync()).Select(a => appointmentRepository.GetMapper().Map<DisplayAppointmentDto>(a)));
+            var doctor = await doctorRepository.GetAsync(doctorId);
+            if (doctor == null)
+            {
+                return BadRequest(DoctorNotFoundError);
+            }
+            var appointmentList = (await appointmentRepository.FindAsync(app => app.DoctorId == doctorId)).ToList();
+            List<DisplayAppointmentInformationDto> appointmentInformationList = new();
+            IActionResult? error = null;
+            appointmentList.ForEach(async app =>
+            {
+                var appointmentInterval = (await appointmentIntervalRepository.FindAsync(appInt => appInt.AppointmentId == app.Id)).FirstOrDefault();
+                if (appointmentInterval == null)
+                {
+                    error = NotFound(AppointmentIntervalNotFoundError);
+                    return;
+                }
+                var patient = (await patientsRepository.FindAsync(p => p.Id == app.PatientId)).FirstOrDefault();
+                if (patient == null)
+                {
+                    error = NotFound(PatientNotFoundError);
+                    return;
+                }
+                appointmentInformationList.Add(new DisplayAppointmentInformationDto(appointmentInterval.Date.ToString("yyyy-MM-dd"),
+                    patient.FirstName, patient.LastName, patient.Email, appointmentInterval.StartTime.ToString("HH:mm"),
+                    appointmentInterval.EndTime.ToString("HH:mm")));
+            });
+            return error ?? Ok(appointmentInformationList);
         }
-
+        /// <summary>
+        /// Endpoint for creating an appointment
+        /// </summary>
+        /// <remarks>
+        /// Parameters remarks
+        /// 
+        ///     date field format is: "yyyy-mm-d"
+        ///         example: "date" : "2023-12-24"
+        ///         
+        ///     startTime format is: "hh:mm"
+        ///         example: "startTime" : "06:00"
+        ///         
+        ///     endTime format is: "hh:mm"
+        ///         example: "endTime" : "07:00"
+        /// </remarks>
         [HttpPost("{patientId:guid}_{doctorId:guid}/create_appointment")]
         public async Task<IActionResult> Create(Guid patientId, Guid doctorId, [FromBody] CreateAppointmentDto dto)
         {

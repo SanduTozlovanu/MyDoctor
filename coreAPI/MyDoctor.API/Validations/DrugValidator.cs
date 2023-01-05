@@ -19,8 +19,7 @@ namespace MyDocAppointment.API.Validations
 
         static public bool IsQuantityValid(uint quantity)
         {
-            if (quantity <= 0) return false;
-            return true;
+            return quantity > 0;
         }
     }
 

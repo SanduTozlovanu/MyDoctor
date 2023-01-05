@@ -11,7 +11,7 @@
         private const string COVID_QUESTION = "Did you vaccinate yourself against COVID-19? If yes, what type of vaccine have you used?";
         private const string HEADACHE_QUESTION = "How often do you suffer from headaches?";
 
-        public SurveyQuestions() 
+        public SurveyQuestions()
         {
             Id = Guid.NewGuid();
         }
@@ -41,12 +41,12 @@
             string AllergiesAnswer, string SexualAnswer, string CovidAnswer, string HeadAcheAnswer)
         {
             this.CancerAnswer = CancerAnswer;
-            this.BloodPressureAnswer= BloodPressureAnswer;
-            this.DiabetisAnswer= DiabetisAnswer;
-            this.AllergiesAnswer= AllergiesAnswer;
-            this.SexualAnswer= SexualAnswer;
-            this.CovidAnswer= CovidAnswer;
-            this.HeadAcheAnswer= HeadAcheAnswer;
+            this.BloodPressureAnswer = BloodPressureAnswer;
+            this.DiabetisAnswer = DiabetisAnswer;
+            this.AllergiesAnswer = AllergiesAnswer;
+            this.SexualAnswer = SexualAnswer;
+            this.CovidAnswer = CovidAnswer;
+            this.HeadAcheAnswer = HeadAcheAnswer;
         }
     }
 }

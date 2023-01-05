@@ -97,7 +97,7 @@ namespace MyDoctor.API.Controllers
                     return;
                 }
             });
-            if(fileExtension.Length == 0)
+            if (fileExtension.Length == 0)
             {
                 return PhysicalFile(Path.Combine(Directory.GetCurrentDirectory(), BackPath, ResourcesFolderName, MissingPhotoFileName), "image/jpg");
             }
@@ -110,11 +110,20 @@ namespace MyDoctor.API.Controllers
                 return BadRequest(ImageProcessError + ex);
             }
         }
-
+        /// <summary>
+        /// Endpoint for getting the available appointments for a doctor for a specific date
+        /// </summary>
+        /// <remarks>
+        /// Parameters remarks
+        /// 
+        ///     date field format is: "yyyy-mm-d"
+        ///         example: "date" : "2023-12-24"
+        ///         
+        /// </remarks>
         [HttpGet("get_available_appointment_schedule/{doctorId:guid}")]
-        public async Task<IActionResult> GetAvailableAppointmentSchedules(Guid doctorId, DateOnly dateOnly)
+        public async Task<IActionResult> GetAvailableAppointmentSchedules(Guid doctorId, DateOnly date)
         {
-            var result = await mediator.Send(new GetDoctorAvailableAppointmentsQuery(doctorId, dateOnly));
+            var result = await mediator.Send(new GetDoctorAvailableAppointmentsQuery(doctorId, date));
             return Ok(result);
         }
 
@@ -242,7 +251,8 @@ namespace MyDoctor.API.Controllers
             try
             {
                 await doctorRepository.Delete(doctorId);
-            }catch(ArgumentException) 
+            }
+            catch (ArgumentException)
             {
                 return BadRequest(InvalidDoctorIdError);
             }

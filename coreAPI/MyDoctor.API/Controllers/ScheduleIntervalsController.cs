@@ -33,10 +33,10 @@ namespace MyDoctor.API.Controllers
         [HttpPut]
         public async Task<ActionResult<List<ScheduleIntervalResponse>>> Update([FromBody] List<UpdateScheduleIntervalDto> scheduleIntervalList)
         {
-            UpdateMedicalRoomCommandValidator validator = new ();
+            UpdateMedicalRoomCommandValidator validator = new();
             UpdateScheduleIntervalCommand command = new(scheduleIntervalList);
             ValidationResult validationResult = validator.Validate(command);
-            if (!validationResult.IsValid) 
+            if (!validationResult.IsValid)
             {
                 return BadRequest(validationResult.Errors[0].ErrorMessage);
             }
@@ -47,7 +47,7 @@ namespace MyDoctor.API.Controllers
         [HttpGet("{doctorId:guid}")]
         public async Task<ActionResult<List<ScheduleIntervalResponse>>> Get(Guid doctorId)
         {
-            var result =  await mediator.Send(new GetDoctorScheduleIntervalsQuery(doctorId));
+            var result = await mediator.Send(new GetDoctorScheduleIntervalsQuery(doctorId));
             return Ok(result);
         }
     }

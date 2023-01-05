@@ -4,7 +4,6 @@ using MyDoctor.Application.Commands.MedicalRoomCommands;
 using MyDoctor.Application.Queries.MedicalRoomQueries;
 using MyDoctor.Application.Responses;
 using MyDoctor.Application.Validators.MedicalRoomValidators;
-using System.Linq;
 
 namespace MyDoctor.API.Controllers
 {

@@ -4,7 +4,7 @@ namespace MyDoctorApp.Domain.Models
 {
     public class Appointment
     {
-        public Appointment() 
+        public Appointment()
         {
             Id = Guid.NewGuid();
         }

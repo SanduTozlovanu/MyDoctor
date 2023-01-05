@@ -51,7 +51,7 @@
             this.UpdateUserDto = updateUserDto;
             this.AppointmentPrice = appointmentPrice;
         }
-        public UpdateUserDto UpdateUserDto { get; set;}
+        public UpdateUserDto UpdateUserDto { get; set; }
         public uint AppointmentPrice { get; set; }
     }
 

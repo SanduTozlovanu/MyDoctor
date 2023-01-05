@@ -15,7 +15,7 @@ namespace MyDoctor.API.Controllers
         private readonly IRepository<Speciality> specialityRepository;
 
         public SpecialitiesController(IRepository<Speciality> specialityRepository)
-        { 
+        {
             this.specialityRepository = specialityRepository;
         }
 

@@ -4,7 +4,7 @@ namespace MyDoctorApp.Domain.Models
 {
     public class Bill
     {
-        public Bill() 
+        public Bill()
         {
             Id = Guid.NewGuid();
         }

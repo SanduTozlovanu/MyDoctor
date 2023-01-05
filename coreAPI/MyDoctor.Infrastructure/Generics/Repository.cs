@@ -47,7 +47,7 @@ namespace MyDoctorApp.Infrastructure.Generics
         public virtual async Task<T> Delete(Guid id)
         {
             var entity = await context.FindAsync<T>(id);
-            if(entity == null)
+            if (entity == null)
             {
                 throw new ArgumentException($"There is no {typeof(T).Name} with id = {id}");
             }

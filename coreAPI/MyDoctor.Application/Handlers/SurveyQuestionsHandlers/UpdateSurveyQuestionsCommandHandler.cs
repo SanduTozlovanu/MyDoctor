@@ -24,7 +24,7 @@ namespace MyDoctor.Application.Handlers.SurveyQuestionsHandlers
                 throw new SqlNullValueException();
             }
             surveyQuestionsEntity.Update(request.CancerAnswer, request.BloodPressureAnswer,
-                request.DiabetisAnswer, request.AllergiesAnswer,request.SexualAnswer, request.CovidAnswer, request.HeadAcheAnswer);
+                request.DiabetisAnswer, request.AllergiesAnswer, request.SexualAnswer, request.CovidAnswer, request.HeadAcheAnswer);
             var surveyQuestion = repository.Update(surveyQuestionsEntity);
             await repository.SaveChangesAsync();
             return SurveyQuestionsMapper.Mapper.Map<SurveyQuestionsResponse>(surveyQuestion);

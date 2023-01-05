@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using MyDoctor.Application.Commands.SurveyQuestionsCommands;
 using MyDoctor.Application.Queries.SurveyQuestionsQueries;
 using MyDoctor.Application.Response;
-using MyDoctor.Application.Validators.ScheduleIntervalValidators;
 using MyDoctor.Application.Validators.SurveyQuestionsValidators;
 
 namespace MyDoctor.API.Controllers
@@ -31,7 +30,7 @@ namespace MyDoctor.API.Controllers
         {
             UpdateSurveyQuestionsCommandValidator validator = new();
             var validationResult = validator.Validate(command);
-            if(!validationResult.IsValid) 
+            if (!validationResult.IsValid)
             {
                 return BadRequest(validationResult.Errors[0].ErrorMessage);
             }

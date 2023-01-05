@@ -1,8 +1,8 @@
 ﻿using MediatR;
-using MyDoctor.Application.Mappers.DoctorAvailableAppointmentsMappers;
 using MyDoctor.Application.Response;
 using MyDoctorApp.Domain.Models;
 using MyDoctorApp.Infrastructure.Generics;
+using System.Data.SqlTypes;
 
 namespace MyDoctor.Application.Queries.GetDoctorAvailableAppointmentsQueries
 {
@@ -27,6 +27,11 @@ namespace MyDoctor.Application.Queries.GetDoctorAvailableAppointmentsQueries
         }
         public async Task<List<IntervalResponse>> Handle(GetDoctorAvailableAppointmentsQuery request, CancellationToken cancellationToken)
         {
+            var doctor = await doctorRepository.GetAsync(request.DoctorId);
+            if (doctor == null)
+            {
+                throw new SqlNullValueException();
+            }
             var scheduleIntervs = (await scheduleIntervalRepository.FindAsync(si => si.DoctorId == request.DoctorId)).ToList();
             var appointments = (await appointmentsRepository.FindAsync(a => a.DoctorId == request.DoctorId)).ToList();
             var appointmentsIntervs = new List<AppointmentInterval>();
@@ -39,7 +44,7 @@ namespace MyDoctor.Application.Queries.GetDoctorAvailableAppointmentsQueries
                 }
             }
             var intervals = new List<IntervalResponse>();
-            var intervs = Doctor.GetAvailableAppointmentIntervals(request.DateOnly, scheduleIntervs, appointmentsIntervs);
+            var intervs = Doctor.GetAvailableAppointmentIntervals(request.Date, scheduleIntervs, appointmentsIntervs);
             foreach (var interval in intervs)
             {
                 intervals.Add(new IntervalResponse(interval.Item1.ToString("HH:mm"), interval.Item2.ToString("HH:mm")));

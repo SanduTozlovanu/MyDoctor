@@ -89,7 +89,7 @@ namespace MyDoctor.Tests.IntegTests
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
 
             string requestAppointment = $"https://localhost:7244/api/v1/Appointments/{contentPatient.Id}_{contentDoctor.Id}/create_appointment";
-            var aDto = new CreateAppointmentDto(50, DateOnly.FromDateTime(DateTime.Today.AddDays(1)), DateTime.Now.AddHours(1).ToString("HH:mm"), DateTime.Now.AddHours(5).ToString("HH:mm"));
+            var aDto = new CreateAppointmentDto(DateOnly.FromDateTime(DateTime.Today.AddDays(1)), DateTime.Now.AddHours(1).ToString("HH:mm"), DateTime.Now.AddHours(5).ToString("HH:mm"));
             var content = new StringContent(JsonConvert.SerializeObject(aDto), Encoding.UTF8, "application/json");
             var res = await HttpClient.PostAsync(string.Format(requestAppointment, patientId.ToString(), doctorId.ToString()), content);
             var jsonStringAppointment = await res.Content.ReadAsStringAsync();

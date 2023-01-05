@@ -84,7 +84,8 @@ namespace MyDoctor.API.Controllers
             try
             {
                 await patientRepository.Delete(patientId);
-            }catch (ArgumentException)
+            }
+            catch (ArgumentException)
             {
                 return BadRequest(InvalidPatientIdError);
             }

@@ -2,7 +2,7 @@
 {
     public class AppointmentInterval : Interval
     {
-        public AppointmentInterval(DateOnly date, TimeOnly startTime, TimeOnly endTime) : base(startTime, endTime) 
+        public AppointmentInterval(DateOnly date, TimeOnly startTime, TimeOnly endTime) : base(startTime, endTime)
         {
             Date = date;
         }

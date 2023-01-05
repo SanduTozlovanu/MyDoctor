@@ -2,7 +2,7 @@
 {
     public class ScheduleInterval : Interval
     {
-        public ScheduleInterval(string dayOfWeek, TimeOnly startTime, TimeOnly endTime) : base( startTime, endTime) 
+        public ScheduleInterval(string dayOfWeek, TimeOnly startTime, TimeOnly endTime) : base(startTime, endTime)
         {
             DayOfWeek = dayOfWeek;
         }
