@@ -35,7 +35,7 @@ namespace MyDoctor.Tests.UnitTests.DomainTests
             Assert.Equal(LAST_NAME, p.LastName);
             Assert.Equal(AccountTypes.Patient, p.AccountType);
 
-            Assert.Null(p.SurveyQuestions);
+            Assert.Empty(p.SurveyQuestions);
             Assert.Empty(p.Appointments);
         }
 
@@ -44,13 +44,13 @@ namespace MyDoctor.Tests.UnitTests.DomainTests
         {
             // Given
             Patient p = CreateDefaultPatient();
-            var mh = new SurveyQuestions();
+            var surveyQuestionList = new List<SurveyQuestion> { new SurveyQuestion(SurveyQuestion.GetQuestionBody(SurveyQuestion.Question.CancerQuestion)) };
 
             // When
-            p.RegisterSurveyQuestions(mh);
+            p.RegisterSurveyQuestions(surveyQuestionList);
 
             // Then
-            Assert.True(ReferenceEquals(mh, p.SurveyQuestions));
+            Assert.Equal(surveyQuestionList, p.SurveyQuestions);
         }
 
         [Fact]

@@ -8,7 +8,7 @@ namespace MyDoctor.Application.Mappers.SurveyQuestionsMappers
     {
         public SurveyQuestionsMappingProfile()
         {
-            CreateMap<SurveyQuestions, SurveyQuestionsResponse>().ReverseMap();
+            CreateMap<SurveyQuestion, SurveyQuestionResponse>().ReverseMap();
         }
     }
 }

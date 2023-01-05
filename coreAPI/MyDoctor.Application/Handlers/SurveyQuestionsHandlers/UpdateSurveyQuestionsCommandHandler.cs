@@ -8,26 +8,34 @@ using System.Data.SqlTypes;
 
 namespace MyDoctor.Application.Handlers.SurveyQuestionsHandlers
 {
-    public class UpdateSurveyQuestionsCommandHandler : IRequestHandler<UpdateSurveyQuestionsCommand, SurveyQuestionsResponse>
+    public class UpdateSurveyQuestionsCommandHandler : IRequestHandler<UpdateSurveyQuestionsCommand, List<SurveyQuestionResponse>>
     {
-        private readonly IRepository<SurveyQuestions> repository;
+        private readonly IRepository<SurveyQuestion> repository;
 
-        public UpdateSurveyQuestionsCommandHandler(IRepository<SurveyQuestions> repository)
+        public UpdateSurveyQuestionsCommandHandler(IRepository<SurveyQuestion> repository)
         {
             this.repository = repository;
         }
-        public async Task<SurveyQuestionsResponse> Handle(UpdateSurveyQuestionsCommand request, CancellationToken cancellationToken)
+        public async Task<List<SurveyQuestionResponse>> Handle(UpdateSurveyQuestionsCommand request, CancellationToken cancellationToken)
         {
-            SurveyQuestions? surveyQuestionsEntity = (await repository.FindAsync(sq => sq.PatientId == request.PatientId)).FirstOrDefault();
-            if (surveyQuestionsEntity == null)
+            List<SurveyQuestion>? surveyQuestionsEntityList = (await repository.FindAsync(sq => sq.PatientId == request.PatientId)).ToList();
+            if (surveyQuestionsEntityList.Count == 0)
             {
                 throw new SqlNullValueException();
             }
-            surveyQuestionsEntity.Update(request.CancerAnswer, request.BloodPressureAnswer,
-                request.DiabetisAnswer, request.AllergiesAnswer, request.SexualAnswer, request.CovidAnswer, request.HeadAcheAnswer);
-            var surveyQuestion = repository.Update(surveyQuestionsEntity);
+            for( int i = 0; i < surveyQuestionsEntityList.Count; i++)
+            {
+                for(int j = 0; j < request.QuestionList.Count; j++)
+                {
+                    if (surveyQuestionsEntityList[i].QuestionBody == request.QuestionList[j].QuestionBody)
+                    {
+                        surveyQuestionsEntityList[i].Update(request.QuestionList[j].Answer);
+                    }
+                }
+                repository.Update(surveyQuestionsEntityList[i]);
+            }
             await repository.SaveChangesAsync();
-            return SurveyQuestionsMapper.Mapper.Map<SurveyQuestionsResponse>(surveyQuestion);
+            return SurveyQuestionsMapper.Mapper.Map<List<SurveyQuestionResponse>>(surveyQuestionsEntityList);
         }
     }
 }

@@ -26,7 +26,7 @@ namespace MyDoctor.API.Controllers
             return Ok(result);
         }
         [HttpPut]
-        public async Task<ActionResult<SurveyQuestionsResponse>> Update([FromBody] UpdateSurveyQuestionsCommand command)
+        public async Task<ActionResult<List<SurveyQuestionResponse>>> Update([FromBody] UpdateSurveyQuestionsCommand command)
         {
             UpdateSurveyQuestionsCommandValidator validator = new();
             var validationResult = validator.Validate(command);

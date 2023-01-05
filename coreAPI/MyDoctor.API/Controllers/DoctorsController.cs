@@ -66,6 +66,17 @@ namespace MyDoctor.API.Controllers
             return Ok((await doctorRepository.AllAsync()).Select(d => doctorRepository.GetMapper().Map<DisplayDoctorDto>(d)));
         }
 
+        [HttpGet("{doctorId:guid}")]
+        public async Task<IActionResult> GetById(Guid doctorId)
+        {
+            var doctor = await doctorRepository.GetAsync(doctorId);
+            if (doctor == null)
+            {
+                return NotFound(InvalidDoctorIdError);
+            }
+            return Ok(doctorRepository.GetMapper().Map<DisplayDoctorDto>(doctor));
+        }
+
         [HttpGet("get_by_speciality/{specialityId:guid}")]
         public async Task<IActionResult> GetBySpeciality(Guid specialityId)
         {
