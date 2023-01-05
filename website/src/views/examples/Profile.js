@@ -39,11 +39,11 @@ import Swal from 'sweetalert2'
 import AuthApi from 'api/auth'
 import { useHistory } from 'react-router-dom'
 
-const handleAccountTypeText = (text) => {
-  const firstLetter = text.charAt(0).toUpperCase()
-  const restOfWord = text.substring(1, text.length).toLowerCase()
-  return firstLetter + restOfWord
-}
+// const handleAccountTypeText = (text) => {
+//   const firstLetter = text.charAt(0).toUpperCase()
+//   const restOfWord = text.substring(1, text.length).toLowerCase()
+//   return firstLetter + restOfWord
+// }
 
 const Profile = () => {
   const { user } = useUserContext()
@@ -52,41 +52,72 @@ const Profile = () => {
   const [email, setEmail] = useState('')
   const [accountType, setAccountType] = useState('')
   const [speciality, setSpeciality] = useState('')
-  const [description, setDescription] = useState('A few words about you...')
+  const [description, setDescription] = useState('')
   const [username, setUsername] = useState('')
   const history = useHistory()
+  const [price, setPrice] = useState()
 
   useEffect(() => {
-    console.log(user)
-    if (user && user.id) {
-      setFirstName(user.firstName)
-      setLastName(user.lastName)
-      setEmail(user.email)
-      setAccountType(user.accountType)
-      if (user.accountType === 'DOCTOR') {
-        setSpeciality(user.speciality)
-      }
-      setUsername(
-        `${user.firstName.toLowerCase()}.${user.lastName.toLowerCase()}`,
-      )
+    const fetchData = async () => {
+      await getUser(user.id)
     }
-  }, [user])
+    fetchData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+
+  const getUser = async () => {
+    try {
+      if (user.accountType === "DOCTOR") {
+        const response = await DoctorApi.GetDoctorById(user.id);
+        console.log(response.data)
+        setEmail(user.email)
+        setAccountType(user.accountType)
+        setUsername(response.data.username)
+        setFirstName(response.data.firstName)
+        setLastName(response.data.lastName)
+        setDescription(response.data.description)
+        setPrice(response.data.appointmentPrice)
+        setSpeciality(user.speciality)
+      } else if (user.accountType === 'PATIENT') {
+        const response = await PatientApi.GetPatientById(user.id);
+        console.log(response.data)
+        setEmail(user.email)
+        setAccountType(user.accountType)
+        setUsername(response.data.username)
+        setFirstName(response.data.firstName)
+        setLastName(response.data.lastName)
+        setDescription(response.data.description)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   const updateProfile = async () => {
     try {
       const data = {
-          firstName: firstName,
-          lastName: lastName,
-          username: username,
-          description: description,
+        firstName: firstName,
+        lastName: lastName,
+        username: username,
+        description: description,
       }
       if (accountType === 'DOCTOR') {
-       const response =  await DoctorApi.UpdateDoctor(user.id, data)
-       console.log(response)
-       /* response va contine noile date si vor trebui setate in state */
-      } else if(accountType === 'PATIENT'){
-        const response  = await PatientApi.UpdatePatient(user.id, data)
-        console.log(response)
+        await DoctorApi.UpdateDoctor(user.id, { updateUserDto: data, appointmentPrice: Number(price) })
+        const response = await DoctorApi.GetDoctorById(user.id);
+        console.log(response.data)
+        setUsername(response.data.username)
+        setFirstName(response.data.firstName)
+        setLastName(response.data.lastName)
+        setDescription(response.data.description)
+        setPrice(response.data.appointmentPrice)
+      } else if (accountType === 'PATIENT') {
+        await PatientApi.UpdatePatient(user.id, data)
+        const response = await PatientApi.GetPatientById(user.id);
+        setUsername(response.data.username)
+        setFirstName(response.data.firstName)
+        setLastName(response.data.lastName)
+        setDescription(response.data.description)
       }
     } catch (error) {
       console.log(error)
@@ -146,7 +177,7 @@ const Profile = () => {
                       <img
                         alt="..."
                         className="rounded-circle"
-                        src={require('../../assets/img/theme/team-4-800x800.jpg')}
+                        src={require('../../assets/img/dashboard/default-avatar.jpg')}
                       />
                     </a>
                   </div>
@@ -156,38 +187,26 @@ const Profile = () => {
               <CardBody className="pt-0 pt-md-4">
                 <Row>
                   <div className="col">
-                    <div className="card-profile-stats d-flex justify-content-center mt-md-5">
-                      <div>
-                        <span className="heading">22</span>
-                        <span className="description">Friends</span>
-                      </div>
-                      <div>
-                        <span className="heading">10</span>
-                        <span className="description">Photos</span>
-                      </div>
-                      <div>
-                        <span className="heading">89</span>
-                        <span className="description">Comments</span>
-                      </div>
-                    </div>
                   </div>
                 </Row>
-                <div className="text-center">
+                <div className="text-center mt-6">
                   <h3>
                     {firstName} {lastName}
                   </h3>
                   <div className="h5 font-weight-300">
-                    <i className="ni location_pin mr-2" />
+                    <i className="fas fa-globe mr-2" />
                     Romania
                   </div>
                   <div className="h5 mt-4">
                     <i className="ni business_briefcase-24 mr-2" />
-                    {handleAccountTypeText(accountType)}
+                    {accountType ? accountType : "No information"}
                   </div>
+                  {user.accountType === "DOCTOR" ?
                   <div>
                     <i className="ni education_hat mr-2" />
-                    {speciality}
-                  </div>
+                    {speciality ? speciality : "No information"}
+                  </div> : null}
+
                   <hr className="my-4" />
                   <p>{description}</p>
                 </div>
@@ -296,6 +315,28 @@ const Profile = () => {
                         </FormGroup>
                       </Col>
                     </Row>
+                    {user.accountType === "DOCTOR" ?
+                      <Row>
+                        <Col lg="6">
+                          <FormGroup>
+                            <label
+                              className="form-control-label"
+                              htmlFor="input-price"
+                            >
+                              Price
+                            </label>
+                            <Input
+                              max="999"
+                              className="form-control-alternative"
+                              defaultValue={price}
+                              id="input-price"
+                              placeholder="Appointment Price"
+                              type="number"
+                              onChange={(e) => setPrice(e.target.value)}
+                            />
+                          </FormGroup>
+                        </Col>
+                      </Row> : null}
                   </div>
                   <hr className="my-4" />
                   {/* Description */}

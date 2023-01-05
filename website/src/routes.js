@@ -25,10 +25,33 @@ import Logout from "views/examples/Logout";
 import CreateAppointment from "views/dashboard/CreateAppointment";
 import DoctorSchedule from "views/dashboard/DoctorSchedule";
 import PatientSurvey from "views/dashboard/PatientSurvey";
+import DoctorAppointments from "views/dashboard/DoctorAppointments";
+import PatientAppointments from "views/dashboard/PatientAppointments";
 
 const routes = {
   ADMIN: [],
   DOCTOR: [
+    {
+      path: "/user-profile",
+      name: "My Profile",
+      icon: "ni ni-single-02 text-primary",
+      component: Profile,
+      layout: "/admin"
+    },
+    {
+      path: "/my-schedule",
+      name: "My Schedule",
+      icon: "ni ni-circle-08 text-primary",
+      component: DoctorSchedule,
+      layout: "/admin"
+    },
+    {
+      path: "/doctor-appointments",
+      name: "View Appointments",
+      icon: "far fa-calendar-check text-primary",
+      component: DoctorAppointments,
+      layout: "/admin"
+    },
     {
       path: "/index",
       name: "Dashboard",
@@ -41,13 +64,6 @@ const routes = {
       name: "Icons",
       icon: "ni ni-planet text-blue",
       component: Icons,
-      layout: "/admin"
-    },
-    {
-      path: "/user-profile",
-      name: "User Profile",
-      icon: "ni ni-single-02 text-yellow",
-      component: Profile,
       layout: "/admin"
     },
     {
@@ -80,21 +96,14 @@ const routes = {
       component: Logout,
       layout: "/auth",
       hide: true
-    },
-    {
-      path: "/my-schedule",
-      name: "My Schedule",
-      icon: "ni ni-circle-08 text-pink",
-      component: DoctorSchedule,
-      layout: "/admin"
-    },
+    }
   ],
   PATIENT: [
     {
-      path: "/create-appointment",
-      name: "Create Appointment",
-      icon: "far fa-calendar-check text-primary",
-      component: CreateAppointment,
+      path: "/user-profile",
+      name: "My Profile",
+      icon: "ni ni-single-02 text-yellow",
+      component: Profile,
       layout: "/admin"
     },
     {
@@ -104,6 +113,20 @@ const routes = {
       component: PatientSurvey,
       layout: "/admin"
     },
+    {
+      path: "/create-appointment",
+      name: "Create Appointment",
+      icon: "far fa-calendar-check text-primary",
+      component: CreateAppointment,
+      layout: "/admin"
+    },
+    {
+    path: "/patient-appointment",
+    name: "My Appointments",
+    icon: "far fa-calendar-check text-primary",
+    component: PatientAppointments,
+    layout: "/admin"
+  },
     {
       path: "/index",
       name: "Dashboard",
@@ -116,13 +139,6 @@ const routes = {
       name: "Icons",
       icon: "ni ni-planet text-blue",
       component: Icons,
-      layout: "/admin"
-    },
-    {
-      path: "/user-profile",
-      name: "User Profile",
-      icon: "ni ni-single-02 text-yellow",
-      component: Profile,
       layout: "/admin"
     },
     {
