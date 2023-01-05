@@ -9,10 +9,10 @@ namespace MyDoctor.API.Helpers
     public static class JwtManager
     {
 
-        private static string SECRET = "db3OIsj+BXE9NZDy0t8W3TcNekrF+2d/1sFnWG4HnV8TZY30iTOdtVWJG8abWvB1GlOgJuQZdcF2Luqm/hccMw==";
-        private static SecurityKey symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SECRET));
-        private static string ISSUER = "issuer";
-        private static string AUDIENCE = "audience";
+        private static readonly string SECRET = "db3OIsj+BXE9NZDy0t8W3TcNekrF+2d/1sFnWG4HnV8TZY30iTOdtVWJG8abWvB1GlOgJuQZdcF2Luqm/hccMw==";
+        private static readonly SecurityKey symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SECRET));
+        private static readonly string ISSUER = "issuer";
+        private static readonly string AUDIENCE = "audience";
 
         public static string GenerateToken(User user, int expireAfterHours = 24)
         {

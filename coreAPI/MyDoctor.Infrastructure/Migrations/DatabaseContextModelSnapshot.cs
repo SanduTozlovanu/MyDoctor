@@ -357,75 +357,26 @@ namespace MyDoctorApp.Infrastructure.Migrations
                     b.ToTable("Specialities");
                 });
 
-            modelBuilder.Entity("MyDoctorApp.Domain.Models.SurveyQuestions", b =>
+            modelBuilder.Entity("MyDoctorApp.Domain.Models.SurveyQuestion", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("AllergiesAnswer")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("AllergiesQuestion")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("BloodPressureAnswer")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("BloodPressureQuestion")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("CancerAnswer")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("CancerQuestion")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("CovidAnswer")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("CovidQuestion")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("DiabetisAnswer")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("DiabetisQuestion")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("HeadAcheAnswer")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("HeadAcheQuestion")
+                    b.Property<string>("Answer")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("PatientId")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("SexualAnswer")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("SexualQuestion")
+                    b.Property<string>("QuestionBody")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PatientId")
-                        .IsUnique();
+                    b.HasIndex("PatientId");
 
                     b.ToTable("SurveyQuestions");
                 });
@@ -564,11 +515,11 @@ namespace MyDoctorApp.Infrastructure.Migrations
                     b.Navigation("Doctor");
                 });
 
-            modelBuilder.Entity("MyDoctorApp.Domain.Models.SurveyQuestions", b =>
+            modelBuilder.Entity("MyDoctorApp.Domain.Models.SurveyQuestion", b =>
                 {
                     b.HasOne("MyDoctorApp.Domain.Models.Patient", "Patient")
-                        .WithOne("SurveyQuestions")
-                        .HasForeignKey("MyDoctorApp.Domain.Models.SurveyQuestions", "PatientId")
+                        .WithMany("SurveyQuestions")
+                        .HasForeignKey("PatientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -609,8 +560,7 @@ namespace MyDoctorApp.Infrastructure.Migrations
                 {
                     b.Navigation("Appointments");
 
-                    b.Navigation("SurveyQuestions")
-                        .IsRequired();
+                    b.Navigation("SurveyQuestions");
                 });
 
             modelBuilder.Entity("MyDoctorApp.Domain.Models.Prescription", b =>

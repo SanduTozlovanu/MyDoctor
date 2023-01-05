@@ -3,27 +3,14 @@ using MyDoctor.Application.Response;
 
 namespace MyDoctor.Application.Commands.SurveyQuestionsCommands
 {
-    public class UpdateSurveyQuestionsCommand : IRequest<SurveyQuestionsResponse>
+    public class UpdateSurveyQuestionsCommand : IRequest<List<SurveyQuestionResponse>>
     {
-        public UpdateSurveyQuestionsCommand(Guid patientId, string cancerAnswer, string bloodPressureAnswer,
-            string diabetisAnswer, string allergiesAnswer, string sexualAnswer, string covidAnswer, string headAcheAnswer)
+        public UpdateSurveyQuestionsCommand(Guid patientId, List<SurveyQuestionResponse> questionList)
         {
             PatientId = patientId;
-            CancerAnswer = cancerAnswer;
-            BloodPressureAnswer = bloodPressureAnswer;
-            DiabetisAnswer = diabetisAnswer;
-            AllergiesAnswer = allergiesAnswer;
-            SexualAnswer = sexualAnswer;
-            CovidAnswer = covidAnswer;
-            HeadAcheAnswer = headAcheAnswer;
+            QuestionList = questionList;
         }
         public Guid PatientId { get; private set; }
-        public string CancerAnswer { get; private set; }
-        public string BloodPressureAnswer { get; private set; }
-        public string DiabetisAnswer { get; private set; }
-        public string AllergiesAnswer { get; private set; }
-        public string SexualAnswer { get; private set; }
-        public string CovidAnswer { get; private set; }
-        public string HeadAcheAnswer { get; private set; }
+        public List<SurveyQuestionResponse> QuestionList { get; private set; }
     }
 }

@@ -3,7 +3,7 @@ using MyDoctor.Application.Response;
 
 namespace MyDoctor.Application.Queries.SurveyQuestionsQueries
 {
-    public class GetPatientSurveyQuestionsQuery : IRequest<SurveyQuestionsResponse>
+    public class GetPatientSurveyQuestionsQuery : IRequest<List<SurveyQuestionResponse>>
     {
         public GetPatientSurveyQuestionsQuery(Guid patientId)
         {
