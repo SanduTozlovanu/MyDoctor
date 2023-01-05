@@ -25,9 +25,9 @@
         public Guid PatientId { get; set; }
         public Guid DoctorId { get; set; }
     }
-    public class DisplayAppointmentInformationDto
+    public class DisplayAppointmentPatientInformationDto
     {
-        public DisplayAppointmentInformationDto(string date, string patientFirstName, string patientLastName, string email, string startTime, string endTime)
+        public DisplayAppointmentPatientInformationDto(string date, string patientFirstName, string patientLastName, string email, string startTime, string endTime)
         {
             Date = date;
             PatientFirstName = patientFirstName;
@@ -40,6 +40,25 @@
         public string Date { get; set; }
         public string PatientFirstName { get; set; }
         public string PatientLastName { get; set; }
+        public string Email { get; set; }
+        public string StartTime { get; set; }
+        public string EndTime { get; set; }
+    }
+    public class DisplayAppointmentDoctorInformationDto
+    {
+        public DisplayAppointmentDoctorInformationDto(string date, string doctorFirstName, string doctorLastName, string email, string startTime, string endTime)
+        {
+            Date = date;
+            DoctorFirstName = doctorFirstName;
+            DoctorLastName = doctorLastName;
+            Email = email;
+            StartTime = startTime;
+            EndTime = endTime;
+        }
+
+        public string Date { get; set; }
+        public string DoctorFirstName { get; set; }
+        public string DoctorLastName { get; set; }
         public string Email { get; set; }
         public string StartTime { get; set; }
         public string EndTime { get; set; }
