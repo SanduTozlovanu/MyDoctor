@@ -1,13 +1,9 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using MyDoctor.API.DTOs;
 using MyDoctor.Application.Commands.MedicalRoomCommands;
 using MyDoctor.Application.Queries.MedicalRoomQueries;
-using MyDoctor.Application.Queries.ScheduleIntervalQueries;
-using MyDoctor.Application.Response;
 using MyDoctor.Application.Responses;
-using MyDoctorApp.Domain.Models;
-using MyDoctorApp.Infrastructure.Generics;
+using MyDoctor.Application.Validators.MedicalRoomValidators;
 
 namespace MyDoctor.API.Controllers
 {
@@ -33,6 +29,12 @@ namespace MyDoctor.API.Controllers
         [HttpPost]
         public async Task<ActionResult<List<MedicalRoomResponse>>> Create([FromBody] CreateMedicalRoomCommand command)
         {
+            CreateMedicalRoomCommandValidator validator = new();
+            var validationResult = validator.Validate(command);
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(validationResult.Errors[0].ErrorMessage);
+            }
             var result = await mediator.Send(command);
             return Ok(result);
         }

@@ -1,9 +1,9 @@
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Mvc.Versioning;
 using MyDoctor.Application;
 using MyDoctorApp.Infrastructure;
 using System.Reflection;
-using Microsoft.AspNetCore.Mvc.Versioning;
-using FluentValidation.AspNetCore;
-using FluentValidation;
 
 var builder = WebApplication.CreateBuilder(args);
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
@@ -65,6 +65,7 @@ app.MapControllers();
 
 app.Run();
 
-public partial class Program {
+public partial class Program
+{
     protected Program() { }
 }

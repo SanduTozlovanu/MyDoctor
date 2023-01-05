@@ -1,9 +1,9 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using MyDoctorApp.Domain.Models;
-using MyDoctorApp.Infrastructure.Generics.GenericRepositories;
-using MyDoctorApp.Infrastructure.Generics;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using MyDoctorApp.Domain.Models;
+using MyDoctorApp.Infrastructure.Generics;
+using MyDoctorApp.Infrastructure.Generics.GenericRepositories;
 
 namespace MyDoctorApp.Infrastructure
 {
@@ -19,7 +19,7 @@ namespace MyDoctorApp.Infrastructure
             services.AddScoped<IRepository<Doctor>, DoctorRepository>();
             services.AddScoped<IRepository<Drug>, DrugRepository>();
             services.AddScoped<IRepository<DrugStock>, DrugStockRepository>();
-            services.AddScoped<IRepository<MedicalHistory>, MedicalHistoryRepository>();
+            services.AddScoped<IRepository<SurveyQuestions>, SurveyQuestionsRepository>();
             services.AddScoped<IRepository<MedicalRoom>, MedicalRoomRepository>();
             services.AddScoped<IRepository<Patient>, PatientRepository>();
             services.AddScoped<IRepository<Prescription>, PrescriptionRepository>();

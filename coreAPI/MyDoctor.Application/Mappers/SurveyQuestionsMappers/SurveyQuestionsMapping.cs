@@ -1,21 +1,22 @@
 ﻿using AutoMapper;
 
-namespace MyDoctor.Application.Mappers.AvailableAppointmentIntervalsMappers
+namespace MyDoctor.Application.Mappers.SurveyQuestionsMappers
 {
-    public static class AvailableAppointmentIntervalsMapper
+    public static class SurveyQuestionsMapper
     {
         private static Lazy<IMapper> Lazy =
-            new Lazy<IMapper>(() =>
+            new(() =>
             {
                 var config = new MapperConfiguration(cfg =>
                 {
                     cfg.ShouldMapProperty = p =>
                     {
-                        if (p.GetMethod == null) return false;
-                        return p.GetMethod.IsPublic ||
+                        return p.GetMethod == null
+                            ? false
+                            : p.GetMethod.IsPublic ||
                         p.GetMethod.IsAssembly;
                     };
-                    cfg.AddProfile<AvailableAppointmentIntervalsProfile>();
+                    cfg.AddProfile<SurveyQuestionsMappingProfile>();
                 });
                 var mapper = config.CreateMapper();
                 return mapper;

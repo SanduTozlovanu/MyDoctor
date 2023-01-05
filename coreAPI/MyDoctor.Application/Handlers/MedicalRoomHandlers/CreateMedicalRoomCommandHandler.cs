@@ -22,7 +22,7 @@ namespace MyDoctor.Application.Handlers.MedicalRoomHandlers
             MedicalRoom medicalRoomEntity = AvailableAppointmentIntervalsMapper.Mapper.Map<MedicalRoom>(request);
             if (medicalRoomEntity == null)
             {
-                throw new ApplicationException("Issue with the mapper"); 
+                throw new ApplicationException("Issue with the mapper");
             }
             var drugStock = new DrugStock();
             medicalRoomEntity.RegisterDrugStock(drugStock);

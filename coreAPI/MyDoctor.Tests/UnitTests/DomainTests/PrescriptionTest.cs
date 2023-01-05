@@ -29,7 +29,7 @@ namespace MyDoctor.Tests.UnitTests.DomainTests
         {
             // Given
             var pre = new Prescription(NAME, DESCRIPTION);
-            var ap = new Appointment(10);
+            var ap = new Appointment();
 
             // When
             pre.AttachAppointment(ap);

@@ -2,7 +2,7 @@
 {
     public class ScheduleIntervalResponse
     {
-       public ScheduleIntervalResponse(Guid id, string startTime, string endTime, string dayOfWeek, Guid doctorId)
+        public ScheduleIntervalResponse(Guid id, string startTime, string endTime, string dayOfWeek, Guid doctorId)
         {
             Id = id;
             var auxSTime = TimeOnly.Parse(startTime);

@@ -1,18 +1,23 @@
 ﻿namespace MyDoctor.Application.Response
 {
-    public class AvailableAppointmentIntervalsResponse
+    public class IntervalResponse
     {
-        public AvailableAppointmentIntervalsResponse(TimeOnly startTime, TimeOnly endTime)
+        public IntervalResponse(string startTime, string endTime)
         {
-            StartTime = startTime.ToString("HH:mm");
-            EndTime = endTime.ToString("HH:mm");
+
+            var auxSTime = TimeOnly.Parse(startTime);
+            startTime = auxSTime.ToString("HH:mm");
+            var auxETime = TimeOnly.Parse(endTime);
+            endTime = auxETime.ToString("HH:mm");
+            StartTime = startTime;
+            EndTime = endTime;
         }
         public string StartTime { get; private set; }
         public string EndTime { get; private set; }
 
         public override bool Equals(object? obj)
         {
-            return obj is AvailableAppointmentIntervalsResponse response &&
+            return obj is IntervalResponse response &&
                     StartTime.Equals(response.StartTime) &&
                     EndTime.Equals(response.EndTime);
         }

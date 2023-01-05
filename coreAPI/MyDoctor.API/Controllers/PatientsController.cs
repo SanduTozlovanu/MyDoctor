@@ -13,19 +13,18 @@ namespace MyDoctor.API.Controllers
     {
         public const string UsedEmailError = "The email is already used!";
         public const string InvalidEmailError = "The email is invalid!";
-        public const string BigAgeError = "Too big age value.";
         private const string CouldNotCreatePatientError = "Could not create a patient from the dto.";
         private const string InvalidPatientIdError = "There doesn't exist such patient with this id.";
         private readonly IRepository<Patient> patientRepository;
-        private readonly IRepository<MedicalHistory> medicalHistoryRepository;
+        private readonly IRepository<SurveyQuestions> surveyQuestionsRepository;
         private readonly IRepository<Doctor> doctorRepository;
 
         public PatientsController(IRepository<Patient> patientRepository,
-            IRepository<MedicalHistory> medicalHistoryRepository,
+            IRepository<SurveyQuestions> surveyQuestionsRepository,
             IRepository<Doctor> doctorRepository)
         {
             this.patientRepository = patientRepository;
-            this.medicalHistoryRepository = medicalHistoryRepository;
+            this.surveyQuestionsRepository = surveyQuestionsRepository;
             this.doctorRepository = doctorRepository;
         }
 
@@ -47,13 +46,13 @@ namespace MyDoctor.API.Controllers
                 return BadRequest(CouldNotCreatePatientError);
 
             Patient patient = ActionResultPatientTuple.Item1;
-            var medicalHistory = new MedicalHistory();
-            patient.RegisterMedicalHistory(medicalHistory);
+            var surveyQuestions = new SurveyQuestions();
+            patient.RegisterSurveyQuestions(surveyQuestions);
 
-            await medicalHistoryRepository.AddAsync(medicalHistory);
+            await surveyQuestionsRepository.AddAsync(surveyQuestions);
             await patientRepository.AddAsync(patient);
 
-            await medicalHistoryRepository.SaveChangesAsync();
+            await surveyQuestionsRepository.SaveChangesAsync();
             await patientRepository.SaveChangesAsync();
             return Ok(patientRepository.GetMapper().Map<DisplayPatientDto>(patient));
         }
@@ -69,14 +68,14 @@ namespace MyDoctor.API.Controllers
                 return NotFound();
             }
 
-            var patientNew = new Patient(patient.Email, patient.Password, dto.FirstName, dto.LastName, patient.Age ,dto.Description);
+            var patientNew = new Patient(patient.Email, patient.Password, dto.FirstName, dto.LastName, dto.Description);
 
             patient.Update(patientNew);
 
             patientRepository.Update(patient);
 
             await patientRepository.SaveChangesAsync();
-            return Ok();
+            return Ok(patientRepository.GetMapper().Map<DisplayPatientDto>(patient));
         }
 
         [HttpDelete("{patientId:guid}")]
@@ -85,7 +84,8 @@ namespace MyDoctor.API.Controllers
             try
             {
                 await patientRepository.Delete(patientId);
-            }catch (ArgumentException)
+            }
+            catch (ArgumentException)
             {
                 return BadRequest(InvalidPatientIdError);
             }
@@ -109,7 +109,7 @@ namespace MyDoctor.API.Controllers
             }
 
             string hashedPassword = AccountInfoManager.HashPassword(dto.UserDetails.Password);
-            var newPatient = new Patient(dto.UserDetails.Email, hashedPassword, dto.UserDetails.FirstName, dto.UserDetails.LastName, dto.Age);
+            var newPatient = new Patient(dto.UserDetails.Email, hashedPassword, dto.UserDetails.FirstName, dto.UserDetails.LastName);
 
             return (newPatient, Ok());
         }

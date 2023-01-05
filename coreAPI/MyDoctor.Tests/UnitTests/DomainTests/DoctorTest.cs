@@ -61,7 +61,7 @@ namespace MyDoctor.Tests.UnitTests.DomainTests
         {
             // Given
             Doctor d = CreateDefaultDoctor();
-            var ap = new Appointment(10);
+            var ap = new Appointment();
 
             // When
             d.RegisterAppointment(ap);

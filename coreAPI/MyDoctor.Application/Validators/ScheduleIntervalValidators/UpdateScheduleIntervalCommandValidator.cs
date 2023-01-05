@@ -1,12 +1,11 @@
 ﻿using FluentValidation;
 using MyDoctor.Application.Commands.ScheduleIntervalCommands;
-using MyDoctorApp.Domain.Helpers;
 
 namespace MyDoctor.Application.Validators.ScheduleIntervalValidators
 {
-    public class UpdateScheduleIntervalCommandValidator : AbstractValidator<UpdateScheduleIntervalCommand>
+    public class UpdateMedicalRoomCommandValidator : AbstractValidator<UpdateScheduleIntervalCommand>
     {
-        public UpdateScheduleIntervalCommandValidator()
+        public UpdateMedicalRoomCommandValidator()
         {
             RuleForEach(si => si.ScheduleIntervalList).SetValidator(new UpdateScheduleIntervalDtoValidator());
         }

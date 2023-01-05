@@ -9,7 +9,6 @@ namespace MyDoctor.Tests.UnitTests.DomainTests
         private const string PASSWORD = "pass";
         private const string FIRST_NAME = "Ionut";
         private const string LAST_NAME = "Virgil";
-        private const uint AGE = 10;
 
         public static Patient CreateDefaultPatient()
         {
@@ -17,9 +16,8 @@ namespace MyDoctor.Tests.UnitTests.DomainTests
             var password = PASSWORD;
             var firstName = FIRST_NAME;
             var lastName = LAST_NAME;
-            uint age = AGE;
 
-            return new Patient(email, password, firstName, lastName, age);
+            return new Patient(email, password, firstName, lastName);
         }
 
         [Fact]
@@ -35,25 +33,24 @@ namespace MyDoctor.Tests.UnitTests.DomainTests
             Assert.Equal(PASSWORD, p.Password);
             Assert.Equal(FIRST_NAME, p.FirstName);
             Assert.Equal(LAST_NAME, p.LastName);
-            Assert.Equal(AGE, p.Age);
             Assert.Equal(AccountTypes.Patient, p.AccountType);
 
-            Assert.Null(p.MedicalHistory);
+            Assert.Null(p.SurveyQuestions);
             Assert.Empty(p.Appointments);
         }
 
         [Fact]
-        public void RegisterMedicalHistory()
+        public void RegisterSurveyQuestions()
         {
             // Given
             Patient p = CreateDefaultPatient();
-            var mh = new MedicalHistory();
+            var mh = new SurveyQuestions();
 
             // When
-            p.RegisterMedicalHistory(mh);
+            p.RegisterSurveyQuestions(mh);
 
             // Then
-            Assert.True(ReferenceEquals(mh, p.MedicalHistory));
+            Assert.True(ReferenceEquals(mh, p.SurveyQuestions));
         }
 
         [Fact]
@@ -61,7 +58,7 @@ namespace MyDoctor.Tests.UnitTests.DomainTests
         {
             // Given
             Patient p = CreateDefaultPatient();
-            var ap = new Appointment(10);
+            var ap = new Appointment();
 
             // When
             p.RegisterAppointment(ap);
@@ -81,9 +78,8 @@ namespace MyDoctor.Tests.UnitTests.DomainTests
             string password = "password";
             string firstName = "firstName";
             string lastName = "lastName";
-            uint age = 10;
 
-            Patient newPatient = new(email, password, firstName, lastName, age);
+            Patient newPatient = new(email, password, firstName, lastName);
 
             // When
             p.Update(newPatient);
@@ -93,7 +89,6 @@ namespace MyDoctor.Tests.UnitTests.DomainTests
             Assert.Equal(newPatient.Password, p.Password);
             Assert.Equal(newPatient.FirstName, p.FirstName);
             Assert.Equal(newPatient.LastName, p.LastName);
-            Assert.Equal(newPatient.Age, p.Age);
         }
     }
 }

@@ -4,7 +4,10 @@ namespace MyDoctorApp.Domain.Models
 {
     public class Prescription
     {
-        public Prescription(string description, string name) 
+        private const string EMPTY_PROCEDURES_ERROR = "Add at least one procedure for the current Prescription";
+        private const string EMPTY_DRUGS_ERROR = "Add at least one drug for the current Prescription";
+
+        public Prescription(string description, string name)
         {
             Id = Guid.NewGuid();
             Description = description;
@@ -26,7 +29,7 @@ namespace MyDoctorApp.Domain.Models
         {
             if (!procedures.Any())
             {
-                return Result.Failure("Add at least one procedure for the current Prescription");
+                return Result.Failure(EMPTY_PROCEDURES_ERROR);
             }
 
 
@@ -43,9 +46,8 @@ namespace MyDoctorApp.Domain.Models
         {
             if (!prescriptedDrugs.Any())
             {
-                return Result.Failure("Add at least one drug for the current Prescription");
+                return Result.Failure(EMPTY_DRUGS_ERROR);
             }
-
 
             foreach (PrescriptedDrug drug in prescriptedDrugs)
             {

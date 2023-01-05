@@ -22,7 +22,7 @@ namespace MyDoctor.Tests.UnitTests.DomainTests
         {
             // Given
             Bill b = new();
-            var ap = new Appointment(10);
+            var ap = AppointmentTest.CreateDefaultAppointment();
 
             // When
             b.AttachAppointment(ap);
@@ -37,8 +37,8 @@ namespace MyDoctor.Tests.UnitTests.DomainTests
         {
             // Given
             Bill b = new();
-            var apPrice = 10;
-            var ap = new Appointment(apPrice);
+            var apPrice = 50;
+            var ap = AppointmentTest.CreateDefaultAppointment();
 
             var expected = apPrice;
 
@@ -82,8 +82,8 @@ namespace MyDoctor.Tests.UnitTests.DomainTests
             pre.RegisterProcedures(new List<Procedure> { pro1, pro2 });
 
             // Creating Appointment
-            var apPrice = 70;
-            var ap = new Appointment(apPrice);
+            var apPrice = 50;
+            var ap = AppointmentTest.CreateDefaultAppointment();
 
             // Link Prescription to Appointment
             ap.RegisterPrescription(pre);

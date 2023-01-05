@@ -7,7 +7,7 @@ namespace MyDocAppointment.API.Validations
     {
         public SpecialityValidator()
         {
-            RuleFor(s => s.Name).NotEmpty() ;
+            RuleFor(s => s.Name).NotEmpty();
         }
     }
 }

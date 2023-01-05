@@ -5,13 +5,19 @@ namespace MyDoctor.Application.Validators.ScheduleIntervalValidators
 {
     public class UpdateScheduleIntervalDtoValidator : AbstractValidator<UpdateScheduleIntervalDto>
     {
-        private const string LATE_STARTTIME_ERROR = "Startime cannot be earlier than EndTime";
+        private const string INVALID_STARTTIME_FORMAT_ERROR = "Invalid format for StartTime";
+        private const string INVALID_ENDTIME_FORMAT_ERROR = "Invalid format for EndTime";
 
         public UpdateScheduleIntervalDtoValidator()
         {
-            RuleFor(si => si.StartTime).LessThan(si => si.EndTime).NotEmpty().WithMessage(LATE_STARTTIME_ERROR);
-            RuleFor(si => si.EndTime).NotEmpty();
+            RuleFor(si => si.StartTime).Must(IsTimeValid).WithMessage(INVALID_STARTTIME_FORMAT_ERROR);
+            RuleFor(si => si.StartTime).Must(IsTimeValid).WithMessage(INVALID_ENDTIME_FORMAT_ERROR);
             RuleFor(si => si.Id).NotEmpty();
+        }
+
+        public static bool IsTimeValid(string time)
+        {
+            return TimeOnly.TryParse(time, out _);
         }
     }
 }

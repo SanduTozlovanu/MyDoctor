@@ -5,14 +5,15 @@ namespace MyDoctor.Application.Mappers.MedicalRoomMappers
     public static class AvailableAppointmentIntervalsMapper
     {
         private static Lazy<IMapper> Lazy =
-            new Lazy<IMapper>(() =>
+            new(() =>
             {
                 var config = new MapperConfiguration(cfg =>
                 {
                     cfg.ShouldMapProperty = p =>
                     {
-                        if (p.GetMethod == null) return false;
-                        return p.GetMethod.IsPublic ||
+                        return p.GetMethod == null
+                            ? false
+                            : p.GetMethod.IsPublic ||
                         p.GetMethod.IsAssembly;
                     };
                     cfg.AddProfile<AvailableAppointmentIntervalsProfile>();

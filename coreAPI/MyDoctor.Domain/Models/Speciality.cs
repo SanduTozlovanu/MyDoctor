@@ -1,6 +1,4 @@
-﻿using MyDoctorApp.Domain.Helpers;
-
-namespace MyDoctorApp.Domain.Models
+﻿namespace MyDoctorApp.Domain.Models
 {
     public class Speciality
     {

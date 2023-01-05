@@ -2,7 +2,6 @@
 using MyDoctor.API.DTOs;
 using MyDoctor.Application.Commands.MedicalRoomCommands;
 using MyDoctor.Tests.Helpers;
-using MyDoctorApp.Domain.Models;
 using Newtonsoft.Json;
 using System.Net;
 using System.Text;
@@ -24,7 +23,7 @@ namespace MyDoctor.Tests.IntegTests
         private async Task Init()
         {
             string request2 = "https://localhost:7244/api/v1/Patients";
-            var pDto = new CreatePatientDto(new CreateUserDto(RandomGenerators.CreateRandomEmail(), "Test1234", "Test", "Test"), 15);
+            var pDto = new CreatePatientDto(new CreateUserDto(RandomGenerators.CreateRandomEmail(), "Test1234", "Test", "Test"));
 
             var content2 = new StringContent(JsonConvert.SerializeObject(pDto), Encoding.UTF8, "application/json");
             var resultPatient = await HttpClient.PostAsync(request2, content2);
@@ -73,9 +72,11 @@ namespace MyDoctor.Tests.IntegTests
 
             CreateDrugDto drugDto2 = new("Peniciline is good", "Peniciline", 25.48, 2);
 
-            List<CreateDrugDto> dtos = new();
-            dtos.Add(drugDto1);
-            dtos.Add(drugDto2);
+            List<CreateDrugDto> dtos = new()
+            {
+                drugDto1,
+                drugDto2
+            };
             var contentDrug = new StringContent(JsonConvert.SerializeObject(dtos), Encoding.UTF8, "application/json");
 
             var result = await HttpClient.PostAsync(string.Format(requestDrug, drugStock.Id.ToString()), contentDrug);
@@ -88,7 +89,7 @@ namespace MyDoctor.Tests.IntegTests
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
 
             string requestAppointment = $"https://localhost:7244/api/v1/Appointments/{contentPatient.Id}_{contentDoctor.Id}/create_appointment";
-            var aDto = new CreateAppointmentDto(50, DateTime.Today.AddDays(1), DateTime.Now.AddHours(1), DateTime.Now.AddHours(5));
+            var aDto = new CreateAppointmentDto(DateOnly.FromDateTime(DateTime.Today.AddDays(1)), DateTime.Now.AddHours(1).ToString("HH:mm"), DateTime.Now.AddHours(5).ToString("HH:mm"));
             var content = new StringContent(JsonConvert.SerializeObject(aDto), Encoding.UTF8, "application/json");
             var res = await HttpClient.PostAsync(string.Format(requestAppointment, patientId.ToString(), doctorId.ToString()), content);
             var jsonStringAppointment = await res.Content.ReadAsStringAsync();

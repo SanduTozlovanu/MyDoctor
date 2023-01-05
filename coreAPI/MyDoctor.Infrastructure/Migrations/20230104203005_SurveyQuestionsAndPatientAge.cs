@@ -1,12 +1,11 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace MyDoctorApp.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class UpdateInfoOnUsers : Migration
+    public partial class SurveyQuestionsAndPatientAge : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -28,7 +27,6 @@ namespace MyDoctorApp.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Age = table.Column<uint>(type: "INTEGER", nullable: false),
                     AccountType = table.Column<string>(type: "TEXT", nullable: false),
                     Email = table.Column<string>(type: "TEXT", nullable: false),
                     Password = table.Column<string>(type: "TEXT", nullable: false),
@@ -73,17 +71,31 @@ namespace MyDoctorApp.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "MedicalHistories",
+                name: "SurveyQuestions",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    PatientId = table.Column<Guid>(type: "TEXT", nullable: false)
+                    PatientId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    CancerQuestion = table.Column<string>(type: "TEXT", nullable: false),
+                    CancerAnswer = table.Column<string>(type: "TEXT", nullable: false),
+                    BloodPressureQuestion = table.Column<string>(type: "TEXT", nullable: false),
+                    BloodPressureAnswer = table.Column<string>(type: "TEXT", nullable: false),
+                    DiabetisQuestion = table.Column<string>(type: "TEXT", nullable: false),
+                    DiabetisAnswer = table.Column<string>(type: "TEXT", nullable: false),
+                    AllergiesQuestion = table.Column<string>(type: "TEXT", nullable: false),
+                    AllergiesAnswer = table.Column<string>(type: "TEXT", nullable: false),
+                    SexualQuestion = table.Column<string>(type: "TEXT", nullable: false),
+                    SexualAnswer = table.Column<string>(type: "TEXT", nullable: false),
+                    CovidQuestion = table.Column<string>(type: "TEXT", nullable: false),
+                    CovidAnswer = table.Column<string>(type: "TEXT", nullable: false),
+                    HeadAcheQuestion = table.Column<string>(type: "TEXT", nullable: false),
+                    HeadAcheAnswer = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MedicalHistories", x => x.Id);
+                    table.PrimaryKey("PK_SurveyQuestions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_MedicalHistories_Patients_PatientId",
+                        name: "FK_SurveyQuestions_Patients_PatientId",
                         column: x => x.PatientId,
                         principalTable: "Patients",
                         principalColumn: "Id",
@@ -97,6 +109,7 @@ namespace MyDoctorApp.Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     MedicalRoomId = table.Column<Guid>(type: "TEXT", nullable: false),
                     SpecialityID = table.Column<Guid>(type: "TEXT", nullable: false),
+                    AppointmentPrice = table.Column<uint>(type: "INTEGER", nullable: false),
                     AccountType = table.Column<string>(type: "TEXT", nullable: false),
                     Email = table.Column<string>(type: "TEXT", nullable: false),
                     Password = table.Column<string>(type: "TEXT", nullable: false),
@@ -238,8 +251,7 @@ namespace MyDoctorApp.Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
                     Description = table.Column<string>(type: "TEXT", nullable: false),
-                    AppointmentId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    MedicalHistoryId = table.Column<Guid>(type: "TEXT", nullable: true)
+                    AppointmentId = table.Column<Guid>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -250,11 +262,6 @@ namespace MyDoctorApp.Infrastructure.Migrations
                         principalTable: "Appointments",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Prescriptions_MedicalHistories_MedicalHistoryId",
-                        column: x => x.MedicalHistoryId,
-                        principalTable: "MedicalHistories",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -348,12 +355,6 @@ namespace MyDoctorApp.Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_MedicalHistories_PatientId",
-                table: "MedicalHistories",
-                column: "PatientId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_PrescriptedDrugs_DrugId",
                 table: "PrescriptedDrugs",
                 column: "DrugId");
@@ -370,11 +371,6 @@ namespace MyDoctorApp.Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Prescriptions_MedicalHistoryId",
-                table: "Prescriptions",
-                column: "MedicalHistoryId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Procedures_PrescriptionId",
                 table: "Procedures",
                 column: "PrescriptionId");
@@ -383,6 +379,12 @@ namespace MyDoctorApp.Infrastructure.Migrations
                 name: "IX_ScheduleIntervals_DoctorId",
                 table: "ScheduleIntervals",
                 column: "DoctorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SurveyQuestions_PatientId",
+                table: "SurveyQuestions",
+                column: "PatientId",
+                unique: true);
         }
 
         /// <inheritdoc />
@@ -404,6 +406,9 @@ namespace MyDoctorApp.Infrastructure.Migrations
                 name: "ScheduleIntervals");
 
             migrationBuilder.DropTable(
+                name: "SurveyQuestions");
+
+            migrationBuilder.DropTable(
                 name: "Drugs");
 
             migrationBuilder.DropTable(
@@ -414,9 +419,6 @@ namespace MyDoctorApp.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Appointments");
-
-            migrationBuilder.DropTable(
-                name: "MedicalHistories");
 
             migrationBuilder.DropTable(
                 name: "Doctors");

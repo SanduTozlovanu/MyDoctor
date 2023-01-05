@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using MyDoctor.Application.Commands.ScheduleIntervalCommands;
 using MyDoctor.Application.Response;
 using MyDoctorApp.Domain.Models;
 

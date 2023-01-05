@@ -1,9 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using MyDoctor.API.DTOs;
 using MyDoctor.API.Helpers;
-using MyDoctor.Application.Mappers.MedicalRoomMappers;
-using MyDoctor.Application.Mappers.ScheduleIntervalMappers;
-using MyDoctor.Application.Response;
+using MyDoctor.Application.Queries.GetDoctorAvailableAppointmentsQueries;
 using MyDoctorApp.Domain.Helpers;
 using MyDoctorApp.Domain.Models;
 using MyDoctorApp.Infrastructure.Generics;
@@ -18,33 +17,37 @@ namespace MyDoctor.API.Controllers
         public const string SpecialityNotFoundError = "Could not find specialty by the specialityId provided.";
         public const string FreeMedicalRoomNotFoundError = "Could not find a free medical room for this doctor.";
         public const string MedicalRoomNotFoundError = "Could not find a medicalRoom with this Id.";
+        private const string ImageProcessError = "An error occured during processing the images - ";
+        private const string ProfilePhotoFolderName = "profilePhotos";
+        private const string DiplomaPhotoFolderName = "diplomaPhotos";
+        private const string ResourcesFolderName = "resources";
+        private const string MissingPhotoFileName = "missingPhoto.jpg";
+        private const string BackPath = "..";
         public const string UsedEmailError = "The email is already used!";
         public const string InvalidEmailError = "The email is invalid!";
         public const string CouldNotCreateDoctorError = "Could not create a doctor from the dto.";
         private const string InvalidDoctorIdError = "There is no such Doctor with this id.";
+        private const string SuccessfulPhotosMessage = "Photos have been updated successfully";
+        private readonly List<string> possiblePhotoExtensions = new() { "jpg", "png", "jpeg" };
         private readonly IRepository<Doctor> doctorRepository;
         private readonly IRepository<MedicalRoom> medicalRoomRepository;
         private readonly IRepository<Patient> patientRepository;
         private readonly IRepository<Speciality> specialityRepository;
         private readonly IRepository<ScheduleInterval> scheduleIntervalRepository;
-        private readonly IRepository<Appointment> appointmentsRepository;
-        private readonly IRepository<AppointmentInterval> appointmentIntervalsRepository;
+        private readonly IMediator mediator;
 
-        public DoctorsController(IRepository<Doctor> doctorRepository,
+        public DoctorsController(IMediator mediator, IRepository<Doctor> doctorRepository,
             IRepository<MedicalRoom> medicalRoomRepository,
             IRepository<Patient> patientRepository,
             IRepository<Speciality> specialityRepository,
-            IRepository<ScheduleInterval> scheduleIntervalRepository,
-            IRepository<Appointment> appointmentsRepository,
-            IRepository<AppointmentInterval> appointmentIntervalsRepository)
+            IRepository<ScheduleInterval> scheduleIntervalRepository)
         {
+            this.mediator = mediator;
             this.doctorRepository = doctorRepository;
             this.medicalRoomRepository = medicalRoomRepository;
             this.patientRepository = patientRepository;
             this.specialityRepository = specialityRepository;
             this.scheduleIntervalRepository = scheduleIntervalRepository;
-            this.appointmentsRepository = appointmentsRepository;
-            this.appointmentIntervalsRepository = appointmentIntervalsRepository;
         }
 
         private static List<ScheduleInterval> GenerateScheduleIntervals()
@@ -52,7 +55,7 @@ namespace MyDoctor.API.Controllers
             var scheduleIntervals = new List<ScheduleInterval>();
             foreach (var day in Enum.GetNames(typeof(WeekDays)))
             {
-                scheduleIntervals.Add(new ScheduleInterval(day, new TimeOnly(0, 0), new TimeOnly(23, 59)));
+                scheduleIntervals.Add(new ScheduleInterval(day, new TimeOnly(6, 0), new TimeOnly(20, 00)));
             }
             return scheduleIntervals;
         }
@@ -77,34 +80,51 @@ namespace MyDoctor.API.Controllers
             return Ok(doctors.Select(d => doctorRepository.GetMapper().Map<DisplayDoctorDto>(d)));
         }
 
-        [HttpGet("get_available_appointment_schedule/{doctorId:guid}")]
-        public async Task<IActionResult> GetAvailableAppointmentSchedule(Guid doctorId, DateOnly dateOnly)
+        [HttpGet("profilePhoto/{doctorId:guid}")]
+        public async Task<IActionResult> GetProfilePhoto(Guid doctorId)
         {
-
             var doctor = await doctorRepository.GetAsync(doctorId);
             if (doctor == null)
             {
-                return NotFound();
+                return NotFound(InvalidDoctorIdError);
             }
-
-            var scheduleIntervs = (await scheduleIntervalRepository.FindAsync(si => si.DoctorId == doctorId)).ToList();
-            var appointments = (await appointmentsRepository.FindAsync(a => a.DoctorId == doctorId)).ToList();
-            var appointmentsIntervs = new List<AppointmentInterval>();
-            foreach (var appointment in appointments)
+            string fileExtension = "";
+            possiblePhotoExtensions.ForEach(extension =>
             {
-                var appointmentInterval = (await appointmentIntervalsRepository.FindAsync(ai => ai.AppointmentId == appointment.Id)).SingleOrDefault();
-                if (appointmentInterval != null)
+                if (new FileInfo(Path.Combine(Directory.GetCurrentDirectory(), BackPath, ProfilePhotoFolderName, $"{doctor.Email}.{extension}")).Exists)
                 {
-                    appointmentsIntervs.Add(appointmentInterval);
+                    fileExtension = extension;
+                    return;
                 }
-            }
-            var intervs = new List<AvailableAppointmentIntervalsResponse>();
-            foreach (var interval in Doctor.GetAvailableAppointmentIntervals(dateOnly, scheduleIntervs, appointmentsIntervs))
+            });
+            if (fileExtension.Length == 0)
             {
-                intervs.Add(new AvailableAppointmentIntervalsResponse(interval.Item1, interval.Item2));
+                return PhysicalFile(Path.Combine(Directory.GetCurrentDirectory(), BackPath, ResourcesFolderName, MissingPhotoFileName), "image/jpg");
             }
-
-            return Ok(intervs);
+            try
+            {
+                return PhysicalFile(Path.Combine(Directory.GetCurrentDirectory(), BackPath, ProfilePhotoFolderName, $"{doctor.Email}.{fileExtension}"), $"image/{fileExtension}");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ImageProcessError + ex);
+            }
+        }
+        /// <summary>
+        /// Endpoint for getting the available appointments for a doctor for a specific date
+        /// </summary>
+        /// <remarks>
+        /// Parameters remarks
+        /// 
+        ///     date field format is: "yyyy-mm-d"
+        ///         example: "date" : "2023-12-24"
+        ///         
+        /// </remarks>
+        [HttpGet("get_available_appointment_schedule/{doctorId:guid}")]
+        public async Task<IActionResult> GetAvailableAppointmentSchedules(Guid doctorId, DateOnly date)
+        {
+            var result = await mediator.Send(new GetDoctorAvailableAppointmentsQuery(doctorId, date));
+            return Ok(result);
         }
 
         [HttpPost("speciality")]
@@ -165,10 +185,47 @@ namespace MyDoctor.API.Controllers
             return Ok(doctorRepository.GetMapper().Map<DisplayDoctorDto>(doctor));
         }
 
+        [HttpPut("photos/{doctorId:guid}")]
+        public async Task<IActionResult> UpdatePhotos(Guid doctorId, [FromForm] UpdateDoctorPhotosDto dto)
+        {
+            var doctor = await doctorRepository.GetAsync(doctorId);
+            if (doctor == null)
+            {
+                return NotFound();
+            }
+            try
+            {
+                possiblePhotoExtensions.ForEach(extension =>
+                {
+                    var profileFile = new FileInfo(Path.Combine(Directory.GetCurrentDirectory(), BackPath, ProfilePhotoFolderName, $"{doctor.Email}.{extension}"));
+                    if (profileFile.Exists)
+                    {
+                        profileFile.Delete();
+                    }
 
+                    var diplomaFile = new FileInfo(Path.Combine(Directory.GetCurrentDirectory(), BackPath, DiplomaPhotoFolderName, $"{doctor.Email}.{extension}"));
+                    if (diplomaFile.Exists)
+                    {
+                        diplomaFile.Delete();
+                    }
+                });
+                var profilePhotoPath = Path.Combine(Directory.GetCurrentDirectory(), BackPath, ProfilePhotoFolderName, $"{doctor.Email}{new FileInfo(dto.ProfilePhoto.FileName).Extension}");
+                var diplomaPhotoPath = Path.Combine(Directory.GetCurrentDirectory(), BackPath, DiplomaPhotoFolderName, $"{doctor.Email}{new FileInfo(dto.DiplomaPhoto.FileName).Extension}");
+
+                var profileStream = new FileStream(profilePhotoPath, FileMode.Create);
+                var diplomaStream = new FileStream(diplomaPhotoPath, FileMode.Create);
+                await dto.ProfilePhoto.CopyToAsync(profileStream);
+                await dto.DiplomaPhoto.CopyToAsync(diplomaStream);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ImageProcessError + ex);
+            }
+            return Ok(SuccessfulPhotosMessage);
+        }
 
         [HttpPut("{doctorId:guid}")]
-        public async Task<IActionResult> Update(Guid doctorId, [FromBody] UpdateUserDto dto)
+        public async Task<IActionResult> Update(Guid doctorId, [FromBody] UpdateDoctorDto dto)
         {
             var doctor = await doctorRepository.GetAsync(doctorId);
             if (doctor == null)
@@ -176,14 +233,15 @@ namespace MyDoctor.API.Controllers
                 return NotFound();
             }
 
-            var doctorNew = new Doctor(doctor.Email, doctor.Password, dto.FirstName, dto.LastName, dto.Description, dto.Username);
+            var doctorNew = new Doctor(doctor.Email, doctor.Password, dto.UpdateUserDto.FirstName,
+                dto.UpdateUserDto.LastName, dto.AppointmentPrice, dto.UpdateUserDto.Description, dto.UpdateUserDto.Username);
 
             doctor.Update(doctorNew);
 
             doctorRepository.Update(doctor);
 
             await doctorRepository.SaveChangesAsync();
-            return Ok();
+            return Ok(doctorRepository.GetMapper().Map<DisplayDoctorDto>(doctor));
         }
 
 
@@ -193,7 +251,8 @@ namespace MyDoctor.API.Controllers
             try
             {
                 await doctorRepository.Delete(doctorId);
-            }catch(ArgumentException) 
+            }
+            catch (ArgumentException)
             {
                 return BadRequest(InvalidDoctorIdError);
             }
