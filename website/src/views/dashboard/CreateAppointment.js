@@ -79,7 +79,7 @@ const CreateAppointment = () => {
     try {
       const response = await DoctorApi.GetAvailableAppointmentSchedule(
         doctor.id,
-        data,
+        {"date": data.year + '-' + data.month + '-' + data.day},
       )
       setScheduleIntervals(response.data)
       setAppointmentDay(data)
@@ -89,8 +89,6 @@ const CreateAppointment = () => {
       console.log(error)
     }
   }
-
-  const crypto = window.crypto
 
   const createAppointmentPopup = async () => {
     await Swal.fire({
@@ -106,12 +104,22 @@ const CreateAppointment = () => {
         return Swal.close()
       }
       try {
-        await AppointmentApi.CreateAppointment(doctor.id, user.id, {
-          price: 0,
-          date: `${appointmentDay.year}-${appointmentDay.month}-${appointmentDay.day}`,
-          startTime: appointmentInterval.startTime,
-          endTime: appointmentInterval.endTime,
-        })
+        if(appointmentDay.month < 10){
+          const response = await AppointmentApi.CreateAppointment(user.id, doctor.id, {
+            date: `${appointmentDay.year}-0${appointmentDay.month}-${appointmentDay.day}`,
+            startTime: appointmentInterval.startTime,
+            endTime: appointmentInterval.endTime,
+          })
+          console.log(response)
+        } else {
+          const response = await AppointmentApi.CreateAppointment(user.id, doctor.id, {
+            date: `${appointmentDay.year}-${appointmentDay.month}-${appointmentDay.day}`,
+            startTime: appointmentInterval.startTime,
+            endTime: appointmentInterval.endTime,
+          })
+          console.log(response)
+        }
+
       } catch (error) {
         console.log(error)
         return setError('There has been an error.')
@@ -175,7 +183,6 @@ const CreateAppointment = () => {
                     <Row>
                       {doctors && doctors.length ? (
                         doctors.map((doc, index) => {
-                          let array = new Uint32Array(1)
                           return (
                             <Col
                               className="text-left mb-3"
@@ -213,9 +220,7 @@ const CreateAppointment = () => {
                                       </h5>
                                       <h3 className="mb-0 text-success">
                                         $
-                                        {crypto.getRandomValues(array) < 200
-                                          ? crypto.getRandomValues()
-                                          : 150}
+                                        {doc.appointmentPrice}
                                       </h3>
                                       <Button
                                         color="primary"

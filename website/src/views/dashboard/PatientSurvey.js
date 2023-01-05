@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import Header from 'components/Headers/Header'
 import {
   Button,
@@ -11,29 +12,18 @@ import {
 } from 'reactstrap'
 import { useUserContext } from 'context/UserContext'
 import { useState, useEffect } from 'react'
+import SurveyApi from 'api/survey'
 
 const answers = ['Yes', 'No', "I don't know"]
 
 const PatientSurvey = () => {
   const { user } = useUserContext()
   const [questions, setQuestions] = useState([
-    {
-      question: 'Do you have diabetis?',
-      answer: '',
-    },
-    {
-      question: 'Do you have high blood pressure?',
-      answer: '',
-    },
-    {
-      question: 'Do / did you have cancer?',
-      answer: '',
-    },
-    {
-      question: 'Do you have any allergies?',
-      answer: '',
-    },
-  ])
+      'Do you have diabetis?',
+      'Do you have high blood pressure?',
+      'Do / did you have cancer?',
+      'Do you have any allergies?'])
+  const [response, setResponse] = useState([])
 
   const handleQuestionAnswer = (e, index) => {
     e.persist()
@@ -49,8 +39,22 @@ const PatientSurvey = () => {
   }
 
   useEffect(() => {
-    console.log(questions)
-  }, [questions])
+    const fetchData = async () => {
+        await getQuestions(user.id)
+    }
+    fetchData()
+}, [])
+
+
+ const getQuestions = async () => {
+  try{
+    const response = await SurveyApi.GetQuestions(user.id);
+    setQuestions(response.data)
+    console.log(response.data)
+  }catch(error){
+    console.log(error)
+  }
+ }
 
   return (
     <>
@@ -78,7 +82,7 @@ const PatientSurvey = () => {
                         <Row key={index} className="mt-3">
                           <Col>
                             <h3 className="font-weight-400">
-                              {question.question}
+                              {question}
                             </h3>
                             <Row className="text-left">
                               {answers.map((answer, answerIndex) => {

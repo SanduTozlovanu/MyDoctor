@@ -13,7 +13,7 @@ class DoctorApi {
   }
   static async GetAvailableAppointmentSchedule(userId, data) {
     return await axios.get(
-      `Doctors/get_available_appointment_schedule/${userId}`,
+      `Doctors/get_available_appointment_schedule/${userId}?` + new URLSearchParams(data)
     )
   }
 }

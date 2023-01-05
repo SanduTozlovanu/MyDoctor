@@ -19,48 +19,7 @@ import moment from 'moment';
 const DoctorAppointments = () => {
 
     const [error, setError] = useState('')
-    const [appointments, setAppointments] = useState([
-        {
-            date: "2023-01-04",
-            pacientFirstName: "Lavinia",
-            pacientLastName: "Naet",
-            email: "lavinian@gmail.com",
-            startTime: "09:00",
-            endTime: "10:00"
-        },
-        {
-            date: "2023-01-04",
-            pacientFirstName: "Theodor",
-            pacientLastName: "Nae",
-            email: "tnae@gmail.com",
-            startTime: "08:00",
-            endTime: "09:00"
-        },
-        {
-            date: "2023-01-05",
-            pacientFirstName: "Theodora",
-            pacientLastName: "Scott",
-            email: "scottThe@gmail.com",
-            startTime: "08:00",
-            endTime: "09:00"
-        },
-        {
-            date: "2023-01-05",
-            pacientFirstName: "Costel",
-            pacientLastName: "Lee",
-            email: "costilee@gmail.com",
-            startTime: "18:00",
-            endTime: "19:00"
-        },
-        {
-            date: "2023-01-10",
-            pacientFirstName: "Theodor",
-            pacientLastName: "Nae",
-            email: "tnae@gmail.com",
-            startTime: "08:00",
-            endTime: "09:00"
-        }
-    ])
+    const [appointments, setAppointments] = useState([])
     const { user } = useUserContext()
 
     useEffect(() => {
@@ -76,9 +35,9 @@ const DoctorAppointments = () => {
     }, [])
     const getAppointments = async () => {
         try {
-            // const response = await AppointmentApi.GetAppointments(user.id)
-            // console.log(response)
-            // setAppointments(response)
+            const response = await AppointmentApi.GetDoctorAppointments(user.id)
+            console.log(response)
+            setAppointments(response.data)
         } catch (error) {
             console.log(error)
             setError("Error: Couldn't get the appointments.")
@@ -132,7 +91,7 @@ const DoctorAppointments = () => {
                                                         </td>
                                                         <td>
                                                             <span className="mb-0 text-sm">
-                                                                {appointment.pacientFirstName} {appointment.pacientLastName}
+                                                                {appointment.patientFirstName} {appointment.patientLastName}
                                                             </span>
                                                         </td>
                                                         <td>

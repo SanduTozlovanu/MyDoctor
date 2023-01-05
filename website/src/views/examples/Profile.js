@@ -52,20 +52,26 @@ const Profile = () => {
   const [email, setEmail] = useState('')
   const [accountType, setAccountType] = useState('')
   const [speciality, setSpeciality] = useState('')
-  const [description, setDescription] = useState('A few words about you...')
+  const [description, setDescription] = useState('')
   const [username, setUsername] = useState('')
   const history = useHistory()
-  const [price, setPrice] = useState(0)
+  const [price, setPrice] = useState()
 
   useEffect(() => {
-    console.log(user)
+    // console.log(user)
     if (user && user.id) {
       setFirstName(user.firstName)
       setLastName(user.lastName)
       setEmail(user.email)
       setAccountType(user.accountType)
+      if(user.description === ""){
+        setDescription('A few words about you...')
+      } else{
+        setDescription(user.description)
+      }
       if (user.accountType === 'DOCTOR') {
-        setSpeciality(user.speciality)
+        setSpeciality(user.speciality)       
+          setPrice(user.appointmentPrice)
       }
       setUsername(
         `${user.firstName.toLowerCase()}.${user.lastName.toLowerCase()}`,
@@ -73,6 +79,7 @@ const Profile = () => {
     }
   }, [user])
 
+  
   const updateProfile = async () => {
     try {
       const data = {
@@ -85,8 +92,17 @@ const Profile = () => {
        const response =  await DoctorApi.UpdateDoctor(user.id, {updateUserDto: data, appointmentPrice: Number(price)})
        console.log(response)
        /* response va contine noile date si vor trebui setate in state */
+       setUsername(response.data.username)
+       setFirstName(response.data.firstName)
+       setLastName(response.data.lastName)
+       setDescription(response.data.description)
+       setPrice(response.data.appointmentPrice)
       } else if(accountType === 'PATIENT'){
         const response  = await PatientApi.UpdatePatient(user.id, data)
+        setUsername(response.data.username)
+        setFirstName(response.data.firstName)
+        setLastName(response.data.lastName)
+        setDescription(response.data.description)
         console.log(response)
       }
     } catch (error) {
@@ -283,7 +299,8 @@ const Profile = () => {
                         </FormGroup>
                       </Col>
                     </Row>
-                    {user.accountType === "DOCTOR"?                   <Row>
+                    {user.accountType === "DOCTOR"?                   
+                    <Row>
                       <Col lg="6">
                       <FormGroup>
                           <label
@@ -295,7 +312,7 @@ const Profile = () => {
                           <Input
                             max="999"
                             className="form-control-alternative"
-                            defaultValue={0}
+                            defaultValue={price}
                             id="input-price"
                             placeholder="Appointment Price"
                             type="number"
