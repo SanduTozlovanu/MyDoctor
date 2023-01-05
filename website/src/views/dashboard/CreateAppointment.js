@@ -22,6 +22,7 @@ import Swal from 'sweetalert2'
 import SpecialitiesApi from 'api/specialities'
 import AppointmentApi from 'api/appointments'
 import { useUserContext } from 'context/UserContext'
+import { useHistory } from 'react-router-dom'
 
 function getDayName(date) {
   const locale = 'en-US'
@@ -39,7 +40,7 @@ const CreateAppointment = () => {
   const [appointmentDay, setAppointmentDay] = useState({})
   const [appointmentDayName, setAppointmentDayName] = useState('')
   const { user } = useUserContext()
-
+  const history = useHistory()
   useEffect(() => {
     const fetchData = async () => {
       await getSpecialities()
@@ -89,14 +90,21 @@ const CreateAppointment = () => {
       console.log(error)
     }
   }
-
+  const redirectToMyAppointments= async () =>{
+    await Swal.fire({
+      title: 'Verify your appointment',
+      icon: 'info',
+      confirmButtonText: 'Check',
+    }).then( async () => {
+      return history.push("/admin/patient-appointment")
+    })
+  }
   const createAppointmentPopup = async () => {
     await Swal.fire({
       title: 'Confirm appointment',
       text: `You will have an appointment with ${doctor.firstName} ${doctor.lastName} on ${appointmentDayName}, ${appointmentDay.day}/${appointmentDay.month}/${appointmentDay.year} at ${appointmentInterval.startTime}.`,
       icon: 'info',
       confirmButtonText: 'Create appointment',
-      showCloseButton: true,
       showCancelButton: true,
       reverseButtons: true,
     }).then(async (status) => {
@@ -104,22 +112,22 @@ const CreateAppointment = () => {
         return Swal.close()
       }
       try {
-        if(appointmentDay.month < 10){
-          const response = await AppointmentApi.CreateAppointment(user.id, doctor.id, {
-            date: `${appointmentDay.year}-0${appointmentDay.month}-${appointmentDay.day}`,
-            startTime: appointmentInterval.startTime,
-            endTime: appointmentInterval.endTime,
-          })
-          console.log(response)
-        } else {
-          const response = await AppointmentApi.CreateAppointment(user.id, doctor.id, {
-            date: `${appointmentDay.year}-${appointmentDay.month}-${appointmentDay.day}`,
-            startTime: appointmentInterval.startTime,
-            endTime: appointmentInterval.endTime,
-          })
-          console.log(response)
+        let month = appointmentDay.month;
+        let day = appointmentDay.day;
+        let year = appointmentDay.year;
+        if(month < 10){
+          month = "0" + appointmentDay.month;
         }
-
+        if(day < 10){
+          day = "0" + appointmentDay.day;
+        }
+          const response = await AppointmentApi.CreateAppointment(user.id, doctor.id, {
+            date: `${year}-${month}-${day}`,
+            startTime: appointmentInterval.startTime,
+            endTime: appointmentInterval.endTime,
+          })
+          console.log(response) 
+        redirectToMyAppointments()
       } catch (error) {
         console.log(error)
         return setError('There has been an error.')
@@ -308,7 +316,12 @@ const CreateAppointment = () => {
               </CardBody>
               <CardFooter className="border-0 pt-0">
                 <Row>
-                  <Col className="text-right">
+                  <Col className="text-right d-flex align-items-center justify-content-end">
+                  {error ? (
+                    <h4 className="text-center text-danger mt-3 mr-2 font-weight-400">
+                      {error}
+                    </h4>
+                  ) : null}
                     <Button
                       color="primary btn-lg"
                       disabled={
@@ -323,11 +336,6 @@ const CreateAppointment = () => {
                     >
                       Create Appointment
                     </Button>
-                    {error ? (
-                    <h4 className="text-center text-danger mt-3 font-weight-400">
-                      {error}
-                    </h4>
-                  ) : null}
                   </Col>
                 </Row>
               </CardFooter>

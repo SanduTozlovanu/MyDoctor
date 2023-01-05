@@ -39,11 +39,11 @@ import Swal from 'sweetalert2'
 import AuthApi from 'api/auth'
 import { useHistory } from 'react-router-dom'
 
-const handleAccountTypeText = (text) => {
-  const firstLetter = text.charAt(0).toUpperCase()
-  const restOfWord = text.substring(1, text.length).toLowerCase()
-  return firstLetter + restOfWord
-}
+// const handleAccountTypeText = (text) => {
+//   const firstLetter = text.charAt(0).toUpperCase()
+//   const restOfWord = text.substring(1, text.length).toLowerCase()
+//   return firstLetter + restOfWord
+// }
 
 const Profile = () => {
   const { user } = useUserContext()
@@ -58,52 +58,66 @@ const Profile = () => {
   const [price, setPrice] = useState()
 
   useEffect(() => {
-    // console.log(user)
-    if (user && user.id) {
-      setFirstName(user.firstName)
-      setLastName(user.lastName)
-      setEmail(user.email)
-      setAccountType(user.accountType)
-      if(user.description === ""){
-        setDescription('A few words about you...')
-      } else{
-        setDescription(user.description)
-      }
-      if (user.accountType === 'DOCTOR') {
-        setSpeciality(user.speciality)       
-          setPrice(user.appointmentPrice)
-      }
-      setUsername(
-        `${user.firstName.toLowerCase()}.${user.lastName.toLowerCase()}`,
-      )
+    const fetchData = async () => {
+      await getUser(user.id)
     }
-  }, [user])
+    fetchData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
-  
-  const updateProfile = async () => {
+
+  const getUser = async () => {
     try {
-      const data = {
-          firstName: firstName,
-          lastName: lastName,
-          username: username,
-          description: description,
-      }
-      if (accountType === 'DOCTOR') {
-       const response =  await DoctorApi.UpdateDoctor(user.id, {updateUserDto: data, appointmentPrice: Number(price)})
-       console.log(response)
-       /* response va contine noile date si vor trebui setate in state */
-       setUsername(response.data.username)
-       setFirstName(response.data.firstName)
-       setLastName(response.data.lastName)
-       setDescription(response.data.description)
-       setPrice(response.data.appointmentPrice)
-      } else if(accountType === 'PATIENT'){
-        const response  = await PatientApi.UpdatePatient(user.id, data)
+      if (user.accountType === "DOCTOR") {
+        const response = await DoctorApi.GetDoctorById(user.id);
+        console.log(response.data)
+        setEmail(user.email)
+        setAccountType(user.accountType)
         setUsername(response.data.username)
         setFirstName(response.data.firstName)
         setLastName(response.data.lastName)
         setDescription(response.data.description)
-        console.log(response)
+        setPrice(response.data.appointmentPrice)
+        setSpeciality(user.speciality)
+      } else if (user.accountType === 'PATIENT') {
+        const response = await PatientApi.GetPatientById(user.id);
+        console.log(response.data)
+        setEmail(user.email)
+        setAccountType(user.accountType)
+        setUsername(response.data.username)
+        setFirstName(response.data.firstName)
+        setLastName(response.data.lastName)
+        setDescription(response.data.description)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const updateProfile = async () => {
+    try {
+      const data = {
+        firstName: firstName,
+        lastName: lastName,
+        username: username,
+        description: description,
+      }
+      if (accountType === 'DOCTOR') {
+        await DoctorApi.UpdateDoctor(user.id, { updateUserDto: data, appointmentPrice: Number(price) })
+        const response = await DoctorApi.GetDoctorById(user.id);
+        console.log(response.data)
+        setUsername(response.data.username)
+        setFirstName(response.data.firstName)
+        setLastName(response.data.lastName)
+        setDescription(response.data.description)
+        setPrice(response.data.appointmentPrice)
+      } else if (accountType === 'PATIENT') {
+        await PatientApi.UpdatePatient(user.id, data)
+        const response = await PatientApi.GetPatientById(user.id);
+        setUsername(response.data.username)
+        setFirstName(response.data.firstName)
+        setLastName(response.data.lastName)
+        setDescription(response.data.description)
       }
     } catch (error) {
       console.log(error)
@@ -185,12 +199,14 @@ const Profile = () => {
                   </div>
                   <div className="h5 mt-4">
                     <i className="ni business_briefcase-24 mr-2" />
-                    {handleAccountTypeText(accountType)}
+                    {accountType ? accountType : "No information"}
                   </div>
+                  {user.accountType === "DOCTOR" ?
                   <div>
                     <i className="ni education_hat mr-2" />
-                    {speciality}
-                  </div>
+                    {speciality ? speciality : "No information"}
+                  </div> : null}
+
                   <hr className="my-4" />
                   <p>{description}</p>
                 </div>
@@ -299,28 +315,28 @@ const Profile = () => {
                         </FormGroup>
                       </Col>
                     </Row>
-                    {user.accountType === "DOCTOR"?                   
-                    <Row>
-                      <Col lg="6">
-                      <FormGroup>
-                          <label
-                            className="form-control-label"
-                            htmlFor="input-price"
-                          >
-                            Price
-                          </label>
-                          <Input
-                            max="999"
-                            className="form-control-alternative"
-                            defaultValue={price}
-                            id="input-price"
-                            placeholder="Appointment Price"
-                            type="number"
-                            onChange={(e) => setPrice(e.target.value)}
-                          />
-                        </FormGroup>
-                      </Col>
-                    </Row> : null}
+                    {user.accountType === "DOCTOR" ?
+                      <Row>
+                        <Col lg="6">
+                          <FormGroup>
+                            <label
+                              className="form-control-label"
+                              htmlFor="input-price"
+                            >
+                              Price
+                            </label>
+                            <Input
+                              max="999"
+                              className="form-control-alternative"
+                              defaultValue={price}
+                              id="input-price"
+                              placeholder="Appointment Price"
+                              type="number"
+                              onChange={(e) => setPrice(e.target.value)}
+                            />
+                          </FormGroup>
+                        </Col>
+                      </Row> : null}
                   </div>
                   <hr className="my-4" />
                   {/* Description */}

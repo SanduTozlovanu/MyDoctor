@@ -18,12 +18,10 @@ const answers = ['Yes', 'No', "I don't know"]
 
 const PatientSurvey = () => {
   const { user } = useUserContext()
-  const [questions, setQuestions] = useState([
-      'Do you have diabetis?',
-      'Do you have high blood pressure?',
-      'Do / did you have cancer?',
-      'Do you have any allergies?'])
-  const [response, setResponse] = useState([])
+  const [questions, setQuestions] = useState([])
+  const [error, setError] = useState("")
+  const [success, setSuccess] = useState(false)
+  let timeout
 
   const handleQuestionAnswer = (e, index) => {
     e.persist()
@@ -45,16 +43,34 @@ const PatientSurvey = () => {
     fetchData()
 }, [])
 
-
  const getQuestions = async () => {
   try{
     const response = await SurveyApi.GetQuestions(user.id);
     setQuestions(response.data)
-    console.log(response.data)
   }catch(error){
     console.log(error)
   }
  }
+
+const sendSurvey = async () => {
+  try{
+    console.log({patientId: user.id, questionList: questions})
+    const response = await SurveyApi.SendSurvey({patientId: user.id, questionList: questions})
+    setSuccess(true)
+    timeout = setTimeout(() => {
+      setSuccess(false)
+    }, 2000)
+    console.log(response)
+  }catch(error){
+    setError("Server error.")
+  }
+}
+
+useEffect(() => {
+  return () => {
+    clearTimeout(timeout)
+  }
+}, [])
 
   return (
     <>
@@ -82,7 +98,7 @@ const PatientSurvey = () => {
                         <Row key={index} className="mt-3">
                           <Col>
                             <h3 className="font-weight-400">
-                              {question}
+                              {question.questionBody}
                             </h3>
                             <Row className="text-left">
                               {answers.map((answer, answerIndex) => {
@@ -112,8 +128,20 @@ const PatientSurvey = () => {
               </CardBody>
               <CardFooter className="border-0 pt-0">
                 <Row>
-                  <Col className="text-right">
-                    <Button color="primary" className="btn btn-lg">
+                  <Col className="text-right  d-flex align-items-center justify-content-end">
+                  <h3
+                      style={{ transition: '.2s all' }}
+                      className={`text-right text-success mb-0 mr-3 font-weight-600 ${success ? 'd-initial' : 'd-none'
+                        }`}
+                    >
+                      Survey sent successfully!
+                    </h3>
+                  {error ? (
+                      <h4 className="text-right text-danger mb-0 mr-3 font-weight-400">
+                        {error}
+                      </h4>
+                    ) : null}
+                    <Button color="primary" className="btn btn-lg" onClick={sendSurvey}>
                       Save survey
                     </Button>
                   </Col>

@@ -4,6 +4,9 @@ class DoctorApi {
   static async GetDoctorsBySpeciality(specialityId) {
     return await axios.get(`/Doctors/get_by_speciality/${specialityId}`)
   }
+  static async GetDoctorById(doctorId) {
+    return await axios.get(`/Doctors/${doctorId}`)
+  }
   static async UpdateDoctor(userId, data) {
     console.log(userId, data)
     return await axios.put(`/Doctors/${userId}`, data)
