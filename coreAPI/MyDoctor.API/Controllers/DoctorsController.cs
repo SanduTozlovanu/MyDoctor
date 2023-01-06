@@ -63,7 +63,24 @@ namespace MyDoctor.API.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            return Ok((await doctorRepository.AllAsync()).Select(d => doctorRepository.GetMapper().Map<DisplayDoctorDto>(d)));
+            var doctors = (await doctorRepository.AllAsync()).ToList();
+            IActionResult? error = null;
+            List<DisplayDoctorWithSpecialityDto> displayDoctorsWithSpecialitiesList = new();
+            doctors.ForEach(async d =>
+            {
+                var speciality = await specialityRepository.GetAsync(d.SpecialityID);
+                if(speciality == null)
+                {
+                    error = NotFound(SpecialityNotFoundError);
+                    return;
+                }
+                displayDoctorsWithSpecialitiesList.Add(new DisplayDoctorWithSpecialityDto(doctorRepository.GetMapper().Map<DisplayDoctorDto>(d), speciality.Name));
+            });
+            if(error != null)
+            {
+                return error;
+            }
+            return Ok(displayDoctorsWithSpecialitiesList);
         }
 
         [HttpGet("{doctorId:guid}")]
@@ -74,7 +91,12 @@ namespace MyDoctor.API.Controllers
             {
                 return NotFound(InvalidDoctorIdError);
             }
-            return Ok(doctorRepository.GetMapper().Map<DisplayDoctorDto>(doctor));
+            var speciality = await specialityRepository.GetAsync(doctor.SpecialityID);
+            if( speciality == null)
+            {
+                return NotFound(SpecialityNotFoundError);
+            }
+            return Ok(new DisplayDoctorWithSpecialityDto(doctorRepository.GetMapper().Map<DisplayDoctorDto>(doctor), speciality.Name));
         }
 
         [HttpGet("get_by_speciality/{specialityId:guid}")]

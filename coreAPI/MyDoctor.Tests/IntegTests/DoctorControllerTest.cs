@@ -95,7 +95,7 @@ namespace MyDoctor.Tests.IntegTests
             var pDto = new CreateDoctorDto(new CreateUserDto("doctor@gmail.com", "Testurilef51sf5", "Test", "Test1234"), dtoSpeciality.Id);
 
             var content = new StringContent(JsonConvert.SerializeObject(pDto), Encoding.UTF8, "application/json");
-            var res = await HttpClient.PostAsync(request, content);
+            await HttpClient.PostAsync(request, content);
             var res2 = await HttpClient.PostAsync(request, content);
             var actualJsonString = await res2.Content.ReadAsStringAsync();
 
