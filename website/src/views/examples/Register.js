@@ -55,7 +55,6 @@ const Register = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [repeatPassword, setRepeatPassword] = useState('')
-  const [age, setAge] = useState(0)
   const [error, setError] = useState(null)
   const [showPassword, setShowPassword] = useState(false)
   const [creating, setCreating] = useState(false)
@@ -69,7 +68,7 @@ const Register = () => {
 
   useEffect(() => {
     setError(null)
-  }, [firstName, lastName, email, password, repeatPassword, age])
+  }, [firstName, lastName, email, password, repeatPassword])
 
   const handleRegister = async () => {
     const error = verifyCredentials()
@@ -92,14 +91,9 @@ const Register = () => {
       !lastName ||
       !email ||
       !password ||
-      !repeatPassword ||
-      (accountType === 'patient' && !age)
+      !repeatPassword 
     ) {
       setError('You must fill in all credentials.')
-      return true
-    }
-    if (accountType === 'patient' && age < 14) {
-      setError('You must be older than 14.')
       return true
     }
     if (password !== repeatPassword) {
@@ -122,8 +116,7 @@ const Register = () => {
           lastName: lastName,
           email: email,
           password: password,
-        },
-        age: age,
+        }
       }
       await AuthApi.RegisterPatient(credentials)
       const user_response = await AuthApi.Login({
@@ -167,7 +160,6 @@ const Register = () => {
               showPassword={showPassword}
               setRepeatPassword={setRepeatPassword}
               setPassword={setPassword}
-              setAge={setAge}
               error={error}
               handleRegister={handleRegister}
               accountType={accountType}
@@ -236,7 +228,6 @@ const SecondStep = ({
   showPassword,
   setRepeatPassword,
   setPassword,
-  setAge,
   error,
   handleRegister,
   accountType,
@@ -336,22 +327,6 @@ const SecondStep = ({
               />
             </InputGroup>
           </FormGroup>
-          {accountType === 'doctor' ? null : (
-            <FormGroup>
-              <InputGroup className="input-group-alternative">
-                <InputGroupAddon addonType="prepend">
-                  <InputGroupText>
-                    <i className="ni ni-badge" />
-                  </InputGroupText>
-                </InputGroupAddon>
-                <Input
-                  onChange={(e) => setAge(Math.abs(Number(e.target.value)))}
-                  placeholder="Age"
-                  type="number"
-                />
-              </InputGroup>
-            </FormGroup>
-          )}
           <Row className="my-4">
             <Col xs="12">
               <div className="custom-control custom-control-alternative custom-checkbox">
@@ -428,7 +403,7 @@ const ThirdStep = ({ firstName, lastName, email, password, history }) => {
       const response = await SpecialitiesApi.GetSpecialities()
       setSpecialities(response.data)
     } catch (err) {
-      setError(err)
+      setError("Error: Couldn't get the specialities.")
     }
   }
 
