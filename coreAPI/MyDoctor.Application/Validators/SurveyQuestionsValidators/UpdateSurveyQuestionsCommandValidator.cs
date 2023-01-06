@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using MyDoctor.Application.Commands.SurveyQuestionsCommands;
-using MyDoctor.Application.Response;
+using MyDoctor.Application.Responses;
 using MyDoctorApp.Domain.Models;
 
 namespace MyDoctor.Application.Validators.SurveyQuestionsValidators
@@ -17,12 +17,13 @@ namespace MyDoctor.Application.Validators.SurveyQuestionsValidators
 
         public static bool IsQuestionListValid(List<SurveyQuestionResponse> questionList)
         {
-            if(questionList.Count != Enum.GetValues(typeof(SurveyQuestion.Question)).Length)
+            if (questionList.Count != Enum.GetValues(typeof(SurveyQuestion.Question)).Length)
             {
                 return false;
             }
             bool isValid = true;
-            questionList.ForEach(question => {
+            questionList.ForEach(question =>
+            {
                 if (!IsQuestionBodyValid(question.QuestionBody))
                     isValid = false;
                 if (question.Answer.Length < 2)

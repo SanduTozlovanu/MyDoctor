@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using MyDoctor.Application.Response;
+using MyDoctor.Application.Responses;
 
 namespace MyDoctor.Application.Queries.ScheduleIntervalQueries
 {

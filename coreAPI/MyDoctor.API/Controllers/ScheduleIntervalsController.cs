@@ -3,7 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using MyDoctor.Application.Commands.ScheduleIntervalCommands;
 using MyDoctor.Application.Queries.ScheduleIntervalQueries;
-using MyDoctor.Application.Response;
+using MyDoctor.Application.Responses;
 using MyDoctor.Application.Validators.ScheduleIntervalValidators;
 
 namespace MyDoctor.API.Controllers

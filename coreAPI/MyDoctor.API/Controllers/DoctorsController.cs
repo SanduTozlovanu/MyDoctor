@@ -69,18 +69,14 @@ namespace MyDoctor.API.Controllers
             doctors.ForEach(async d =>
             {
                 var speciality = await specialityRepository.GetAsync(d.SpecialityID);
-                if(speciality == null)
+                if (speciality == null)
                 {
                     error = NotFound(SpecialityNotFoundError);
                     return;
                 }
                 displayDoctorsWithSpecialitiesList.Add(new DisplayDoctorWithSpecialityDto(doctorRepository.GetMapper().Map<DisplayDoctorDto>(d), speciality.Name));
             });
-            if(error != null)
-            {
-                return error;
-            }
-            return Ok(displayDoctorsWithSpecialitiesList);
+            return error != null ? error : Ok(displayDoctorsWithSpecialitiesList);
         }
 
         [HttpGet("{doctorId:guid}")]
@@ -92,11 +88,9 @@ namespace MyDoctor.API.Controllers
                 return NotFound(InvalidDoctorIdError);
             }
             var speciality = await specialityRepository.GetAsync(doctor.SpecialityID);
-            if( speciality == null)
-            {
-                return NotFound(SpecialityNotFoundError);
-            }
-            return Ok(new DisplayDoctorWithSpecialityDto(doctorRepository.GetMapper().Map<DisplayDoctorDto>(doctor), speciality.Name));
+            return speciality == null
+                ? NotFound(SpecialityNotFoundError)
+                : Ok(new DisplayDoctorWithSpecialityDto(doctorRepository.GetMapper().Map<DisplayDoctorDto>(doctor), speciality.Name));
         }
 
         [HttpGet("get_by_speciality/{specialityId:guid}")]
@@ -127,7 +121,6 @@ namespace MyDoctor.API.Controllers
                 if (new FileInfo(Path.Combine(Directory.GetCurrentDirectory(), BackPath, ProfilePhotoFolderName, $"{doctor.Email}.{extension}")).Exists)
                 {
                     fileExtension = extension;
-                    return;
                 }
             });
             if (fileExtension.Length == 0)

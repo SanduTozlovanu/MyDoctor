@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using MyDoctor.API.DTOs;
 
-namespace MyDocAppointment.API.Validations
+namespace MyDoctor.API.Validations
 {
     public class CreateDrugValidator : AbstractValidator<CreateDrugDto>
     {

@@ -47,9 +47,7 @@ namespace MyDoctor.API.Controllers
         public async Task<IActionResult> GetById(Guid patientId)
         {
             var patient = await patientRepository.GetAsync(patientId);
-            if(patient == null)
-                return NotFound(InvalidPatientIdError);
-            return Ok(patientRepository.GetMapper().Map<DisplayPatientDto>(patient));
+            return patient == null ? NotFound(InvalidPatientIdError) : Ok(patientRepository.GetMapper().Map<DisplayPatientDto>(patient));
         }
 
         [HttpPost]

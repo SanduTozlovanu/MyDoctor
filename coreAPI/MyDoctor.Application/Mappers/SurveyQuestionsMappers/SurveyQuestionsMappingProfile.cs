@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using MyDoctor.Application.Response;
+using MyDoctor.Application.Responses;
 using MyDoctorApp.Domain.Models;
 
 namespace MyDoctor.Application.Mappers.SurveyQuestionsMappers

@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using MyDoctor.Application.Mappers.ScheduleIntervalMappers;
-using MyDoctor.Application.Response;
+using MyDoctor.Application.Responses;
 using MyDoctorApp.Domain.Models;
 using MyDoctorApp.Infrastructure.Generics;
 

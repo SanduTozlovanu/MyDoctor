@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MyDoctor.Application.Commands.SurveyQuestionsCommands;
 using MyDoctor.Application.Queries.SurveyQuestionsQueries;
-using MyDoctor.Application.Response;
+using MyDoctor.Application.Responses;
 using MyDoctor.Application.Validators.SurveyQuestionsValidators;
 
 namespace MyDoctor.API.Controllers

@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using MyDoctor.Application.Response;
+using MyDoctor.Application.Responses;
 
 namespace MyDoctor.Application.Mappers.DoctorAvailableAppointmentsMappers
 {

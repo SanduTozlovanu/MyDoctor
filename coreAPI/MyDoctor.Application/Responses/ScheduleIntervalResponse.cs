@@ -1,4 +1,4 @@
-﻿namespace MyDoctor.Application.Response
+﻿namespace MyDoctor.Application.Responses
 {
     public class ScheduleIntervalResponse
     {

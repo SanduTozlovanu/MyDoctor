@@ -1,6 +1,6 @@
-﻿using MyDocAppointment.API.Validations;
-using MyDoctor.API.Controllers;
+﻿using MyDoctor.API.Controllers;
 using MyDoctor.API.DTOs;
+using MyDoctor.API.Validations;
 using MyDoctor.Application.Commands.MedicalRoomCommands;
 using MyDoctor.Tests.Helpers;
 using Newtonsoft.Json;
@@ -11,9 +11,7 @@ namespace MyDoctor.Tests.IntegTests
 {
     public class DoctorControllerTest : BaseControllerTest<DoctorsController>
     {
-        public DoctorControllerTest(CustomWebApplicationFactory<Program> factory) : base(factory)
-        {
-        }
+        public DoctorControllerTest(CustomWebApplicationFactory<Program> factory) : base(factory) { }
 
         private async Task Init()
         {

@@ -4,17 +4,16 @@ namespace MyDoctor.Application.Mappers.ScheduleIntervalMappers
 {
     public static class ScheduleIntervalMapper
     {
-        private static Lazy<IMapper> Lazy =
+        private static readonly Lazy<IMapper> Lazy =
             new(() =>
             {
                 var config = new MapperConfiguration(cfg =>
                 {
                     cfg.ShouldMapProperty = p =>
                     {
-                        return p.GetMethod == null
-                            ? false
-                            : p.GetMethod.IsPublic ||
-                        p.GetMethod.IsAssembly;
+                        return p.GetMethod != null
+                        && (p.GetMethod.IsPublic ||
+                        p.GetMethod.IsAssembly);
                     };
                     cfg.AddProfile<ScheduleIntervalMappingProfile>();
                 });

@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using MyDoctor.Application.Commands.SurveyQuestionsCommands;
 using MyDoctor.Application.Mappers.SurveyQuestionsMappers;
-using MyDoctor.Application.Response;
+using MyDoctor.Application.Responses;
 using MyDoctorApp.Domain.Models;
 using MyDoctorApp.Infrastructure.Generics;
 using System.Data.SqlTypes;
@@ -23,9 +23,9 @@ namespace MyDoctor.Application.Handlers.SurveyQuestionsHandlers
             {
                 throw new SqlNullValueException();
             }
-            for( int i = 0; i < surveyQuestionsEntityList.Count; i++)
+            for (int i = 0; i < surveyQuestionsEntityList.Count; i++)
             {
-                for(int j = 0; j < request.QuestionList.Count; j++)
+                for (int j = 0; j < request.QuestionList.Count; j++)
                 {
                     if (surveyQuestionsEntityList[i].QuestionBody == request.QuestionList[j].QuestionBody)
                     {

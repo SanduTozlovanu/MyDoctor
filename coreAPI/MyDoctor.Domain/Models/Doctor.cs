@@ -93,40 +93,10 @@ namespace MyDoctorApp.Domain.Models
             bool skipCurrentInterval = false;
             foreach (var appointmentInterval in appointmentIntervals)
             {
-                if (intervalStartTime.IsBetween(appointmentInterval.StartTime, appointmentInterval.EndTime) ||
-                    intervalEndTime.AddMinutes(-1).IsBetween(appointmentInterval.StartTime, appointmentInterval.EndTime))
+                if (IsIntervalSkippable(ref intervalStartTime, ref intervalEndTime, appointmentInterval, ref date))
                 {
-                    // If StartTime is bigger than EndTime (e.x.: "23:30", "00:00")
-                    if (appointmentInterval.StartTime.CompareTo(appointmentInterval.EndTime) == 1)
-                    {
-                        if (date == appointmentInterval.Date)
-                        {
-                            if (intervalEndTime >= appointmentInterval.StartTime)
-                            {
-                                skipCurrentInterval = true;
-                                break;
-                            }
-                        }
-
-                        if (date.AddDays(-1) == appointmentInterval.Date)
-                        {
-                            if (intervalEndTime <= appointmentInterval.EndTime)
-                            {
-                                skipCurrentInterval = true;
-                                break;
-                            }
-                        }
-
-                    }
-                    // If StartTime is less or equal than EndTime (e.x.: "00:00", "00:30")
-                    else
-                    {
-                        if (date == appointmentInterval.Date)
-                        {
-                            skipCurrentInterval = true;
-                            break;
-                        }
-                    }
+                    skipCurrentInterval = true;
+                    break;
                 }
             }
 
@@ -134,6 +104,25 @@ namespace MyDoctorApp.Domain.Models
             {
                 availableIntervals.Add(Tuple.Create(intervalStartTime, intervalEndTime));
             }
+        }
+        private static bool IsIntervalSkippable(ref TimeOnly intervalStartTime, ref TimeOnly intervalEndTime, AppointmentInterval appointmentInterval, ref DateOnly date)
+        {
+            if (intervalStartTime.IsBetween(appointmentInterval.StartTime, appointmentInterval.EndTime) ||
+                intervalEndTime.AddMinutes(-1).IsBetween(appointmentInterval.StartTime, appointmentInterval.EndTime))
+            {
+                // If StartTime is bigger than EndTime (e.x.: "23:30", "00:00")
+                if (appointmentInterval.StartTime.CompareTo(appointmentInterval.EndTime) == 1)
+                {
+                    return date == appointmentInterval.Date && intervalEndTime >= appointmentInterval.StartTime
+                    || date.AddDays(-1) == appointmentInterval.Date && intervalEndTime <= appointmentInterval.EndTime;
+                }
+                // If StartTime is less or equal than EndTime (e.x.: "00:00", "00:30")
+                else
+                {
+                    return date == appointmentInterval.Date;
+                }
+            }
+            return false;
         }
     }
 }

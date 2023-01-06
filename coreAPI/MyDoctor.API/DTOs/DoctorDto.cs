@@ -12,7 +12,7 @@
     }
     public class DisplayDoctorDto
     {
-        public DisplayDoctorDto(Guid id, Guid medicalRoomId, Guid specialityId, string email, string firstName,
+        public DisplayDoctorDto(Guid id, Guid medicalRoomId, Guid specialityId, string email, string firstName, //NOSONAR
             string lastName, uint appointmentPrice, string description, string username)
         {
             this.Id = id;
