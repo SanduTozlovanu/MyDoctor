@@ -53,20 +53,18 @@ namespace MyDoctor.Tests.IntegTests
             MedicalRoomResponse expectedObject2 = new(cont2.Id, mdDto2.Adress);
             Assert.True(expectedObject.Equals(cont));
             Assert.True(expectedObject2.Equals(cont2));
-            using (var scope = Factory.Services.CreateScope())
-            {
-                var scopeProvider = scope.ServiceProvider;
-                var databaseContext = scopeProvider.GetRequiredService<DatabaseContext>();
+            using var scope = Factory.Services.CreateScope();
+            var scopeProvider = scope.ServiceProvider;
+            var databaseContext = scopeProvider.GetRequiredService<DatabaseContext>();
 
-                MedicalRoom? medicalRoom1 = await databaseContext.MedicalRooms.FindAsync(cont.Id);
-                MedicalRoom? medicalRoom2 = await databaseContext.MedicalRooms.FindAsync(cont2.Id);
-                Assert.NotNull(medicalRoom1);
-                Assert.NotNull(medicalRoom2);
-                Assert.Equal(medicalRoom1.Adress, mdDto.Adress);
-                Assert.Equal(medicalRoom1.Id, cont.Id);
-                Assert.Equal(medicalRoom2.Adress, mdDto2.Adress);
-                Assert.Equal(medicalRoom2.Id, cont2.Id);
-            }
+            MedicalRoom? medicalRoom1 = await databaseContext.MedicalRooms.FindAsync(cont.Id);
+            MedicalRoom? medicalRoom2 = await databaseContext.MedicalRooms.FindAsync(cont2.Id);
+            Assert.NotNull(medicalRoom1);
+            Assert.NotNull(medicalRoom2);
+            Assert.Equal(medicalRoom1.Adress, mdDto.Adress);
+            Assert.Equal(medicalRoom1.Id, cont.Id);
+            Assert.Equal(medicalRoom2.Adress, mdDto2.Adress);
+            Assert.Equal(medicalRoom2.Id, cont2.Id);
 
         }
 

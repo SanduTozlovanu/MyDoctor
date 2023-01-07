@@ -94,5 +94,81 @@ namespace MyDoctor.Tests.UnitTests.DomainTests
             Assert.Equal(newDoctor.LastName, d.LastName);
             Assert.Equal(newDoctor.Speciality, d.Speciality);
         }
+        [Fact]
+        public void GetAvailableAppointmentIntervalsTest()
+        {
+            List<Tuple<TimeOnly, TimeOnly>> expectedIntervals = new()
+            {
+                Tuple.Create(TimeOnly.Parse("08:00"), TimeOnly.Parse("09:00")),
+                Tuple.Create(TimeOnly.Parse("09:00"), TimeOnly.Parse("10:00"))
+            };
+            DateOnly date = DateOnly.Parse("2023-05-20");
+            List<AppointmentInterval> appointmentIntervals = new()
+            {
+                new AppointmentInterval(date, TimeOnly.Parse("07:00"), TimeOnly.Parse("08:00")),
+                new AppointmentInterval(date, TimeOnly.Parse("06:00"), TimeOnly.Parse("07:00")),
+                new AppointmentInterval(date, TimeOnly.Parse("10:00"), TimeOnly.Parse("11:00")),
+                new AppointmentInterval(date, TimeOnly.Parse("11:00"), TimeOnly.Parse("12:00")),
+            };
+            var scheduleIntervals = new List<ScheduleInterval>();
+            foreach (var day in Enum.GetNames(typeof(WeekDays)))
+            {
+                scheduleIntervals.Add(new ScheduleInterval(day, new TimeOnly(6, 0), new TimeOnly(12, 00)));
+            }
+            var receivedIntervals = Doctor.GetAvailableAppointmentIntervals(date, scheduleIntervals, appointmentIntervals);
+            Assert.Equal(expectedIntervals, receivedIntervals);
+        }
+        [Fact]
+        public void GetAvailableAppointmentIntervalsTest_All_available()
+        {
+            List<Tuple<TimeOnly, TimeOnly>> expectedIntervals = new()
+            {
+                Tuple.Create(TimeOnly.Parse("06:00"), TimeOnly.Parse("07:00")),
+                Tuple.Create(TimeOnly.Parse("07:00"), TimeOnly.Parse("08:00")),
+                Tuple.Create(TimeOnly.Parse("08:00"), TimeOnly.Parse("09:00")),
+                Tuple.Create(TimeOnly.Parse("09:00"), TimeOnly.Parse("10:00")),
+            };
+            DateOnly date = DateOnly.Parse("2023-05-20");
+            List<AppointmentInterval> appointmentIntervals = new()
+            {
+                new AppointmentInterval(DateOnly.Parse("2023-05-21"), TimeOnly.Parse("07:00"), TimeOnly.Parse("08:00")),
+                new AppointmentInterval(DateOnly.Parse("2023-05-21"), TimeOnly.Parse("06:00"), TimeOnly.Parse("07:00")),
+                new AppointmentInterval(DateOnly.Parse("2023-05-21"), TimeOnly.Parse("10:00"), TimeOnly.Parse("11:00")),
+                new AppointmentInterval(DateOnly.Parse("2023-05-21"), TimeOnly.Parse("11:00"), TimeOnly.Parse("12:00")),
+            };
+            var scheduleIntervals = new List<ScheduleInterval>();
+            foreach (var day in Enum.GetNames(typeof(WeekDays)))
+            {
+                scheduleIntervals.Add(new ScheduleInterval(day, new TimeOnly(6, 0), new TimeOnly(10, 00)));
+            }
+            var receivedIntervals = Doctor.GetAvailableAppointmentIntervals(date, scheduleIntervals, appointmentIntervals);
+            Assert.Equal(expectedIntervals, receivedIntervals);
+        }
+        [Fact]
+        public void GetAvailableAppointmentIntervalsTest_Night_Turn()
+        {
+            List<Tuple<TimeOnly, TimeOnly>> expectedIntervals = new()
+            {
+                Tuple.Create(TimeOnly.Parse("21:00"), TimeOnly.Parse("22:00"))
+            };
+            DateOnly date = DateOnly.Parse("2023-05-20");
+            List<AppointmentInterval> appointmentIntervals = new()
+            {
+                new AppointmentInterval(date, TimeOnly.Parse("20:00"), TimeOnly.Parse("21:00")),
+                new AppointmentInterval(date, TimeOnly.Parse("22:00"), TimeOnly.Parse("23:00")),
+                new AppointmentInterval(date, TimeOnly.Parse("23:00"), TimeOnly.Parse("23:59")),
+                new AppointmentInterval(date.AddDays(1), TimeOnly.Parse("00:00"), TimeOnly.Parse("01:00")),
+            };
+            var scheduleIntervals = new List<ScheduleInterval>();
+            foreach (var day in Enum.GetNames(typeof(WeekDays)))
+            {
+                if (day == "Sunday")
+                    scheduleIntervals.Add(new ScheduleInterval(day, new TimeOnly(00, 00), new TimeOnly(02, 00)));
+                else
+                    scheduleIntervals.Add(new ScheduleInterval(day, new TimeOnly(20, 00), new TimeOnly(00, 00)));
+            }
+            var receivedIntervals = Doctor.GetAvailableAppointmentIntervals(date, scheduleIntervals, appointmentIntervals);
+            Assert.Equal(expectedIntervals, receivedIntervals);
+        }
     }
 }

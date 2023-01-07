@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using MyDoctor.Application.Commands.MedicalRoomCommands;
+using MyDoctor.Application.Exceptions;
 using MyDoctor.Application.Mappers.MedicalRoomMappers;
 using MyDoctor.Application.Responses;
 using MyDoctorApp.Domain.Models;
@@ -19,10 +20,10 @@ namespace MyDoctor.Application.Handlers.MedicalRoomHandlers
         }
         public async Task<MedicalRoomResponse> Handle(CreateMedicalRoomCommand request, CancellationToken cancellationToken)
         {
-            MedicalRoom medicalRoomEntity = AvailableAppointmentIntervalsMapper.Mapper.Map<MedicalRoom>(request);
+            MedicalRoom medicalRoomEntity = MedicalRoomMapper.Mapper.Map<MedicalRoom>(request);
             if (medicalRoomEntity == null)
             {
-                throw new ApplicationException("Issue with the mapper");
+                throw new BaseMapperException();
             }
             var drugStock = new DrugStock();
             medicalRoomEntity.RegisterDrugStock(drugStock);
@@ -30,7 +31,7 @@ namespace MyDoctor.Application.Handlers.MedicalRoomHandlers
             await drugStockRepository.AddAsync(drugStock);
             await medicalRoomRepository.SaveChangesAsync();
             await drugStockRepository.SaveChangesAsync();
-            return AvailableAppointmentIntervalsMapper.Mapper.Map<MedicalRoomResponse>(newMedicalRoomEntity);
+            return MedicalRoomMapper.Mapper.Map<MedicalRoomResponse>(newMedicalRoomEntity);
         }
     }
 }

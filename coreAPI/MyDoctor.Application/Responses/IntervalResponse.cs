@@ -1,6 +1,6 @@
 ﻿namespace MyDoctor.Application.Responses
 {
-    public class IntervalResponse
+    public class IntervalResponse : BaseResponse
     {
         public IntervalResponse(string startTime, string endTime)
         {

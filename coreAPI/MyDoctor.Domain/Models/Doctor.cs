@@ -111,16 +111,10 @@ namespace MyDoctorApp.Domain.Models
                 intervalEndTime.AddMinutes(-1).IsBetween(appointmentInterval.StartTime, appointmentInterval.EndTime))
             {
                 // If StartTime is bigger than EndTime (e.x.: "23:30", "00:00")
-                if (appointmentInterval.StartTime.CompareTo(appointmentInterval.EndTime) == 1)
-                {
-                    return date == appointmentInterval.Date && intervalEndTime >= appointmentInterval.StartTime
-                    || date.AddDays(-1) == appointmentInterval.Date && intervalEndTime <= appointmentInterval.EndTime;
-                }
-                // If StartTime is less or equal than EndTime (e.x.: "00:00", "00:30")
-                else
-                {
-                    return date == appointmentInterval.Date;
-                }
+                return appointmentInterval.StartTime.CompareTo(appointmentInterval.EndTime) == 1
+                    ? date == appointmentInterval.Date && intervalEndTime >= appointmentInterval.StartTime
+                    || date.AddDays(-1) == appointmentInterval.Date && intervalEndTime <= appointmentInterval.EndTime
+                    : date == appointmentInterval.Date;
             }
             return false;
         }

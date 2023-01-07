@@ -115,7 +115,7 @@ namespace MyDoctor.API.Controllers
                 return NotFound(DrugStockNotFoundError);
             }
             bool drugNotFound = false;
-            List<Tuple<Guid, uint>> getDrugTuples = dtos.Select(dto => Tuple.Create(dto.drugId, dto.Quantity)).ToList();
+            List<Tuple<Guid, uint>> getDrugTuples = dtos.Select(dto => Tuple.Create(dto.DrugId, dto.Quantity)).ToList();
             List<Tuple<Drug, uint>> drugTuples = new();
 
             foreach (var tuple in getDrugTuples)

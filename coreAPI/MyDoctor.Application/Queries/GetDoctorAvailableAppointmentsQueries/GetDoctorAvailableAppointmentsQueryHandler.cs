@@ -1,8 +1,8 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using MyDoctor.Application.Responses;
 using MyDoctorApp.Domain.Models;
 using MyDoctorApp.Infrastructure.Generics;
-using System.Data.SqlTypes;
 
 namespace MyDoctor.Application.Queries.GetDoctorAvailableAppointmentsQueries
 {
@@ -10,6 +10,7 @@ namespace MyDoctor.Application.Queries.GetDoctorAvailableAppointmentsQueries
         IRequestHandler<GetDoctorAvailableAppointmentsQuery,
             List<IntervalResponse>>
     {
+        private const string DOCTOR_NOTFOUND_ID = "Could not find a doctor with this doctorId";
         private readonly IRepository<ScheduleInterval> scheduleIntervalRepository;
         private readonly IRepository<Appointment> appointmentsRepository;
         private readonly IRepository<AppointmentInterval> appointmentIntervalsRepository;
@@ -28,9 +29,13 @@ namespace MyDoctor.Application.Queries.GetDoctorAvailableAppointmentsQueries
         public async Task<List<IntervalResponse>> Handle(GetDoctorAvailableAppointmentsQuery request, CancellationToken cancellationToken)
         {
             var doctor = await doctorRepository.GetAsync(request.DoctorId);
+            var intervals = new List<IntervalResponse>();
             if (doctor == null)
             {
-                throw new SqlNullValueException();
+                var intervalResponse = new IntervalResponse(string.Empty, string.Empty);
+                intervalResponse.SetStatusResult(new NotFoundObjectResult(DOCTOR_NOTFOUND_ID));
+                intervals.Add(intervalResponse);
+                return intervals;
             }
             var scheduleIntervs = (await scheduleIntervalRepository.FindAsync(si => si.DoctorId == request.DoctorId)).ToList();
             var appointments = (await appointmentsRepository.FindAsync(a => a.DoctorId == request.DoctorId)).ToList();
@@ -43,7 +48,6 @@ namespace MyDoctor.Application.Queries.GetDoctorAvailableAppointmentsQueries
                     appointmentsIntervs.Add(appointmentInterval);
                 }
             }
-            var intervals = new List<IntervalResponse>();
             var intervs = Doctor.GetAvailableAppointmentIntervals(request.Date, scheduleIntervs, appointmentsIntervs);
             foreach (var interval in intervs)
             {

@@ -1,6 +1,6 @@
 ﻿namespace MyDoctor.Application.Responses
 {
-    public class ScheduleIntervalResponse
+    public class ScheduleIntervalResponse : BaseResponse
     {
         public ScheduleIntervalResponse(Guid id, string startTime, string endTime, string dayOfWeek, Guid doctorId)
         {

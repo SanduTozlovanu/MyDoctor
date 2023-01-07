@@ -1,6 +1,6 @@
 ﻿namespace MyDoctor.Application.Responses
 {
-    public class MedicalRoomResponse
+    public class MedicalRoomResponse : BaseResponse
     {
         public MedicalRoomResponse(Guid id, string adress)
         {

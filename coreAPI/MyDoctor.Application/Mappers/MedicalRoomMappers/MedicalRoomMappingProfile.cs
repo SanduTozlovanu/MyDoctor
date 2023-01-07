@@ -5,9 +5,9 @@ using MyDoctorApp.Domain.Models;
 
 namespace MyDoctor.Application.Mappers.MedicalRoomMappers
 {
-    public class AvailableAppointmentIntervalsProfile : Profile
+    public class MedicalRoomMappingProfile : Profile
     {
-        public AvailableAppointmentIntervalsProfile()
+        public MedicalRoomMappingProfile()
         {
             CreateMap<MedicalRoom, MedicalRoomResponse>().ReverseMap();
             CreateMap<MedicalRoom, CreateMedicalRoomCommand>().ReverseMap();

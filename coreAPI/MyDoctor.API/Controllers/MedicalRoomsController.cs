@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using MyDoctor.Application.Commands.MedicalRoomCommands;
+using MyDoctor.Application.Exceptions;
 using MyDoctor.Application.Queries.MedicalRoomQueries;
 using MyDoctor.Application.Responses;
 using MyDoctor.Application.Validators.MedicalRoomValidators;
@@ -35,8 +36,15 @@ namespace MyDoctor.API.Controllers
             {
                 return BadRequest(validationResult.Errors[0].ErrorMessage);
             }
-            var result = await mediator.Send(command);
-            return Ok(result);
+            try
+            {
+                var result = await mediator.Send(command);
+                return Ok(result);
+            }
+            catch (BaseMapperException)
+            {
+                return StatusCode(500);
+            }
         }
     }
 }

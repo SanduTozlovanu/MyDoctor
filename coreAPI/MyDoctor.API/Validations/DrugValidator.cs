@@ -28,7 +28,7 @@ namespace MyDoctor.API.Validations
         private const string NEGATIVE_QUANTITY_ERROR = "Quantity should not be negative.";
         public GetDrugValidator()
         {
-            RuleFor(d => d.drugId).NotEmpty();
+            RuleFor(d => d.DrugId).NotEmpty();
             RuleFor(d => d.Quantity).NotNull().Must(CreateDrugValidator.IsQuantityValid).WithMessage(NEGATIVE_QUANTITY_ERROR);
         }
     }

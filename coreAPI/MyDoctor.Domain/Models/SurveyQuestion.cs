@@ -2,14 +2,14 @@
 {
     public class SurveyQuestion
     {
-        private const string EMPTY_STRING = "";
-        private const string CANCER_QUESTION = "Do / did you have cancer?";
-        private const string BLOODPRESSURE_QUESTION = "Do you have high blood pressure?";
-        private const string DIABETIS_QUESTION = "Do you have diabetis?";
-        private const string ALLERGY_QUESTION = "Do you have any allergy? If yes, what are they?";
-        private const string SEXUAL_QUESTION = "Do you suffer from any sexually trasmitted diseases?";
-        private const string COVID_QUESTION = "Did you vaccinate yourself against COVID-19? If yes, what type of vaccine have you used?";
-        private const string HEADACHE_QUESTION = "How often do you suffer from headaches?";
+        public const string EMPTY_STRING = "";
+        public const string CANCER_QUESTION = "Do / did you have cancer?";
+        public const string BLOODPRESSURE_QUESTION = "Do you have high blood pressure?";
+        public const string DIABETIS_QUESTION = "Do you have diabetis?";
+        public const string ALLERGY_QUESTION = "Do you have any allergy? If yes, what are they?";
+        public const string SEXUAL_QUESTION = "Do you suffer from any sexually trasmitted diseases?";
+        public const string COVID_QUESTION = "Did you vaccinate yourself against COVID-19? If yes, what type of vaccine have you used?";
+        public const string HEADACHE_QUESTION = "How often do you suffer from headaches?";
 
         public enum Question
         {
@@ -54,21 +54,6 @@
                 Question.HeadAcheQuestion => HEADACHE_QUESTION,
                 _ => EMPTY_STRING,
             };
-        }
-
-        public override bool Equals(object? obj)
-        {
-            return obj is SurveyQuestion question &&
-                   Id.Equals(question.Id) &&
-                   EqualityComparer<Patient>.Default.Equals(Patient, question.Patient) &&
-                   PatientId.Equals(question.PatientId) &&
-                   QuestionBody == question.QuestionBody &&
-                   Answer == question.Answer;
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Id, Patient, PatientId, QuestionBody, Answer);
         }
     }
 }

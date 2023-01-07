@@ -76,7 +76,7 @@ namespace MyDoctor.API.Controllers
                 }
                 displayDoctorsWithSpecialitiesList.Add(new DisplayDoctorWithSpecialityDto(doctorRepository.GetMapper().Map<DisplayDoctorDto>(d), speciality.Name));
             });
-            return error != null ? error : Ok(displayDoctorsWithSpecialitiesList);
+            return error ?? Ok(displayDoctorsWithSpecialitiesList);
         }
 
         [HttpGet("{doctorId:guid}")]
@@ -150,7 +150,7 @@ namespace MyDoctor.API.Controllers
         public async Task<IActionResult> GetAvailableAppointmentSchedules(Guid doctorId, DateOnly date)
         {
             var result = await mediator.Send(new GetDoctorAvailableAppointmentsQuery(doctorId, date));
-            return Ok(result);
+            return result.Count > 0 && !result[0].IsStatusOk() ? result[0].GetStatusResult() : (IActionResult)Ok(result);
         }
 
         [HttpPost("speciality")]

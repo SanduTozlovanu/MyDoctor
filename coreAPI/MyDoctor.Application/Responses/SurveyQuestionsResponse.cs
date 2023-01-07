@@ -1,6 +1,6 @@
 ﻿namespace MyDoctor.Application.Responses
 {
-    public class SurveyQuestionResponse
+    public class SurveyQuestionResponse : BaseResponse
     {
         public SurveyQuestionResponse(string questionBody, string answer)
         {

@@ -19,7 +19,7 @@ namespace MyDoctor.Application.Queries.MedicalRoomQueries
         public async Task<List<MedicalRoomResponse>> Handle(GetMedicalRoomsQuery request, CancellationToken cancellationToken)
         {
             var medicalRooms = (await repository.AllAsync()).ToList();
-            return AvailableAppointmentIntervalsMapper.Mapper.Map<List<MedicalRoomResponse>>(medicalRooms);
+            return MedicalRoomMapper.Mapper.Map<List<MedicalRoomResponse>>(medicalRooms);
         }
     }
 }

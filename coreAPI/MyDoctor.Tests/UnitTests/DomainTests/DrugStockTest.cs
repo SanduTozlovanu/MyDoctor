@@ -4,11 +4,6 @@ namespace MyDoctor.Tests.UnitTests.DomainTests
 {
     public class DrugStockTest
     {
-        private const string NAME = "nume";
-        private const string DESCRIPTION = "desc";
-        private const double PRICE = 50;
-        private const uint QUANTITY = 10;
-
         [Fact]
         public void Create()
         {

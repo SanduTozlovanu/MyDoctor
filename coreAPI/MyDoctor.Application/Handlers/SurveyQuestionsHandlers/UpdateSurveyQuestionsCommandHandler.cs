@@ -1,15 +1,16 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using MyDoctor.Application.Commands.SurveyQuestionsCommands;
 using MyDoctor.Application.Mappers.SurveyQuestionsMappers;
 using MyDoctor.Application.Responses;
 using MyDoctorApp.Domain.Models;
 using MyDoctorApp.Infrastructure.Generics;
-using System.Data.SqlTypes;
 
 namespace MyDoctor.Application.Handlers.SurveyQuestionsHandlers
 {
     public class UpdateSurveyQuestionsCommandHandler : IRequestHandler<UpdateSurveyQuestionsCommand, List<SurveyQuestionResponse>>
     {
+        private const string SURVEYQUESTIONS_NOTFOUND_ERROR = "The list of survey Questions for this patient id could not be found!";
         private readonly IRepository<SurveyQuestion> repository;
 
         public UpdateSurveyQuestionsCommandHandler(IRepository<SurveyQuestion> repository)
@@ -21,7 +22,11 @@ namespace MyDoctor.Application.Handlers.SurveyQuestionsHandlers
             List<SurveyQuestion>? surveyQuestionsEntityList = (await repository.FindAsync(sq => sq.PatientId == request.PatientId)).ToList();
             if (surveyQuestionsEntityList.Count == 0)
             {
-                throw new SqlNullValueException();
+                var responseList = new List<SurveyQuestionResponse>();
+                var surveyResponse = new SurveyQuestionResponse(string.Empty, string.Empty);
+                surveyResponse.SetStatusResult(new NotFoundObjectResult(SURVEYQUESTIONS_NOTFOUND_ERROR));
+                responseList.Add(surveyResponse);
+                return responseList;
             }
             for (int i = 0; i < surveyQuestionsEntityList.Count; i++)
             {

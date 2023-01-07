@@ -19,11 +19,11 @@
     {
         public GetDrugDto(Guid drugId, uint quantity)
         {
-            this.drugId = drugId;
+            this.DrugId = drugId;
             Quantity = quantity;
         }
 
-        public Guid drugId { get; set; }
+        public Guid DrugId { get; set; }
         public uint Quantity { get; set; }
 
     }

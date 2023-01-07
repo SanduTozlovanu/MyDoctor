@@ -23,7 +23,7 @@ namespace MyDoctor.API.Controllers
         public async Task<IActionResult> Get(Guid patientId)
         {
             var result = await mediator.Send(new GetPatientSurveyQuestionsQuery(patientId));
-            return Ok(result);
+            return result.Count > 0 && !result[0].IsStatusOk() ? result[0].GetStatusResult() : (IActionResult)Ok(result);
         }
         [HttpPut]
         public async Task<ActionResult<List<SurveyQuestionResponse>>> Update([FromBody] UpdateSurveyQuestionsCommand command)
@@ -35,7 +35,7 @@ namespace MyDoctor.API.Controllers
                 return BadRequest(validationResult.Errors[0].ErrorMessage);
             }
             var result = await mediator.Send(command);
-            return Ok(result);
+            return result.Count > 0 && !result[0].IsStatusOk() ? (ActionResult<List<SurveyQuestionResponse>>)result[0].GetStatusResult() : (ActionResult<List<SurveyQuestionResponse>>)Ok(result);
         }
     }
 }

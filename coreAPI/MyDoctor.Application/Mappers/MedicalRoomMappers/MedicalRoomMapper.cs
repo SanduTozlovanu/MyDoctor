@@ -2,7 +2,7 @@
 
 namespace MyDoctor.Application.Mappers.MedicalRoomMappers
 {
-    public static class AvailableAppointmentIntervalsMapper
+    public static class MedicalRoomMapper
     {
         private static readonly Lazy<IMapper> Lazy =
             new(() =>
@@ -11,12 +11,11 @@ namespace MyDoctor.Application.Mappers.MedicalRoomMappers
                 {
                     cfg.ShouldMapProperty = p =>
                     {
-                        return p.GetMethod == null
-                            ? false
-                            : p.GetMethod.IsPublic ||
-                        p.GetMethod.IsAssembly;
+                        return p.GetMethod != null
+                        && (p.GetMethod.IsPublic ||
+                        p.GetMethod.IsAssembly);
                     };
-                    cfg.AddProfile<AvailableAppointmentIntervalsProfile>();
+                    cfg.AddProfile<MedicalRoomMappingProfile>();
                 });
                 var mapper = config.CreateMapper();
                 return mapper;

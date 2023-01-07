@@ -41,7 +41,7 @@ namespace MyDoctor.API.Controllers
                 return BadRequest(validationResult.Errors[0].ErrorMessage);
             }
             var result = await mediator.Send(command);
-            return Ok(result);
+            return result.Count > 0 && !result[0].IsStatusOk() ? (ActionResult<List<ScheduleIntervalResponse>>)result[0].GetStatusResult() : (ActionResult<List<ScheduleIntervalResponse>>)Ok(result);
         }
 
         [HttpGet("{doctorId:guid}")]

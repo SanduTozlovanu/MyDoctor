@@ -9,7 +9,6 @@ namespace MyDoctor.Application.Queries.ScheduleIntervalQueries
         {
             DoctorId = doctorId;
         }
-
         public Guid DoctorId { get; private set; }
     }
 }
