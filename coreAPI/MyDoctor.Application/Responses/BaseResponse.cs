@@ -12,7 +12,7 @@ namespace MyDoctor.Application.Responses
         public virtual ActionResult GetStatusResult() { return statusResult; }
         public virtual bool IsStatusOk()
         {
-            return statusResult.Equals(new OkObjectResult(""));
+            return statusResult.GetType() == new OkObjectResult("").GetType();
         }
     }
 }
