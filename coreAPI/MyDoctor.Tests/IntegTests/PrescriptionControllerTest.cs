@@ -59,15 +59,6 @@ namespace MyDoctor.Tests.IntegTests
             Assert.NotNull(contentDoctor);
             doctorId = contentDoctor.Id;
 
-            string requestDrugStock = "https://localhost:7244/api/v1/DrugStocks";
-            string requestDrug = "https://localhost:7244/api/v1/Drugs/{0}";
-            var resultDrugStock = await HttpClient.GetAsync(requestDrugStock);
-
-            var jsonString = await resultDrugStock.Content.ReadAsStringAsync();
-            var contentDrugStocks = JsonConvert.DeserializeObject<List<DisplayDrugStockDto>>(jsonString);
-            Assert.NotNull(contentDrugStocks);
-            DisplayDrugStockDto drugStock = contentDrugStocks.First();
-
             CreateDrugDto drugDto1 = new("Peniciline is bad", "Not Peniciline", 35.64, 5);
 
             CreateDrugDto drugDto2 = new("Peniciline is good", "Peniciline", 25.48, 2);
@@ -78,8 +69,8 @@ namespace MyDoctor.Tests.IntegTests
                 drugDto2
             };
             var contentDrug = new StringContent(JsonConvert.SerializeObject(dtos), Encoding.UTF8, "application/json");
-
-            var result = await HttpClient.PostAsync(string.Format(requestDrug, drugStock.Id.ToString()), contentDrug);
+            string requestDrug = "https://localhost:7244/api/v1/Drugs/{0}";
+            var result = await HttpClient.PostAsync(string.Format(requestDrug, this.doctorId.ToString()), contentDrug);
             var jsonString2 = await result.Content.ReadAsStringAsync();
             var drugsDtos = JsonConvert.DeserializeObject<List<DisplayDrugDto>>(jsonString2);
             Assert.NotNull(drugsDtos);

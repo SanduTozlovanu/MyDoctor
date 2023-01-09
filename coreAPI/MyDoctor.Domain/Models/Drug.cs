@@ -38,5 +38,13 @@ namespace MyDoctorApp.Domain.Models
             return Result.Success();
         }
 
+        public void Update(Drug drug)
+        {
+            this.Description = drug.Description;
+            this.Price = drug.Price;
+            this.Name = drug.Name;
+            this.Quantity = drug.Quantity;
+        }
+
     }
 }

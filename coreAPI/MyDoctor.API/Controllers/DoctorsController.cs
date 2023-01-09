@@ -256,7 +256,7 @@ namespace MyDoctor.API.Controllers
             var doctor = await doctorRepository.GetAsync(doctorId);
             if (doctor == null)
             {
-                return NotFound();
+                return NotFound(InvalidDoctorIdError);
             }
 
             var doctorNew = new Doctor(doctor.Email, doctor.Password, dto.UpdateUserDto.FirstName,
@@ -264,7 +264,7 @@ namespace MyDoctor.API.Controllers
 
             doctor.Update(doctorNew);
 
-            doctorRepository.Update(doctor);
+            doctor = doctorRepository.Update(doctor);
 
             await doctorRepository.SaveChangesAsync();
             return Ok(doctorRepository.GetMapper().Map<DisplayDoctorDto>(doctor));

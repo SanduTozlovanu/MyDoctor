@@ -87,7 +87,7 @@ namespace MyDoctor.API.Controllers
 
             patient.Update(patientNew);
 
-            patientRepository.Update(patient);
+            patient = patientRepository.Update(patient);
 
             await patientRepository.SaveChangesAsync();
             return Ok(patientRepository.GetMapper().Map<DisplayPatientDto>(patient));

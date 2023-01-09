@@ -21,8 +21,9 @@ namespace MyDoctor.Tests.IntegTests
 
             // When
             string request = "https://localhost:7244/api/v1/MedicalRooms";
-            string request1 = "https://localhost:7244/api/v1/DrugStocks";
             string request3 = "https://localhost:7244/api/v1/Drugs/{0}";
+            string reqSpeciality = "https://localhost:7244/api/v1/Specialities/create_speciality";
+            string createDoctorRequest = "https://localhost:7244/api/v1/Doctors/speciality";
             CreateMedicalRoomCommand mdDto1 = new("Strada Farmaciei 8");
 
             var content1 = new StringContent(JsonConvert.SerializeObject(mdDto1), Encoding.UTF8, "application/json");
@@ -35,39 +36,44 @@ namespace MyDoctor.Tests.IntegTests
             Assert.NotNull(cont1);
             MedicalRoomResponse medRoom1 = new(cont1.Id, mdDto1.Adress);
 
-            var res = await HttpClient.GetAsync(request1);
+            CreateSpecialityDto sDto = new("Chirurg");
+            var contSpeciality = new StringContent(JsonConvert.SerializeObject(sDto), Encoding.UTF8, "application/json");
+            var resSpeciality = await HttpClient.PostAsync(reqSpeciality, contSpeciality);
+            var jsonCreatedSpeciality = await resSpeciality.Content.ReadAsStringAsync();
+            var dtoSpeciality = JsonConvert.DeserializeObject<DisplaySpecialityDto>(jsonCreatedSpeciality);
+            Assert.NotNull(dtoSpeciality);
+            Assert.Equal(HttpStatusCode.OK, resSpeciality.StatusCode);
+            var dDto = new CreateDoctorDto(new CreateUserDto(RandomGenerators.CreateRandomEmail(), "Testurilef51sf5", "Cutelaba", "Test1234"), dtoSpeciality.Id);
 
+            var createDoctorContent = new StringContent(JsonConvert.SerializeObject(dDto), Encoding.UTF8, "application/json");
+            var res = await HttpClient.PostAsync(createDoctorRequest, createDoctorContent);
             var jsonString = await res.Content.ReadAsStringAsync();
-            var cont = JsonConvert.DeserializeObject<List<DisplayDrugStockDto>>(jsonString);
-            Assert.NotNull(cont);
-            Assert.True(cont.Count >= 1);
-            bool medicalRoomFound = false;
-            cont.ForEach(dto =>
-            {
-                if (dto.MedicalRoomId == medRoom1.Id)
-                    medicalRoomFound = true;
-            });
-            Assert.True(medicalRoomFound);
-            DisplayDrugStockDto drugStock = cont.First();
+            var doctorDisplay = JsonConvert.DeserializeObject<DisplayDoctorDto>(jsonString);
+            Assert.NotNull(doctorDisplay);
+            Assert.True(doctorDisplay.FirstName == dDto.UserDetails.FirstName);
+            Assert.True(doctorDisplay.Email == dDto.UserDetails.Email);
+            Assert.True(doctorDisplay.LastName == dDto.UserDetails.LastName);
 
             CreateDrugDto drugDto1 = new("Peniciline is bad", "Not Peniciline", 35.64, 5);
 
             CreateDrugDto drugDto2 = new("Peniciline is good", "Peniciline", 25.48, 2);
 
-            List<CreateDrugDto> dtos = new();
-            dtos.Add(drugDto1);
-            dtos.Add(drugDto2);
+            List<CreateDrugDto> dtos = new()
+            {
+                drugDto1,
+                drugDto2
+            };
             var content = new StringContent(JsonConvert.SerializeObject(dtos), Encoding.UTF8, "application/json");
 
-            var result = await HttpClient.PostAsync(string.Format(request3, drugStock.Id.ToString()), content);
+            var result = await HttpClient.PostAsync(string.Format(request3, doctorDisplay.Id.ToString()), content);
             var jsonString2 = await result.Content.ReadAsStringAsync();
             var displayDtos = JsonConvert.DeserializeObject<List<DisplayDrugDto>>(jsonString2);
             Assert.NotNull(displayDtos);
             Assert.Equal(2, displayDtos.Count);
             displayDtos.ForEach(dto => Assert.True(dto.Equals(new DisplayDrugDto
-                (dto.Id, drugStock.Id, drugDto1.Name, drugDto1.Description, drugDto1.Price, drugDto1.Quantity))
+                (dto.Id, dto.DrugStockId, drugDto1.Name, drugDto1.Description, drugDto1.Price, drugDto1.Quantity))
                  || dto.Equals(new DisplayDrugDto
-                (dto.Id, drugStock.Id, drugDto2.Name, drugDto2.Description, drugDto2.Price, drugDto2.Quantity))));
+                (dto.Id, dto.DrugStockId, drugDto2.Name, drugDto2.Description, drugDto2.Price, drugDto2.Quantity))));
 
         }
         [Fact]
@@ -87,7 +93,7 @@ namespace MyDoctor.Tests.IntegTests
             var result = await HttpClient.PostAsync(string.Format(request3, "48db124a-e731-4664-9add-44172a403b90"), content);
             var jsonString1 = await result.Content.ReadAsStringAsync();
             Assert.Equal(HttpStatusCode.NotFound, result.StatusCode);
-            Assert.Equal(DrugsController.DrugStockNotFoundError, jsonString1);
+            Assert.Equal(DrugsController.DoctorNotFoundError, jsonString1);
         }
     }
 }
