@@ -38,7 +38,7 @@ namespace MyDoctor.API.Controllers
             {
                 return NotFound(DoctorNotFoundError);
             }
-            var drugStock = (await drugStockRepository.AllAsync()).Where(ds => ds.MedicalRoomId == doctor.MedicalRoomId).FirstOrDefault();
+            var drugStock = (await drugStockRepository.AllAsync()).FirstOrDefault(ds => ds.MedicalRoomId == doctor.MedicalRoomId);
             if (drugStock == null)
             {
                 return new StatusCodeResult(500);
@@ -60,7 +60,7 @@ namespace MyDoctor.API.Controllers
             {
                 return NotFound(DoctorNotFoundError);
             }
-            var drugStock = (await drugStockRepository.AllAsync()).Where(ds => ds.MedicalRoomId == doctor.MedicalRoomId).FirstOrDefault();
+            var drugStock = (await drugStockRepository.AllAsync()).FirstOrDefault(ds => ds.MedicalRoomId == doctor.MedicalRoomId);
             if (drugStock == null)
             {
                 return NotFound(DrugStockNotFoundError);
