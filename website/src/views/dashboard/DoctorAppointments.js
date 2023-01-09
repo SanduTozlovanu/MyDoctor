@@ -6,7 +6,6 @@ import {
     CardHeader,
     CardBody,
     Table,
-    Badge,
     Button,
 } from 'reactstrap'
 // core components
@@ -17,6 +16,8 @@ import { useUserContext } from "context/UserContext";
 import AppointmentApi from 'api/appointments';
 import moment from 'moment';
 import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+const ReactSwal = withReactContent(Swal)
 
 const DoctorAppointments = () => {
 
@@ -35,6 +36,7 @@ const DoctorAppointments = () => {
         appointments.sort((a, b) => new Date(...a.date.split('-').reverse()) - new Date(...b.date.split('-').reverse()));
         appointments.sort((a, b) => a.date.split(":") - b.date.split(":"));
     }, [])
+
     const getAppointments = async () => {
         try {
             const response = await AppointmentApi.GetDoctorAppointments(user.id)
@@ -46,21 +48,10 @@ const DoctorAppointments = () => {
         }
     }
 
-    const createPrescription = async () => {
-        Swal.fire({
-            title: 'Create presciption',
-            html:
-              '<div class="row"> <div class="col"><input type="text"></input></div></div>',
-            showCloseButton: true,
-            showCancelButton: true,
-            focusConfirm: false,
-            confirmButtonText:
-              '<i class="fa fa-thumbs-up"></i> Great!',
-            confirmButtonAriaLabel: 'Thumbs up, great!',
-            cancelButtonText:
-              '<i class="fa fa-thumbs-down"></i>',
-            cancelButtonAriaLabel: 'Thumbs down'
-          })
+    const createPrescription = async (patient) => {
+        ReactSwal.fire({
+            html: <Prescription patient={patient} close={ReactSwal.close} />
+        })
     }
 
     return (
@@ -91,7 +82,6 @@ const DoctorAppointments = () => {
                                                 <th scope="col">Name</th>
                                                 <th scope="col">Email</th>
                                                 <th scope="col">Prescription</th>
-                                                <th scope='col'>Status</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -120,13 +110,7 @@ const DoctorAppointments = () => {
                                                             </span>
                                                         </td>
                                                         <td>
-                                                            <Button color="primary" className='text-center' onClick={createPrescription}>Prescription</Button>
-                                                        </td>
-                                                        <td>
-                                                            <Badge color="" className="badge-dot">
-                                                                <i className="bg-info" />
-                                                                on schedule
-                                                            </Badge>
+                                                            <Button size='sm' color="info" className='text-center' onClick={() => createPrescription({ firstName: appointment.patientFirstName, lastName: appointment.patientLastName, email: appointment.email })}>Prescription</Button>
                                                         </td>
                                                     </tr>)
                                             })}
@@ -143,3 +127,14 @@ const DoctorAppointments = () => {
 }
 
 export default DoctorAppointments
+
+const Prescription = (props) => {
+    const [test, setTest] = useState("");
+
+    return (
+        <>
+        <h2>title: {test}</h2>
+        <input onChange={e => setTest(e.target.value)} />
+    </>
+    )
+}
