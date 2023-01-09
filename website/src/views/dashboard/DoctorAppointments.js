@@ -7,6 +7,7 @@ import {
     CardBody,
     Table,
     Badge,
+    Button,
 } from 'reactstrap'
 // core components
 /* eslint-disable react-hooks/exhaustive-deps */
@@ -15,6 +16,7 @@ import Header from 'components/Headers/Header'
 import { useUserContext } from "context/UserContext";
 import AppointmentApi from 'api/appointments';
 import moment from 'moment';
+import Swal from 'sweetalert2'
 
 const DoctorAppointments = () => {
 
@@ -44,6 +46,23 @@ const DoctorAppointments = () => {
         }
     }
 
+    const createPrescription = async () => {
+        Swal.fire({
+            title: 'Create presciption',
+            html:
+              '<div class="row"> <div class="col"><input type="text"></input></div></div>',
+            showCloseButton: true,
+            showCancelButton: true,
+            focusConfirm: false,
+            confirmButtonText:
+              '<i class="fa fa-thumbs-up"></i> Great!',
+            confirmButtonAriaLabel: 'Thumbs up, great!',
+            cancelButtonText:
+              '<i class="fa fa-thumbs-down"></i>',
+            cancelButtonAriaLabel: 'Thumbs down'
+          })
+    }
+
     return (
         <>
             <Header />
@@ -71,6 +90,7 @@ const DoctorAppointments = () => {
                                                 <th scope="col">Time</th>
                                                 <th scope="col">Name</th>
                                                 <th scope="col">Email</th>
+                                                <th scope="col">Prescription</th>
                                                 <th scope='col'>Status</th>
                                             </tr>
                                         </thead>
@@ -98,6 +118,9 @@ const DoctorAppointments = () => {
                                                             <span className="mb-0 text-sm">
                                                                 {appointment.email}
                                                             </span>
+                                                        </td>
+                                                        <td>
+                                                            <Button color="primary" className='text-center' onClick={createPrescription}>Prescription</Button>
                                                         </td>
                                                         <td>
                                                             <Badge color="" className="badge-dot">

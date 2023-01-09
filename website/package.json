@@ -63,7 +63,7 @@
     "react-step-wizard": "^5.3.11",
     "reactstrap": "8.9.0",
     "sass": "1.54.5",
-    "sweetalert2": "^11.6.15"
+    "sweetalert2": "^11.6.16"
   },
   "devDependencies": {
     "@testing-library/react": "^12.1.2",

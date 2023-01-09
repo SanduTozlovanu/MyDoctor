@@ -46,6 +46,8 @@ const PatientSurvey = () => {
  const getQuestions = async () => {
   try{
     const response = await SurveyApi.GetQuestions(user.id);
+    /* BUG : nu primesc nimic inapoi */
+    console.log("response data", response.data)
     setQuestions(response.data)
   }catch(error){
     console.log(error)
