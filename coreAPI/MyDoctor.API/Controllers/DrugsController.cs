@@ -11,20 +11,40 @@ namespace MyDoctor.API.Controllers
     public class DrugsController : ControllerBase
     {
         public const string DrugStockNotFoundError = "Could not find a drugStock with this Id.";
+        public const string DoctorNotFoundError = "Could not find a doctor with this Id.";
+        public const string DrugNotFoundError = "Could not find a drug with this Id.";
         private readonly IRepository<Drug> drugRepository;
         private readonly IRepository<DrugStock> drugStockRepository;
+        private readonly IRepository<Doctor> doctorRepository;
 
-        public DrugsController(IRepository<Drug> drugRepository,
+        public DrugsController(IRepository<Drug> drugRepository, IRepository<Doctor> doctorRepository,
             IRepository<DrugStock> drugStockRepository)
         {
             this.drugRepository = drugRepository;
             this.drugStockRepository = drugStockRepository;
+            this.doctorRepository = doctorRepository;
         }
-
         [HttpGet]
         public async Task<IActionResult> Get()
         {
             return Ok((await drugRepository.AllAsync()).Select(d => drugRepository.GetMapper().Map<DisplayDrugDto>(d)));
+        }
+
+        [HttpGet("{doctorId:guid}")]
+        public async Task<IActionResult> GetDoctorDrugs(Guid doctorId)
+        {
+            var doctor = await doctorRepository.GetAsync(doctorId);
+            if (doctor == null) 
+            {
+                return NotFound(DoctorNotFoundError);
+            }
+            var drugStock = (await drugStockRepository.AllAsync()).Where(ds => ds.MedicalRoomId == doctor.MedicalRoomId).FirstOrDefault();
+            if (drugStock == null)
+            {
+                return new StatusCodeResult(500);
+            }
+            return Ok((await drugRepository.AllAsync()).Where(d => d.DrugStockId == drugStock.Id).Select(d => drugRepository.GetMapper().Map<DisplayDrugDto>(d)));
+
         }
         /// <remarks>
         /// Parameters remarks
@@ -32,10 +52,15 @@ namespace MyDoctor.API.Controllers
         ///     You can put multiple drugs.
         ///         
         /// </remarks>
-        [HttpPost("{drugStockId:guid}")]
-        public async Task<IActionResult> Create(Guid drugStockId, [FromBody] List<CreateDrugDto> dtos)
+        [HttpPost("{doctorId:guid}")]
+        public async Task<IActionResult> Create(Guid doctorId, [FromBody] List<CreateDrugDto> dtos)
         {
-            var drugStock = await drugStockRepository.GetAsync(drugStockId);
+            var doctor = await doctorRepository.GetAsync(doctorId);
+            if (doctor == null)
+            {
+                return NotFound(DoctorNotFoundError);
+            }
+            var drugStock = (await drugStockRepository.AllAsync()).Where(ds => ds.MedicalRoomId == doctor.MedicalRoomId).FirstOrDefault();
             if (drugStock == null)
             {
                 return NotFound(DrugStockNotFoundError);
@@ -54,5 +79,38 @@ namespace MyDoctor.API.Controllers
             return Ok(drugDtos);
         }
 
+        [HttpDelete("{drugId:guid}")]
+        public async Task<IActionResult> DeleteDrug(Guid drugId)
+        {
+            try
+            {
+                await drugRepository.Delete(drugId);
+            }
+            catch (ArgumentException)
+            {
+                return BadRequest(DrugNotFoundError);
+            }
+
+            await drugRepository.SaveChangesAsync();
+            return Ok();
+        }
+        [HttpPut("{drugId:guid}")]
+        public async Task<IActionResult> Update(Guid drugId, [FromBody] CreateDrugDto dto)
+        {
+            var drug = await drugRepository.GetAsync(drugId);
+            if (drug == null)
+            {
+                return NotFound(DrugNotFoundError);
+            }
+
+            var drugNew = new Drug(dto.Name, dto.Description, dto.Price, dto.Quantity);
+
+            drug.Update(drugNew);
+
+            drug = drugRepository.Update(drug);
+
+            await drugRepository.SaveChangesAsync();
+            return Ok(drugRepository.GetMapper().Map<DisplayDrugDto>(drug));
+        }
     }
 }

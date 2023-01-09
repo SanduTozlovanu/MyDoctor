@@ -91,7 +91,7 @@ namespace MyDoctor.API.Controllers
                 return NotFound(BillNotFoundError);
             }
             appointment.RegisterBill(bill);
-            billRepository.Update(bill);
+            bill = billRepository.Update(bill);
 
             await prescriptedDrugRepository.SaveChangesAsync();
             await billRepository.SaveChangesAsync();
@@ -144,7 +144,7 @@ namespace MyDoctor.API.Controllers
                 {
                     return BadRequest(TooManyDrugsTakenError);
                 }
-                drugRepository.Update(drug);
+                drug = drugRepository.Update(drug);
             }
             List<PrescriptedDrug> prescriptedDrugs = new();
             drugTuples.ForEach(drugTuple =>
