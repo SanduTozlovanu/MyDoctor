@@ -17,9 +17,9 @@
     {
         public DisplayAppointmentDto(Guid id, Guid patientId, Guid doctorId)
         {
-            this.Id = id;
-            this.PatientId = patientId;
-            this.DoctorId = doctorId;
+            Id = id;
+            PatientId = patientId;
+            DoctorId = doctorId;
         }
         public Guid Id { get; set; }
         public Guid PatientId { get; set; }
@@ -27,8 +27,9 @@
     }
     public class DisplayAppointmentPatientInformationDto
     {
-        public DisplayAppointmentPatientInformationDto(string date, string patientFirstName, string patientLastName, string email, string startTime, string endTime)
+        public DisplayAppointmentPatientInformationDto(Guid id, string date, string patientFirstName, string patientLastName, string email, string startTime, string endTime)
         {
+            Id = id;
             Date = date;
             PatientFirstName = patientFirstName;
             PatientLastName = patientLastName;
@@ -36,7 +37,7 @@
             StartTime = startTime;
             EndTime = endTime;
         }
-
+        public Guid Id { get; set; }
         public string Date { get; set; }
         public string PatientFirstName { get; set; }
         public string PatientLastName { get; set; }
@@ -46,8 +47,9 @@
     }
     public class DisplayAppointmentDoctorInformationDto
     {
-        public DisplayAppointmentDoctorInformationDto(string date, string doctorFirstName, string doctorLastName, string email, string startTime, string endTime)
+        public DisplayAppointmentDoctorInformationDto(Guid id, string date, string doctorFirstName, string doctorLastName, string email, string startTime, string endTime)
         {
+            Id = id;
             Date = date;
             DoctorFirstName = doctorFirstName;
             DoctorLastName = doctorLastName;
@@ -55,7 +57,7 @@
             StartTime = startTime;
             EndTime = endTime;
         }
-
+        public Guid Id { get; set; }
         public string Date { get; set; }
         public string DoctorFirstName { get; set; }
         public string DoctorLastName { get; set; }
