@@ -152,11 +152,16 @@ const Prescription = (props) => {
             console.log("appointmentId ", props.appointment.appointmentId)
             const response = await PrescriptionApi.getPrescriptionByAppointmentId(props.appointment.appointmentId)
             setPrescription(response.data)
+            console.log(response.data)
         } catch (err) {
             setError("Error: Couldn't get the drug list.")
         }
     }
-    return <>
+    useEffect(()=>{
+        console.log(prescription)
+    }, [prescription])
+    if(moment(props.appointment.date).diff(new Date().toISOString().slice(0, 10), 'day') < 0 && prescription){
+        return <>
         <Row>
             <Col>
                 <Row className='align-items-center mb-1'>
@@ -170,21 +175,31 @@ const Prescription = (props) => {
                     </Col>
                 </Row>
                 <hr className='mt-3' />
-                {moment(props.appointment.date).diff(new Date().toISOString().slice(0, 10), 'day') < 0 ? 
-                <>
                 <Row className='mb-2'>
                     <Col className='text-left'>
-                        <h3>Diagnostic: </h3>
+                        <h3>Diagnostic: {prescription.name}</h3>
                     </Col>
                 </Row>
                 <Row className='mb-2'>
                     <Col className='text-left'>
-                        <h3>Description: </h3>
+                        <h3>Description: {prescription.description}</h3>
                     </Col>
                 </Row>
                 <Row>
                     <Col className='text-left'>
                         <h3>Drugs to take:</h3>
+                        {prescription.prescriptedDrugs.map((drug, index) => {
+                            return (
+                                <Row key={index}>
+                                    <Col>
+                                    <h4>{drug.drugId}</h4>
+                                    </Col>
+                                    <Col>
+                                    <h4>{drug.quantity}</h4>
+                                    </Col>
+                                </Row>
+                            )
+                        })}
                     </Col>
                 </Row>
                 <Row className='mt-4'>
@@ -194,24 +209,27 @@ const Prescription = (props) => {
                 </Row>
                 <Row>
                     <Col className='text-left'>
-                        <p>Name: </p>
+                        <p>Name: {prescription.procedures.name}</p>
                     </Col>
                 </Row>
                 <Row>
                     <Col className='text-left'>
-                        <p>Description: </p>
+                        <p>Description: {prescription.procedures.description}</p>
                     </Col>
                 </Row>
                 <Row>
                     <Col className='text-left'>
-                        <p>Price: </p>
+                        <p>Price: {prescription.procedures.price}</p>
                     </Col>
                 </Row>
-                </>
-                 : <h4>You don't have any prescription for this appointment</h4>}
             </Col>
         </Row>
-    </>
-       
+    </>     
+    } else {
+        return <>
+        <h4>Hahah</h4>
+        </>
+    }
+   
 }
 
