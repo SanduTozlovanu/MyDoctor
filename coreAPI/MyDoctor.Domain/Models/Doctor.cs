@@ -43,6 +43,7 @@ namespace MyDoctorApp.Domain.Models
 
         public void RegisterScheduleIntervals(List<ScheduleInterval> scheduleIntervals)
         {
+            ScheduleIntervals.Clear();
             foreach (var si in scheduleIntervals)
             {
                 si.AttachToDoctor(this);

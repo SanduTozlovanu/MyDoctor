@@ -32,7 +32,7 @@ namespace MyDoctorApp.Domain.Models
                 return Result.Failure(EMPTY_PROCEDURES_ERROR);
             }
 
-
+            Procedures.Clear();
             foreach (Procedure procedure in procedures)
             {
                 procedure.AttachToPrescription(this);
@@ -49,6 +49,7 @@ namespace MyDoctorApp.Domain.Models
                 return Result.Failure(EMPTY_DRUGS_ERROR);
             }
 
+            PrescriptedDrugs.Clear();
             foreach (PrescriptedDrug drug in prescriptedDrugs)
             {
                 PrescriptedDrugs.Add(drug);

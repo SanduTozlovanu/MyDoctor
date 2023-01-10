@@ -14,9 +14,11 @@ namespace MyDoctor.API.Controllers
         public const string DoctorNotFoundError = "Could not find the doctor in the DataBase";
         public const string DrugStockNotFoundError = "Could not find the drugStock in the DataBase";
         public const string DrugCreateError = "Could not create drugs.";
+        public const string NoPrescriptionFoundError = "There is no prescription with this appointmentId";
         public const string TooManyDrugsTakenError = "You tried to take more drugs than it's available.";
         public const string BillNotFoundError = "Could not find the bill of the appointment with this Id.";
-        private readonly IRepository<Prescription> prescriptonRepository;
+        private const string PrescriptionAlreadyCreatedError = "The appointment with that id has already a prescription";
+        private readonly IRepository<Prescription> prescriptionRepository;
         private readonly IRepository<Appointment> appointmentRepository;
         private readonly IRepository<DrugStock> drugStockRepository;
         private readonly IRepository<Drug> drugRepository;
@@ -24,7 +26,7 @@ namespace MyDoctor.API.Controllers
         private readonly IRepository<Procedure> procedureRepository;
         private readonly IRepository<Bill> billRepository;
         private readonly IRepository<PrescriptedDrug> prescriptedDrugRepository;
-        public PrescriptionsController(IRepository<Prescription> prescriptonRepository,  //NOSONAR
+        public PrescriptionsController(IRepository<Prescription> prescriptionRepository,  //NOSONAR
                                       IRepository<Appointment> appointmentRepository,
                                       IRepository<DrugStock> drugStockRepository,
                                       IRepository<Drug> drugRepository,
@@ -33,7 +35,7 @@ namespace MyDoctor.API.Controllers
                                       IRepository<Bill> billRepository,
                                       IRepository<PrescriptedDrug> prescriptedDrugRepository)
         {
-            this.prescriptonRepository = prescriptonRepository;
+            this.prescriptionRepository = prescriptionRepository;
             this.appointmentRepository = appointmentRepository;
             this.drugStockRepository = drugStockRepository;
             this.drugRepository = drugRepository;
@@ -43,10 +45,19 @@ namespace MyDoctor.API.Controllers
             this.prescriptedDrugRepository = prescriptedDrugRepository;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Get()
+        [HttpGet("{appointmentId:guid}")]
+        public async Task<IActionResult> GetByAppointmentId(Guid appointmentId)
         {
-            return Ok((await prescriptonRepository.AllAsync()).Select(p => prescriptonRepository.GetMapper().Map<DisplayPrescriptionDto>(p)));
+            var prescription = (await prescriptionRepository.FindAsync(p => p.AppointmentId == appointmentId)).FirstOrDefault();
+            if(prescription == null) 
+            {
+                return NotFound(NoPrescriptionFoundError);
+            }
+            var prescriptedDrugs = (await prescriptedDrugRepository.FindAsync(pd => pd.PrescriptionId == prescription.Id)).ToList();
+            var procedures = (await procedureRepository.FindAsync(p => p.PrescriptionId == prescription.Id)).ToList();
+            prescription.RegisterProcedures(procedures);
+            prescription.RegisterPrescriptedDrugs(prescriptedDrugs);
+            return Ok(prescriptionRepository.GetMapper().Map<DisplayPrescriptionDto>(prescription));
         }
 
         /// <summary>
@@ -61,11 +72,20 @@ namespace MyDoctor.API.Controllers
         [HttpPost("{appointmentId:guid}")]
         public async Task<IActionResult> Create(Guid appointmentId, [FromBody] CreatePrescriptionDto dto)
         {
+            if((await prescriptionRepository.FindAsync(p => p.AppointmentId == appointmentId)).FirstOrDefault() is not null)
+            {
+                return BadRequest(PrescriptionAlreadyCreatedError);
+            }
             Prescription prescription = new(dto.Description, dto.Name);
             Appointment? appointment = await appointmentRepository.GetAsync(appointmentId);
             if (appointment == null)
             {
                 return NotFound(AppointmentNotFoundError);
+            }
+            Doctor? doctor = await doctorRepository.GetAsync(appointment.DoctorId);
+            if (doctor == null)
+            {
+                return NotFound(DoctorNotFoundError);
             }
             if (dto.Procedures != null && dto.Procedures.Any())
             {
@@ -75,7 +95,7 @@ namespace MyDoctor.API.Controllers
             }
             if (dto.Drugs != null && dto.Drugs.Any())
             {
-                var result = await AttachPrescriptedDrugsToPrescription(appointment, prescription, dto.Drugs);
+                var result = await AttachPrescriptedDrugsToPrescription(appointment, doctor, prescription, dto.Drugs);
                 if (result.GetType() != typeof(OkResult))
                 {
                     return result;
@@ -83,7 +103,7 @@ namespace MyDoctor.API.Controllers
             }
             // Register prescription after done with it, because it needs to already have all the drugs to make the billing before registration.
             appointment.RegisterPrescription(prescription);
-            await prescriptonRepository.AddAsync(prescription);
+            await prescriptionRepository.AddAsync(prescription);
 
             Bill? bill = (await billRepository.FindAsync(b => b.AppointmentId == appointment.Id)).FirstOrDefault();
             if (bill == null)
@@ -97,18 +117,13 @@ namespace MyDoctor.API.Controllers
             await billRepository.SaveChangesAsync();
             await procedureRepository.SaveChangesAsync();
             await drugRepository.SaveChangesAsync();
-            await prescriptonRepository.SaveChangesAsync();
+            await prescriptionRepository.SaveChangesAsync();
 
-            return Ok(prescriptonRepository.GetMapper().Map<DisplayPrescriptionDto>(prescription));
+            return Ok(prescriptionRepository.GetMapper().Map<DisplayPrescriptionDto>(prescription));
         }
 
-        private async Task<IActionResult> AttachPrescriptedDrugsToPrescription(Appointment appointment, Prescription prescription, List<GetDrugDto> dtos)
+        private async Task<IActionResult> AttachPrescriptedDrugsToPrescription(Appointment appointment, Doctor doctor, Prescription prescription, List<GetDrugDto> dtos)
         {
-            Doctor? doctor = await doctorRepository.GetAsync(appointment.DoctorId);
-            if (doctor == null)
-            {
-                return NotFound(DoctorNotFoundError);
-            }
             DrugStock? drugStock = (await drugStockRepository.FindAsync(ds => ds.MedicalRoomId == doctor.MedicalRoomId)).FirstOrDefault();
             if (drugStock == null)
             {
