@@ -95,7 +95,7 @@ namespace MyDoctor.API.Controllers
             }
             if (dto.Drugs != null && dto.Drugs.Any())
             {
-                var result = await AttachPrescriptedDrugsToPrescription(appointment, doctor, prescription, dto.Drugs);
+                var result = await AttachPrescriptedDrugsToPrescription(doctor, prescription, dto.Drugs);
                 if (result.GetType() != typeof(OkResult))
                 {
                     return result;
@@ -122,7 +122,7 @@ namespace MyDoctor.API.Controllers
             return Ok(prescriptionRepository.GetMapper().Map<DisplayPrescriptionDto>(prescription));
         }
 
-        private async Task<IActionResult> AttachPrescriptedDrugsToPrescription(Appointment appointment, Doctor doctor, Prescription prescription, List<GetDrugDto> dtos)
+        private async Task<IActionResult> AttachPrescriptedDrugsToPrescription(Doctor doctor, Prescription prescription, List<GetDrugDto> dtos)
         {
             DrugStock? drugStock = (await drugStockRepository.FindAsync(ds => ds.MedicalRoomId == doctor.MedicalRoomId)).FirstOrDefault();
             if (drugStock == null)
