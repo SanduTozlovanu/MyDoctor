@@ -27,6 +27,7 @@ import DoctorSchedule from "views/dashboard/DoctorSchedule";
 import PatientSurvey from "views/dashboard/PatientSurvey";
 import DoctorAppointments from "views/dashboard/DoctorAppointments";
 import PatientAppointments from "views/dashboard/PatientAppointments";
+import AddDeleteDrugs from "views/dashboard/AddDeleteDrugs";
 
 const routes = {
   ADMIN: [],
@@ -53,24 +54,17 @@ const routes = {
       layout: "/admin"
     },
     {
+      path: "/add-delete-drugs",
+      name: "Manage Drugs",
+      icon: "fas fa-prescription-bottle-alt text-primary",
+      component: AddDeleteDrugs,
+      layout: "/admin"
+    },
+    {
       path: "/index",
       name: "Dashboard",
       icon: "ni ni-tv-2 text-primary",
       component: Index,
-      layout: "/admin"
-    },
-    {
-      path: "/icons",
-      name: "Icons",
-      icon: "ni ni-planet text-blue",
-      component: Icons,
-      layout: "/admin"
-    },
-    {
-      path: "/tables",
-      name: "Tables",
-      icon: "ni ni-bullet-list-67 text-red",
-      component: Tables,
       layout: "/admin"
     },
     {
@@ -132,20 +126,6 @@ const routes = {
       name: "Dashboard",
       icon: "ni ni-tv-2 text-primary",
       component: Index,
-      layout: "/admin"
-    },
-    {
-      path: "/icons",
-      name: "Icons",
-      icon: "ni ni-planet text-blue",
-      component: Icons,
-      layout: "/admin"
-    },
-    {
-      path: "/tables",
-      name: "Tables",
-      icon: "ni ni-bullet-list-67 text-red",
-      component: Tables,
       layout: "/admin"
     },
     {

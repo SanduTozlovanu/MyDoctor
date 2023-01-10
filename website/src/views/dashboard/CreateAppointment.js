@@ -82,6 +82,7 @@ const CreateAppointment = () => {
         doctor.id,
         {"date": data.year + '-' + data.month + '-' + data.day},
       )
+      console.log(response.data)
       setScheduleIntervals(response.data)
       setAppointmentDay(data)
       const newDate = data.year + '-' + data.month + '-' + data.day
