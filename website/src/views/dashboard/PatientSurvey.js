@@ -46,8 +46,6 @@ const PatientSurvey = () => {
  const getQuestions = async () => {
   try{
     const response = await SurveyApi.GetQuestions(user.id);
-    /* BUG : nu primesc nimic inapoi */
-    console.log("response data", response.data)
     setQuestions(response.data)
   }catch(error){
     console.log(error)
@@ -56,13 +54,11 @@ const PatientSurvey = () => {
 
 const sendSurvey = async () => {
   try{
-    console.log({patientId: user.id, questionList: questions})
-    const response = await SurveyApi.SendSurvey({patientId: user.id, questionList: questions})
+    await SurveyApi.SendSurvey({patientId: user.id, questionList: questions})
     setSuccess(true)
     timeout = setTimeout(() => {
       setSuccess(false)
     }, 2000)
-    console.log(response)
   }catch(error){
     setError("Server error.")
   }
@@ -112,6 +108,7 @@ useEffect(() => {
                                           handleQuestionAnswer(e, index)
                                         }
                                         type="radio"
+                                        checked={question.answer === answer}
                                         className="mr-2 mb-0"
                                         name={`answers-${index}`}
                                         value={answer}

@@ -205,15 +205,20 @@ const Prescription = (props) => {
             if (verifyFields()) {
                 return
             }
-            const data = {
+            let data = {
                 name: diagnostic,
                 description: description,
-                drugs: drugsArray,
-                procedures: [{ name: procedureName, description: procedureDescription, price: procedurePrice }]
+            }
+            if(drugsArray?.length){
+                data.drugs = drugsArray
+            }
+            if(procedureDescription && procedureName && procedurePrice){
+                data.procedures = [{ name: procedureName, description: procedureDescription, price: procedurePrice }]
             }
             console.log(data, props.patient.appointmentId)
             const response = await PrescriptionApi.CreatePrescription(props.patient.appointmentId, data)
             console.log(response.data)
+            props.close()
         } catch (error) {
             setError("Error: Couldn't create the prescription.")
         }
@@ -277,6 +282,7 @@ const Prescription = (props) => {
                                     setDrugsArrayFunction(drugs)
                                 } else if (action.action === 'clear') {
                                     setChosenDrugs([])
+                                    setDrugsArrayFunction([])
                                     setError('')
                                 }
                             }}
@@ -290,6 +296,7 @@ const Prescription = (props) => {
                             })}
                             className="basic-multi-select"
                             classNamePrefix="select"
+                            size="sm"
                         />
                         {chosenDrugs?.length ? (
                             chosenDrugs.map((drug, index) => {
@@ -299,7 +306,7 @@ const Prescription = (props) => {
                                         <Col className='text-left'>
                                             <h4>{drug.label}</h4>
                                         </Col>
-                                        <Col>
+                                        <Col className='text-left'>
                                             <Label
                                                 className='text-sm'
                                             >
