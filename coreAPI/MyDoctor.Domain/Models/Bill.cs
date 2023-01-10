@@ -27,7 +27,7 @@ namespace MyDoctorApp.Domain.Models
             double totalPrice = 0;
             if(appointment.Doctor is null)
             {
-                throw new NullReferenceException(NULL_DOCTORFIELD_ERROR);
+                throw new AppDomainUnloadedException(NULL_DOCTORFIELD_ERROR);
             }
             totalPrice += appointment.Doctor.AppointmentPrice;
 

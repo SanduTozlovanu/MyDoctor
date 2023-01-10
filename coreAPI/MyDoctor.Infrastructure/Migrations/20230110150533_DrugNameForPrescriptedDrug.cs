@@ -1,11 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace MyDoctorApp.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class SurveyQuestions : Migration
+    public partial class DrugNameForPrescriptedDrug : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -259,6 +260,7 @@ namespace MyDoctorApp.Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     PrescriptionId = table.Column<Guid>(type: "TEXT", nullable: false),
                     DrugId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    DrugName = table.Column<string>(type: "TEXT", nullable: false),
                     Quantity = table.Column<uint>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>

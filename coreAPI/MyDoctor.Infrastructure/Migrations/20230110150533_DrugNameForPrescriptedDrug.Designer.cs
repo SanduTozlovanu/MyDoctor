@@ -11,8 +11,8 @@ using MyDoctorApp.Infrastructure;
 namespace MyDoctorApp.Infrastructure.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20230105141207_SurveyQuestions")]
-    partial class SurveyQuestions
+    [Migration("20230110150533_DrugNameForPrescriptedDrug")]
+    partial class DrugNameForPrescriptedDrug
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -250,6 +250,10 @@ namespace MyDoctorApp.Infrastructure.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("DrugId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DrugName")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("PrescriptionId")

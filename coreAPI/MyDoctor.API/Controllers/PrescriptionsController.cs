@@ -138,7 +138,7 @@ namespace MyDoctor.API.Controllers
                 var drugId = tuple.Item1;
                 var quantityToTake = tuple.Item2;
                 var drug = await drugRepository.GetAsync(drugId);
-                if (drug == null)
+                if (drug == null || drug.DrugStockId != drugStock.Id)
                 {
                     drugNotFound = true;
                     break;
