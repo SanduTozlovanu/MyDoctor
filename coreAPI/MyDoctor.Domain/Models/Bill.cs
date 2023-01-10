@@ -1,9 +1,12 @@
 ﻿using MyDoctorApp.Domain.Helpers;
+using System.ComponentModel;
 
 namespace MyDoctorApp.Domain.Models
 {
     public class Bill
     {
+        private const string NULL_DOCTORFIELD_ERROR = "Doctor field for Bill instance is null!";
+
         public Bill()
         {
             Id = Guid.NewGuid();
@@ -22,6 +25,10 @@ namespace MyDoctorApp.Domain.Models
         public Result CalculateBillPrice(Appointment appointment)
         {
             double totalPrice = 0;
+            if(appointment.Doctor is null)
+            {
+                throw new ArgumentNullException(NULL_DOCTORFIELD_ERROR);
+            }
             totalPrice += appointment.Doctor.AppointmentPrice;
 
             if (appointment.Prescription != null)
