@@ -78,7 +78,7 @@ const Profile = () => {
         setLastName(response.data.lastName)
         setDescription(response.data.description)
         setPrice(response.data.appointmentPrice)
-        setSpeciality(user.speciality)
+        setSpeciality(response.data.speciality)
       } else if (user.accountType === 'PATIENT') {
         const response = await PatientApi.GetPatientById(user.id);
         console.log(response.data)
