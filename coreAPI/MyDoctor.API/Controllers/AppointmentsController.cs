@@ -58,7 +58,7 @@ namespace MyDoctor.API.Controllers
                     error = NotFound(PatientNotFoundError);
                     return;
                 }
-                appointmentInformationList.Add(new DisplayAppointmentPatientInformationDto(appointmentInterval.Date.ToString("yyyy-MM-dd"),
+                appointmentInformationList.Add(new DisplayAppointmentPatientInformationDto(app.Id, appointmentInterval.Date.ToString("yyyy-MM-dd"),
                     patient.FirstName, patient.LastName, patient.Email, appointmentInterval.StartTime.ToString("HH:mm"),
                     appointmentInterval.EndTime.ToString("HH:mm")));
             });
@@ -89,7 +89,7 @@ namespace MyDoctor.API.Controllers
                     error = NotFound(DoctorNotFoundError);
                     return;
                 }
-                appointmentInformationList.Add(new DisplayAppointmentDoctorInformationDto(appointmentInterval.Date.ToString("yyyy-MM-dd"),
+                appointmentInformationList.Add(new DisplayAppointmentDoctorInformationDto(app.Id, appointmentInterval.Date.ToString("yyyy-MM-dd"),
                     doctor.FirstName, doctor.LastName, doctor.Email, appointmentInterval.StartTime.ToString("HH:mm"),
                     appointmentInterval.EndTime.ToString("HH:mm")));
             });
