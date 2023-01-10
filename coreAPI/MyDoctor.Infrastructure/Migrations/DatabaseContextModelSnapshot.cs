@@ -249,6 +249,10 @@ namespace MyDoctorApp.Infrastructure.Migrations
                     b.Property<Guid>("DrugId")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("DrugName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<Guid>("PrescriptionId")
                         .HasColumnType("TEXT");
 

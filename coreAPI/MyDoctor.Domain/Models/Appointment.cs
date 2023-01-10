@@ -4,6 +4,8 @@ namespace MyDoctorApp.Domain.Models
 {
     public class Appointment
     {
+        private const string NOT_ENOUGH_DATA_ERROR = "Not enough data to make the billing.";
+
         public Appointment()
         {
             Id = Guid.NewGuid();
@@ -51,7 +53,7 @@ namespace MyDoctorApp.Domain.Models
         {
             if (Bill == null)
             {
-                return Result.Failure("Not enough data to make the billing.");
+                return Result.Failure(NOT_ENOUGH_DATA_ERROR);
             }
 
             Bill.CalculateBillPrice(this);

@@ -13,6 +13,7 @@
         public Guid PrescriptionId { get; private set; }
         public virtual Drug Drug { get; private set; }
         public Guid DrugId { get; private set; }
+        public string DrugName { get; private set; }
         public uint Quantity { get; private set; }
 
         public void AttachPrescription(Prescription prescription)
@@ -24,6 +25,7 @@
         {
             Drug = drug;
             DrugId = drug.Id;
+            DrugName = drug.Name;
         }
 
     }

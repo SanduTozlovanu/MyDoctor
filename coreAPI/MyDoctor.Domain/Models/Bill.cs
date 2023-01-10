@@ -1,11 +1,11 @@
 ﻿using MyDoctorApp.Domain.Helpers;
-using System.ComponentModel;
 
 namespace MyDoctorApp.Domain.Models
 {
     public class Bill
     {
         private const string NULL_DOCTORFIELD_ERROR = "Doctor field for Bill instance is null!";
+        private const string NULL_PRESCRIPTEDDRUG_ERROR = "Drug from prescriptedDrug is Null";
 
         public Bill()
         {
@@ -27,34 +27,42 @@ namespace MyDoctorApp.Domain.Models
             double totalPrice = 0;
             if(appointment.Doctor is null)
             {
-                throw new ArgumentNullException(NULL_DOCTORFIELD_ERROR);
+                throw new AppDomainUnloadedException(NULL_DOCTORFIELD_ERROR);
             }
             totalPrice += appointment.Doctor.AppointmentPrice;
 
-            if (appointment.Prescription != null)
+            var result = CalculatePrescriptedDrugsAndProceduresPrice(appointment, ref totalPrice);
+            if (result.IsFailure)
             {
-                if (appointment.Prescription.PrescriptedDrugs != null)
-                {
-                    foreach (PrescriptedDrug prescriptedDrug in appointment.Prescription.PrescriptedDrugs)
-                    {
-                        if (prescriptedDrug.Drug == null)
-                        {
-                            return Result.Failure("Drug from prescriptedDrug is Null");
-                        }
-                        totalPrice += prescriptedDrug.Drug.Price * prescriptedDrug.Quantity;
-                    }
-                }
-                if (appointment.Prescription.Procedures != null)
-                {
-                    foreach (Procedure procedure in appointment.Prescription.Procedures)
-                    {
-                        totalPrice += procedure.Price;
-                    }
-                }
+                return result;
             }
 
-
             BillPrice = totalPrice;
+            return Result.Success();
+        }
+        
+        private static Result CalculatePrescriptedDrugsAndProceduresPrice(Appointment appointment, ref double totalPrice)
+        {
+            if (appointment.Prescription == null)
+                return Result.Success();
+            if (appointment.Prescription.PrescriptedDrugs != null)
+            {
+                foreach (PrescriptedDrug prescriptedDrug in appointment.Prescription.PrescriptedDrugs)
+                {
+                    if (prescriptedDrug.Drug == null)
+                    {
+                        return Result.Failure(NULL_PRESCRIPTEDDRUG_ERROR);
+                    }
+                    totalPrice += prescriptedDrug.Drug.Price * prescriptedDrug.Quantity;
+                }
+            }
+            if (appointment.Prescription.Procedures != null)
+            {
+                foreach (Procedure procedure in appointment.Prescription.Procedures)
+                {
+                    totalPrice += procedure.Price;
+                }
+            }
             return Result.Success();
         }
     }
