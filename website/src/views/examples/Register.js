@@ -41,11 +41,10 @@ import { useHistory } from 'react-router-dom'
 import { useUserContext } from "context/UserContext";
 import SpecialitiesApi from 'api/specialities'
 
-const hasSpecialChars = (password, rule) =>{
-  console.log(rule.split(""))
+const hasSpecialChars = (password, rule) => {
   if (rule.split("").some(v => password.includes(v))) {
-   return true;
-}
+    return true;
+  }
   return false;
 }
 const Register = () => {
@@ -64,7 +63,7 @@ const Register = () => {
   const { login: loginContext } = useUserContext()
 
 
-  
+
 
   useEffect(() => {
     setError(null)
@@ -91,7 +90,7 @@ const Register = () => {
       !lastName ||
       !email ||
       !password ||
-      !repeatPassword 
+      !repeatPassword
     ) {
       setError('You must fill in all credentials.')
       return true
@@ -382,14 +381,10 @@ const ThirdStep = ({ firstName, lastName, email, password, history }) => {
   const [profilePhoto, setProfilePhoto] = useState('')
   const [error, setError] = useState(null)
   const [creating, setCreating] = useState(false)
+  // const [diplomaFile, setDiplomaFile] = useState(null);
+  // const [profileFile, setProfileFile] = useState(null);
+  // const [formDataToSend, setFormDataToSend] = useState(new FormData())
   const { login: loginContext } = useUserContext()
-
-  // const specialitiesOptions = [
-  //   { value: 'neurologist', label: 'Neurologist' },
-  //   { value: 'orl', label: 'ORL' },
-  //   { value: 'family medicine', label: 'Family medicine' },
-  //   { value: 'internal medicine', label: 'Internal medicine' },
-  // ]
 
   useEffect(() => {
     const fetchData = async () => {
@@ -407,22 +402,18 @@ const ThirdStep = ({ firstName, lastName, email, password, history }) => {
     }
   }
 
-  function uploadFile(event, type) {
+  const uploadFile = async (event, type) => {
     let blobFile = event.target.files[0]
+    // let file = new File([blobFile], `file-${type}`, { type: blobFile.type });
     const img = new Image()
     let url = window.URL.createObjectURL(blobFile)
     img.src = url
     if (type === 'profile') {
       setProfilePhoto(img.src)
+      // setProfileFile(file)
     } else if (type === 'degree') {
       setDegreePhoto(img.src)
-    }
-    const formData = new FormData()
-    formData.append('fileToUpload', blobFile)
-    try {
-      //api upload img call with formData
-    } catch (err) {
-      console.log(err)
+      // setDiplomaFile(file)
     }
   }
 
@@ -450,7 +441,6 @@ const ThirdStep = ({ firstName, lastName, email, password, history }) => {
         },
         specialityId: speciality
       }
-      console.log(credentials)
       await AuthApi.RegisterDoctor(credentials)
       const user_response = await AuthApi.Login({
         email: email,
@@ -461,6 +451,13 @@ const ThirdStep = ({ firstName, lastName, email, password, history }) => {
         'user',
         JSON.stringify({ ...user.userDetails, jwtToken: user.jwtToken }),
       )
+
+      // let formData = new FormData()
+      // formData.append('ProfilePhoto', profileFile)
+      // formData.append('DiplomaPhoto', diplomaFile)
+      // console.log(formData.has("ProfilePhoto"), formData.has("DiplomaPhoto"), formData.forEach((item) => console.log(item)), formData)
+      // const photos_response = await DoctorApi.SendPhotos(user.userDetails.id, formData)
+      // console.log(photos_response)
       loginContext()
       return history.push('/admin/index')
     } catch (err) {
@@ -483,7 +480,7 @@ const ThirdStep = ({ firstName, lastName, email, password, history }) => {
           <FormGroup className="mb-3">
             <Label>Choose your speciality *</Label>
             <Select
-              onChange={(spec) => setSpeciality(spec? spec.value : '')}
+              onChange={(spec) => setSpeciality(spec ? spec.value : '')}
               defaultValue={null}
               isSearchable
               isClearable
@@ -500,7 +497,7 @@ const ThirdStep = ({ firstName, lastName, email, password, history }) => {
               <FormGroup>
                 <Label className="ws-0">Upload your Degree photo *</Label>
                 <Input
-                  accept=".png,.jpg,.jpeg,.svg,.gif"
+                  accept=".png,.jpg,.jpeg,.svg"
                   onChange={(e) => uploadFile(e, 'degree')}
                   id="degree-photo"
                   className="d-none"
@@ -527,7 +524,7 @@ const ThirdStep = ({ firstName, lastName, email, password, history }) => {
               <FormGroup>
                 <Label className="ws-0">Upload your profile photo *</Label>
                 <Input
-                  accept=".png,.jpg,.jpeg,.svg,.gif"
+                  accept=".png,.jpg,.jpeg,.svg"
                   onChange={(e) => uploadFile(e, 'profile')}
                   id="profile-photo"
                   className="d-none"
