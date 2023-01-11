@@ -38,7 +38,6 @@ exports[`should test Register component 1`] = `
           creating={false}
           error={null}
           handleRegister={[Function]}
-          setAge={[Function]}
           setEmail={[Function]}
           setFirstName={[Function]}
           setLastName={[Function]}
