@@ -38,7 +38,7 @@ const PatientSurvey = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-        await getQuestions(user.id)
+        await getQuestions()
     }
     fetchData()
 }, [])

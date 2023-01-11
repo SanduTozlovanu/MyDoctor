@@ -19,8 +19,6 @@ import Index from "views/Index.js";
 import Profile from "views/examples/Profile.js";
 import Register from "views/examples/Register.js";
 import Login from "views/examples/Login.js";
-import Tables from "views/examples/Tables.js";
-import Icons from "views/examples/Icons.js";
 import Logout from "views/examples/Logout";
 import CreateAppointment from "views/dashboard/CreateAppointment";
 import DoctorSchedule from "views/dashboard/DoctorSchedule";

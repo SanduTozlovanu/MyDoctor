@@ -39,12 +39,6 @@ import Swal from 'sweetalert2'
 import AuthApi from 'api/auth'
 import { useHistory } from 'react-router-dom'
 
-// const handleAccountTypeText = (text) => {
-//   const firstLetter = text.charAt(0).toUpperCase()
-//   const restOfWord = text.substring(1, text.length).toLowerCase()
-//   return firstLetter + restOfWord
-// }
-
 const Profile = () => {
   const { user } = useUserContext()
   const [firstName, setFirstName] = useState('')
@@ -59,7 +53,7 @@ const Profile = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      await getUser(user.id)
+      await getUser()
     }
     fetchData()
     // eslint-disable-next-line react-hooks/exhaustive-deps

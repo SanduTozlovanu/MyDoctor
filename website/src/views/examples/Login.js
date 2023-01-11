@@ -28,7 +28,7 @@ import {
   InputGroupAddon,
   InputGroupText,
   InputGroup,
-  Col,
+  Col
 } from 'reactstrap'
 import AuthApi from 'api/auth'
 import { useHistory } from 'react-router-dom'
@@ -57,7 +57,6 @@ const Login = () => {
         password: password,
       }
       const response = await AuthApi.Login(credentials)
-      console.log(credentials, response.data)
       const user = response.data
       localStorage.setItem(
         'user',

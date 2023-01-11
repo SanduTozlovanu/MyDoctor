@@ -3,20 +3,12 @@ import {
   Row,
   Col,
   Card,
-  CardHeader,
-  Button,
   CardBody,
-  Table,
 } from 'reactstrap'
 // core components
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useState, useEffect } from 'react'
+
 import Header from 'components/Headers/Header'
-import { useUserContext } from "context/UserContext";
-import Swal from 'sweetalert2'
-import withReactContent from 'sweetalert2-react-content'
-import DrugApi from 'api/drug';
-const ReactSwal = withReactContent(Swal)
 
 const Index = () => {
 
