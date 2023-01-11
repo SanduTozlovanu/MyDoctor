@@ -6,9 +6,7 @@ import {
     CardHeader,
     Button,
     CardBody,
-    Table,
-    Input,
-    Label
+    Table
 } from 'reactstrap'
 // core components
 /* eslint-disable react-hooks/exhaustive-deps */
@@ -20,7 +18,6 @@ import moment from 'moment';
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import PrescriptionApi from 'api/prescription';
-import DrugApi from 'api/drug';
 const ReactSwal = withReactContent(Swal)
 
 const PatientAppointments = () => {
