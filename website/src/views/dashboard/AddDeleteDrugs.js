@@ -18,7 +18,6 @@ import { useUserContext } from "context/UserContext";
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import DrugApi from 'api/drug';
-import Select from 'react-select'
 const ReactSwal = withReactContent(Swal)
 
 const AddDeleteDrugs = () => {
