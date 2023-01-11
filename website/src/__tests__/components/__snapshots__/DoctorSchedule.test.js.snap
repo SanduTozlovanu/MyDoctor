@@ -76,7 +76,7 @@ exports[`should test DoctorSchedule component 1`] = `
                 </h3>
               </Col>
               <Col
-                className="text-right"
+                className="text-right d-flex align-items-center justify-content-end"
                 lg="4"
                 md="4"
                 sm="12"
@@ -92,7 +92,18 @@ exports[`should test DoctorSchedule component 1`] = `
                 }
                 xs="12"
               >
+                <h3
+                  className="text-right text-success mb-0 mr-3 font-weight-600 d-none"
+                  style={
+                    Object {
+                      "transition": ".2s all",
+                    }
+                  }
+                >
+                  Success!
+                </h3>
                 <Button
+                  className="ws-0"
                   color="primary"
                   onClick={[Function]}
                   tag="button"
