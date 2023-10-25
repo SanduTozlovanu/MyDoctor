@@ -1,4 +1,4 @@
-# MyDoctor - web platform for doctors and patientsMyDoctor - web platform for doctors and patients
+# MyDoctor - web platform for doctors and patients
 dec. 2022 - feb. 2023
 - Medical appointments
 - Drugs management
